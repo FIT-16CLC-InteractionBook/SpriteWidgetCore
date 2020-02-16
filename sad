@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:spritewidget/spritewidget.dart';
+import 'dart:ui';
+
+void main() => runApp(new MyWidget());
+
+class MyWidget extends StatefulWidget {
+  @override
+  MyWidgetState createState() => new MyWidgetState();
+}
+
+class MyWidgetState extends State<MyWidget> {
+  NodeBook rootNode;
+
+  @override
+  void initState() {
+    super.initState();
+    rootNode = new NodeBook();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Label label = new Label("TEXT", textAlign: TextAlign.center, textStyle: new TextStyle(fontSize: 20));
+  	rootNode.addChild(label);
+    return new SpriteWidget(rootNode);
+  }
+}
+
+class NodeBook extends NodeWithSize {
+  NodeBook() : super(const Size(1024.0, 1024.0)) {
+
+    // Start by adding a background.
+    _background = new GradientNode(
+      this.size,
+      Color(0xff5ebbd5),
+      Color(0xff0b2734),
+    );
+    addChild(_background);
+  }
+
+  GradientNode _background;
+}
+class GradientNode extends NodeWithSize {
+  GradientNode(Size size, this.colorTop, this.colorBottom) : super(size);
+
+  Color colorTop;
+  Color colorBottom;
+
+  @override
+  void paint(Canvas canvas) {
+    applyTransformForPivot(canvas);
+
+    Rect rect = Offset.zero & size;
+    Paint gradientPaint = new Paint()..shader = new LinearGradient(
+      begin: FractionalOffset.topLeft,
+      end: FractionalOffset.bottomLeft,
+      colors: <Color>[colorTop, colorBottom],
+      stops: <double>[0.0, 1.0]
+    ).createShader(rect);
+
+    canvas.drawRect(rect, gradientPaint);
+  }
+}
