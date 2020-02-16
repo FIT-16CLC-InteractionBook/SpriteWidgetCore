@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'dart:ui';
 import 'IBLabel.dart';
-import 'utils.dart';
+import 'IBTranslation.dart';
 import 'package:flutter/scheduler.dart';
 
 void main() => runApp(App());
@@ -35,10 +34,24 @@ class MyWidgetState extends State<MyWidget> {
   }
 
   yourFunction(BuildContext context) {
-     Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
+    Offset a = rootNode.convertPointToNodeSpace(const Offset(300.0,400.0));
     IBLabel label = new IBLabel("Tessttt", TextAlign.center, new TextStyle(fontSize: 30), a, 1.0, 0.0, 1.0);
-   
-    label.motions.run(new MotionRepeat(myTween, 20));
+
+    MotionTween b = new MotionTween<Offset> (
+      (a) => label.position = a,
+      label.position,
+      rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)),
+      2.0,
+      Curves.bounceIn,
+    );
+    // Motion b = Utils.createMotion(
+    //   "BouncedOut", 
+    //   1.0,
+    //   setterFunction: (a) => label.position = a,
+    //   startVal: label.position,
+    //   endVal: rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)),
+    //   numRepeat: 20);
+    label.motions.run(b);
     rootNode.addChild(label);
   }
 

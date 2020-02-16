@@ -3,25 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:spritewidget/spritewidget.dart';
 
 class IBLabel extends Label {
-  final String txt;
-  final TextAlign txtAlign;
-  final TextStyle txtStyle;
-  final Offset p;
-  final double s;
-  final double r;
-  final double a; 
-  // final MotionInterval m; //motions
+  final String _text;
+  final TextAlign _textAlign;
+  final TextStyle _textStyle;
+  final Offset _position;
+  final double _scale;
+  final double _rotation;
+  final double _alpha; 
 
   IBLabel(
-    this.txt, 
-    this.txtAlign, 
-    this.txtStyle, 
-    this.p, 
-    this.s, 
-    this.r, 
-    this.a) : super(txt, textAlign: txtAlign, textStyle: txtStyle) {
-    this.position = Offset(this.p.dx, this.p.dy);
-    this.scale = this.s;
-    this.rotation = this.r;
+    this._text, 
+    this._textAlign, 
+    this._textStyle, 
+    this._position, 
+    this._scale, 
+    this._rotation, 
+    this._alpha) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
+    this.position = Offset(this._position.dx, this._position.dy);
+    this.scale = this._scale;
+    this.rotation = this._rotation;
   }
 }

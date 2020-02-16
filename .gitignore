@@ -7,7 +7,8 @@
 
 # Files for the ART/Dalvik VM
 *.dex
-
+.dart_tool/
+./build
 # Java class files
 *.class
 
@@ -311,8 +312,7 @@ playground.xcworkspace
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
 # Packages/
 # Package.pins
-.build/
-
+./lib
 # CocoaPods - Refactored to standalone file
 
 # Carthage - Refactored to standalone file
