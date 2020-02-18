@@ -1,33 +1,25 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:spritewidget/spritewidget.dart';
 
-class IBLabel extends Label {
-  
-  final String _text;
-  final TextAlign _textAlign;
-  final TextStyle _textStyle;
+class IBSprite extends Sprite {
+
+  final ui.Image _image;
   final Size _size;
   final Offset _position;
   final double _scale;
   final double _rotation;
   final double _opacity; 
-  final bool _userInteractionEnabled;
+  final bool _userInteractionEnabled; 
 
-  IBLabel(
-    this._text, 
-    this._textAlign, 
-    this._textStyle,
-    this._size,
-    this._position, 
-    this._scale, 
-    this._rotation, 
-    this._opacity,
-    this._userInteractionEnabled) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
-    position = Offset(_position.dx, _position.dy);
-    scale = _scale;
+  IBSprite(this._image, this._size, this._position, this._scale, this._rotation, this._opacity, this._userInteractionEnabled) : super.fromImage(_image) {
+    size = _size;
+    position = _position;
+    scale= _scale;
     rotation = _rotation;
+    opacity = _opacity;
     userInteractionEnabled = _userInteractionEnabled;
+    pivot = Offset(0.0, 0.0);
   }
 
   Offset range;
@@ -35,7 +27,7 @@ class IBLabel extends Label {
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
-    if (checkPoint.dx >= position.dx && checkPoint.dx <= _size.width + position.dx && checkPoint.dy <= _size.height + position.dy && checkPoint.dy >= position.dy)
+    if (checkPoint.dx >= position.dx && checkPoint.dx <= size.width + position.dx && checkPoint.dy <= size.height + position.dy && checkPoint.dy >= position.dy)
       return true;
 
     return false;
