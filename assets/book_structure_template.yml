@@ -1,0 +1,76 @@
+---
+version: 1.0
+manifest:
+  author:
+    name: {{ user-name }}
+  app-name: {{ app-name }}
+  categories:
+    - horror
+    - history
+    - romantic
+    - children
+  created-at: {{ date }}
+app:
+  background:
+    image: ''
+    color: 0xffffffff #rgba
+  app-page:
+    - page:
+        index: {{ page-index }} #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              id: {{ object-index }} #1 -> n
+              type:
+                - name: "image"
+                - name: "text"
+                - name: "particle"
+                - name: "gallery"
+                - name: "text-to-speach"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 100.0
+              original-image: 'link' #image only
+              content: 'text' #text only
+              properties:
+                opacity: 1
+                rotation: 0
+                font-size: 10 #text only
+                font-weight: 400 #text only
+                font: Arial #text only
+                color: 'text color' #text only
+              objectActions:
+                type: 
+                  - name: "Sequence Action"
+                  - name: "Single Action"
+                actions:
+                  - action:
+                      index: {{ action-index }}
+                      type:
+                        - name: "move"
+                        - name: "rotation"
+                        - name: "blur"
+                      parameters:
+                        - soundName
+                        - duration
+                        - targetX
+                        - targetY
+                        - height
+                        - jumps
+                        - objectID
+                        - scale
+...
+
+
+
+        
+
+
+      

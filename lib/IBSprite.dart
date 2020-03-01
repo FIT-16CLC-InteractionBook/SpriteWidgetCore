@@ -41,6 +41,8 @@ class IBSprite extends Sprite {
     if (event.type == PointerMoveEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       Offset newPosition = Offset(currentPosition.dx - range.dx, currentPosition.dy - range.dy);
+      if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
+        return false;
       this.position = newPosition;
     }
     return true;

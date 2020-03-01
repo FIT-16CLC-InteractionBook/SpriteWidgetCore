@@ -11,7 +11,6 @@ class IBLabel extends Label {
   final Offset _position;
   final double _scale;
   final double _rotation;
-  final double _opacity; 
   final bool _userInteractionEnabled;
 
   IBLabel(
@@ -22,7 +21,6 @@ class IBLabel extends Label {
     this._position, 
     this._scale, 
     this._rotation, 
-    this._opacity,
     this._userInteractionEnabled) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
     position = Offset(_position.dx, _position.dy);
     scale = _scale;
@@ -49,6 +47,8 @@ class IBLabel extends Label {
     if (event.type == PointerMoveEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       Offset newPosition = Offset(currentPosition.dx - range.dx, currentPosition.dy - range.dy);
+      if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
+        return false;
       this.position = newPosition;
     }
     return true;

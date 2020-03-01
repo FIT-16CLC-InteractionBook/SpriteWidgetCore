@@ -1,17 +1,12 @@
-import 'dart:async';
-
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/painting.dart';
+import 'package:sprite_widget/IBLabel.dart';
 import 'package:spritewidget/spritewidget.dart';
-import 'dart:ui' as ui;
-import 'IBLabel.dart';
-import 'IBTranslation.dart';
-import 'IBSprite.dart';
-import 'IBParticle.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:yaml/yaml.dart';
+import 'utils.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); 
@@ -19,48 +14,83 @@ void main() {
   runApp(App());
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
+   @override
+   AppState createState() => new AppState();
+}
+
+class AppState extends State<App> {
+  var doc;
+  bool isLoading = true;
+  Map background;
+  @override
+  void initState() {
+    super.initState();
+    // SchedulerBinding.instance.addPostFrameCallback((_) => loadBook(context));
+    WidgetsBinding.instance.addPostFrameCallback((_) => initialData());
+  }
+
+  initialData() async {
+    String fileText = await rootBundle.loadString('assets/book_structure_template.yml');
+    doc = loadYaml(fileText);
+    Map main = Utils.loadMainData(doc['app']);
+
+    background = await Utils.loadBackground(main['background']);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return isLoading ? MaterialApp(
       title: 'Title',
-      home: MyWidget(),
+      home: new Container(child: Text('123')),
+    ) : MaterialApp(
+      title: 'Title',
+      home: MyWidget(background),
     );
   }
 }
 
 class MyWidget extends StatefulWidget {
+  final Map background;
+  MyWidget(this.background);
   @override
-  MyWidgetState createState() => new MyWidgetState();
+  MyWidgetState createState() => new MyWidgetState(background);
 }
 
 class MyWidgetState extends State<MyWidget> {
+
+  final Map background;
   NodeBook rootNode;
   var size;
-  SpriteSheet _sprites;
-  ImageMap _images;
-  List<ParticleSystem> _particles = <ParticleSystem>[];
-
+  // SpriteSheet _sprites;
+  // ImageMap _images;
+  // List<ParticleSystem> _particles = <ParticleSystem>[];
+  MyWidgetState(this.background) : super();
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) => yourFunction(context));
-    rootNode = new NodeBook();
+    rootNode = new NodeBook(background);
+    // SchedulerBinding.instance.addPostFrameCallback((_) => loadBook(context));
+    WidgetsBinding.instance.addPostFrameCallback((_) => loadBook(context));
   }
 
-  yourFunction(BuildContext context) async {
-    // Offset a = rootNode.convertPointToNodeSpace(const Offset(100.0,100.0));
-    // IBLabel label = new IBLabel(
-    //   "123456",
-    //   TextAlign.start, 
-    //   new TextStyle(fontSize: 30),
-    //   new Size(100.0, 100.0),
-    //   a, 
-    //   1.0, 
-    //   0.0, 
-    //   1.0,
-    //   true);
+  loadBook(BuildContext context) {
+    Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
+    IBLabel label = new IBLabel(
+      "123456",
+      TextAlign.start, 
+      new TextStyle(fontSize: 30, color: Colors.black),
+      new Size(100.0, 30.0),
+      a, 
+      1.0, 
+      0.0, 
+      true);
+    rootNode.addChild(label);
     // Motion b = Utils.createMotion(
     //   "BouncedOut", 
     //   1.0,
@@ -72,19 +102,19 @@ class MyWidgetState extends State<MyWidget> {
     // Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
     // ui.Image image = await getImage("https://picsum.photos/250?image=9");
     // IBSprite sprite = new IBSprite(image, new Size(200.0, 200.0), a, 1, 0, 1, true);
-    _images = new ImageMap(rootBundle);
-     _images.load([
-      'assets/particle-0.png',
-      'assets/particle-1.png',
-      'assets/particle-2.png',
-      'assets/particle-3.png',
-      'assets/particle-4.png',
-      'assets/particle-5.png',
-    ]).then((List<ui.Image> images) {
-      ParticleWorld _particleWorld = new ParticleWorld( _images, rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)), const Size(100.0, 100.0));
-      ParticlePreset.updateParticles(_particleWorld, ParticlePresetType.Fireworks);
-      rootNode.addChild(_particleWorld);
-     });
+    // _images = new ImageMap(rootBundle);
+    //  _images.load([
+    //   'assets/particle-0.png',
+    //   'assets/particle-1.png',
+    //   'assets/particle-2.png',
+    //   'assets/particle-3.png',
+    //   'assets/particle-4.png',
+    //   'assets/particle-5.png',
+    // ]).then((List<ui.Image> images) {
+      // ParticleWorld _particleWorld = new ParticleWorld( _images, rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)), const Size(100.0, 100.0));
+      // ParticlePreset.updateParticles(_particleWorld, ParticlePresetType.Fire);
+      // rootNode.addChild(_particleWorld);
+    //  });
     // await _loadAssets(bundle);
     // _addParticles(1.0);
     // _addParticles(1.5);
@@ -106,30 +136,6 @@ class MyWidgetState extends State<MyWidget> {
   //   _sprites = new SpriteSheet(_images['assets/weathersprites.png'], json);
   // }
 
-  void _addParticles(double distance) {
-    ParticleSystem particles = new ParticleSystem(
-      _sprites['raindrop.png'],
-      transferMode: BlendMode.srcATop,
-      posVar: rootNode.convertPointToNodeSpace(Offset(400.0, 400.0)),
-      direction: 90.0,
-      directionVar: 0.0,
-      speed: 1000.0 / distance,
-      speedVar: 100.0 / distance,
-      startSize: 1.2 / distance,
-      startSizeVar: 0.2 / distance,
-      endSize: 1.2 / distance,
-      endSizeVar: 0.2 / distance,
-      life: 1.5 * distance,
-      lifeVar: 1.0 * distance
-    );
-    particles.position = rootNode.convertPointToNodeSpace(const Offset(100.0, 100.0));
-    particles.rotation = 10.0;
-    particles.opacity = 0.0;
-
-    _particles.add(particles);
-    rootNode.addChild(particles);
-  }
-
   // Completer<ImageInfo> completer = Completer();
   // Future<ui.Image> getImage(String path) async {
   //   var img = new NetworkImage(path);
@@ -139,21 +145,29 @@ class MyWidgetState extends State<MyWidget> {
   //   ImageInfo imageInfo = await completer.future;
   //   return imageInfo.image;
   // }
+  
+  
 
   @override
   Widget build(BuildContext context) {
-    return new SpriteWidget(rootNode);
+    return new Align(
+        alignment: Alignment.center,
+        child: AspectRatio(
+          aspectRatio: 4/3,
+          child: new SpriteWidget(rootNode),),
+        ) ;
   }
 }
 
 class NodeBook extends NodeWithSize {
-  NodeBook() : super(const Size(1024.0, 1024.0)) {
 
+  final Map background;
+  NodeBook(this.background) : super(const Size(1024.0, 768.0)) {
+    
     // Start by adding a background.
     _background = new GradientNode(
       this.size,
-      Color(0xff5ebbd5),
-      Color(0xff0b2734),
+      background,
     );
     addChild(_background);
   }
@@ -161,24 +175,28 @@ class NodeBook extends NodeWithSize {
   GradientNode _background;
 }
 class GradientNode extends NodeWithSize {
-  GradientNode(Size size, this.colorTop, this.colorBottom) : super(size);
+  GradientNode(Size size, this.background) : super(size);
 
-  Color colorTop;
-  Color colorBottom;
+  final Map background;
 
   @override
   void paint(Canvas canvas) {
     applyTransformForPivot(canvas);
+    var img = background['image'];
+    var color = background['color'];
+    if (img != '') {
+      paintImage(canvas: canvas, rect: Offset.zero & size, image: img, fit: BoxFit.fill);
+    } else {
+      Rect rect = Offset.zero & size;
+      Paint gradientPaint = new Paint()..shader = new LinearGradient(
+        begin: FractionalOffset.topLeft,
+        end: FractionalOffset.bottomLeft,
+        colors: <Color>[Color(color), Color(color)],
+        stops: <double>[0.0, 1.0]
+      ).createShader(rect);
 
-    Rect rect = Offset.zero & size;
-    Paint gradientPaint = new Paint()..shader = new LinearGradient(
-      begin: FractionalOffset.topLeft,
-      end: FractionalOffset.bottomLeft,
-      colors: <Color>[colorTop, colorBottom],
-      stops: <double>[0.0, 1.0]
-    ).createShader(rect);
-
-    canvas.drawRect(rect, gradientPaint);
+      canvas.drawRect(rect, gradientPaint);
+    }
   }
 }
 
@@ -241,6 +259,28 @@ class GradientNode extends NodeWithSize {
 //   Widget build(BuildContext context) {
 //     return new Scaffold(
 //       body: _loaded ? new ParticleDesigner(images: _images,) : null,
+//     );
+//   }
+// }
+
+
+// import 'package:flutter/material.dart';
+// import 'IBGallery.dart';
+
+// void main() => runApp(new CarouselDemo());
+
+// class CarouselDemo extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'demo',
+//       home: Scaffold(
+//         appBar: AppBar(title: Text('Carousel slider demo')),
+//         body: Container(
+//           height: 300.0,
+//           width: 300.0,
+//           child: CarouselWithIndicator(Size(300.0, 300.0))) 
+//       ),
 //     );
 //   }
 // }

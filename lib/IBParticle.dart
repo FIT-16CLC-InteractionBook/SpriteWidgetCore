@@ -9,6 +9,7 @@ class ParticleWorld extends NodeWithSize {
   final ImageMap images;
   final Offset _position;
   final Size _size;
+  final bool _userInteractionEnabled;
   // optional
   // TEXTURE & COLORS
   int optRedVar; // 0.0 -> 255.0
@@ -56,12 +57,12 @@ class ParticleWorld extends NodeWithSize {
   ParticleWorld(
     this.images, 
     this._position, 
-    this._size, 
+    this._size,
+    this._userInteractionEnabled,
     [ optRedVar, optGreenVar , optBlueVar, optAlphaVar,
      optStartRotation, optStartRotationVar, optEndRotation, optEndRotationVar, optStartSize, optStartSizeVar, optEndSize, optEndSizeVar, optRotateToMovement,
      optPosVar, optTangentialAcceleration, optTangentialAccelerationVar, optRadialAcceleration, optRadialAccelerationVar, optSpeed, optSpeedVar, optDirection, optDirectionVar, optGravity,
      optNumParticlesToEmit, optEmissionRate, optMaxParticles, optLife, optLifeVar ]) : super(_size) {
-    userInteractionEnabled = true;
 
     SpriteTexture texture = new SpriteTexture(images['assets/particle-$_selectedTexture.png']);
 
@@ -71,7 +72,17 @@ class ParticleWorld extends NodeWithSize {
     );
     particleSystem.position = _position;
     particleSystem.insertionOffset = Offset.zero;
+    userInteractionEnabled = _userInteractionEnabled;
     addChild(particleSystem);
+  }
+
+  
+  @override bool isPointInside(Offset point) {
+    Offset postionParticle = particleSystem.position;
+    if (point.dx >= postionParticle.dx && point.dx <= _size.width + postionParticle.dx && point.dy <= _size.height + postionParticle.dy && point.dy >= postionParticle.dy)
+      return true;
+
+    return false;
   }
 
   @override bool handleEvent(SpriteBoxEvent event) {
