@@ -16,7 +16,7 @@ app:
     color: 0xffffffff #rgba
   app-page:
     - page:
-        index: {{ page-index }} #1 -> n
+        index: 1 #1 -> n
         music:
           available:
             - name: true
@@ -25,47 +25,51 @@ app:
           time: 1
         objects:
           - object:
-              id: {{ object-index }} #1 -> n
-              type:
-                - name: "image"
-                - name: "text"
-                - name: "particle"
-                - name: "gallery"
-                - name: "text-to-speach"
+              index: 1 #1 -> n
+              type: "text"
               coordinates:
                 x: 0.0
                 y: 0.0
                 w: 100.0
-                h: 100.0
-              original-image: 'link' #image only
-              content: 'text' #text only
+                h: 30.0
+              content: '123456' #text only
               properties:
-                opacity: 1
-                rotation: 0
-                font-size: 10 #text only
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
                 font-weight: 400 #text only
-                font: Arial #text only
-                color: 'text color' #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
               objectActions:
-                type: 
-                  - name: "Sequence Action"
-                  - name: "Single Action"
-                actions:
-                  - action:
-                      index: {{ action-index }}
-                      type:
-                        - name: "move"
-                        - name: "rotation"
-                        - name: "blur"
-                      parameters:
-                        - soundName
-                        - duration
-                        - targetX
-                        - targetY
-                        - height
-                        - jumps
-                        - objectID
-                        - scale
+                objectAction:
+                  index: 1
+                  type: "Sequence Action"
+                  actions:
+                    - action:
+                        index: 1
+                        type: "move"
+                        parameters:
+                          name: EaseIn
+                          duration: 1
+                          start-val:
+                            x: 0.0
+                            y: 0.0
+                          end-val:  
+                            x: 300.0
+                            y: 300.0
+                    - action:
+                        index: 2
+                        type: "move"
+                        parameters:
+                          name: BouncedOut
+                          duration: 1
+                          start-val:
+                            x: 300.0
+                            y: 300.0
+                          end-val:  
+                            x: 300.0
+                            y: 100.0
 ...
 
 

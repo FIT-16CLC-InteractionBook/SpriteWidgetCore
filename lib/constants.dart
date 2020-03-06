@@ -3,6 +3,7 @@ library constants;
 //Motion
 const MOTION_TWEEN = "MotionTween";
 const MOTION_TWEEN_REPEAT = "MotionTweenRepeat";
+const MOTION_SEQUENCE = "MotionSequence";
 const MOTION_BOUNCED_OUT = "BouncedOut";
 const MOTION_BOUNCED_IN_OUT = "BouncedInOut";
 const MOTION_BOUNCED_IN = "BouncedIn";
@@ -42,8 +43,8 @@ const MOTION_FAST_OUT_SLOW_IN = "EaseFastOutSlowIn";
 const MOTION_SLOW_MIDDLE = "EaseSlowMiddle";
 const MOTION_LINEAR = "EaseLinear";
 
-
-
+//Object type
+const TEXT = 'text';
 
 
 

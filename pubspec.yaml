@@ -36,6 +36,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  fonts:
+    - family: CrimsonText
+      fonts:
+        - asset: fonts/CrimsonText-Regular.ttf
   assets:
     - assets/book_structure_template.yml
     - assets/particle-0.png

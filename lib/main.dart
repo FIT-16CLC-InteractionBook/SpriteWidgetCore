@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/painting.dart';
-import 'package:sprite_widget/IBLabel.dart';
+import 'package:sprite_widget/NodeBook.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
 import 'utils.dart';
@@ -22,6 +22,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   var doc;
   bool isLoading = true;
+  Map pages;
   Map background;
   @override
   void initState() {
@@ -36,7 +37,7 @@ class AppState extends State<App> {
     Map main = Utils.loadMainData(doc['app']);
 
     background = await Utils.loadBackground(main['background']);
-
+    pages = await Utils.loadPage(main['app-page']);
     setState(() {
       isLoading = false;
     });
@@ -49,27 +50,29 @@ class AppState extends State<App> {
       home: new Container(child: Text('123')),
     ) : MaterialApp(
       title: 'Title',
-      home: MyWidget(background),
+      home: MyWidget(background, pages),
     );
   }
 }
 
 class MyWidget extends StatefulWidget {
   final Map background;
-  MyWidget(this.background);
+  final Map pages;
+  MyWidget(this.background, this.pages);
   @override
-  MyWidgetState createState() => new MyWidgetState(background);
+  MyWidgetState createState() => new MyWidgetState(background, pages);
 }
 
 class MyWidgetState extends State<MyWidget> {
 
   final Map background;
+  final Map pages;
   NodeBook rootNode;
   var size;
   // SpriteSheet _sprites;
   // ImageMap _images;
   // List<ParticleSystem> _particles = <ParticleSystem>[];
-  MyWidgetState(this.background) : super();
+  MyWidgetState(this.background, this.pages) : super();
 
   @override
   void initState() {
@@ -80,17 +83,23 @@ class MyWidgetState extends State<MyWidget> {
   }
 
   loadBook(BuildContext context) {
-    Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
-    IBLabel label = new IBLabel(
-      "123456",
-      TextAlign.start, 
-      new TextStyle(fontSize: 30, color: Colors.black),
-      new Size(100.0, 30.0),
-      a, 
-      1.0, 
-      0.0, 
-      true);
-    rootNode.addChild(label);
+    for (var key in pages.keys) {
+      var page = pages[key];
+      Map<String, dynamic> objects = Utils.createObjectsInPage(page, rootNode);
+      for (var spriteObject in objects.values) {
+        rootNode.addChild(spriteObject);
+      }
+    }
+    // Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
+    // IBLabel label = new IBLabel(
+    //   "123456",
+    //   TextAlign.start, 
+    //   new TextStyle(fontSize: 30, color: Colors.black),
+    //   new Size(100.0, 30.0),
+    //   a,
+    //   1.0, 
+    //   0.0, 
+    //   true);
     // Motion b = Utils.createMotion(
     //   "BouncedOut", 
     //   1.0,
@@ -159,46 +168,7 @@ class MyWidgetState extends State<MyWidget> {
   }
 }
 
-class NodeBook extends NodeWithSize {
 
-  final Map background;
-  NodeBook(this.background) : super(const Size(1024.0, 768.0)) {
-    
-    // Start by adding a background.
-    _background = new GradientNode(
-      this.size,
-      background,
-    );
-    addChild(_background);
-  }
-
-  GradientNode _background;
-}
-class GradientNode extends NodeWithSize {
-  GradientNode(Size size, this.background) : super(size);
-
-  final Map background;
-
-  @override
-  void paint(Canvas canvas) {
-    applyTransformForPivot(canvas);
-    var img = background['image'];
-    var color = background['color'];
-    if (img != '') {
-      paintImage(canvas: canvas, rect: Offset.zero & size, image: img, fit: BoxFit.fill);
-    } else {
-      Rect rect = Offset.zero & size;
-      Paint gradientPaint = new Paint()..shader = new LinearGradient(
-        begin: FractionalOffset.topLeft,
-        end: FractionalOffset.bottomLeft,
-        colors: <Color>[Color(color), Color(color)],
-        stops: <double>[0.0, 1.0]
-      ).createShader(rect);
-
-      canvas.drawRect(rect, gradientPaint);
-    }
-  }
-}
 
 // import 'dart:ui' as ui show Image;
 

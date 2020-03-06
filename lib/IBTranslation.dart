@@ -9,7 +9,8 @@ class IBTranslation {
     { Function(dynamic) setterFunction,
     Offset startVal,
     Offset endVal, 
-    int numRepeat}) {
+    int numRepeat,
+    List<Motion> motions}) {
       switch (motionName) {
         case Constants.MOTION_TWEEN:
           return new MotionTween<Offset> (
@@ -25,6 +26,9 @@ class IBTranslation {
             endVal,
             duration,
           ), numRepeat);
+          break;
+        case Constants.MOTION_SEQUENCE:
+          return new MotionSequence(motions);
           break;
         case Constants.MOTION_BOUNCED_OUT:
           return new MotionTween<Offset> (
