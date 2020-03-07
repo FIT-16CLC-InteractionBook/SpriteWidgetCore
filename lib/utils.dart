@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:sprite_widget/CustomAction.dart';
 import 'package:sprite_widget/IBLabel.dart';
+import 'package:sprite_widget/IBObject.dart';
+import 'package:sprite_widget/IBPage.dart';
 import 'package:sprite_widget/NodeBook.dart';
 import 'package:flutter/painting.dart';
-
+import 'package:spritewidget/spritewidget.dart';
+import 'IBTranslation.dart';
 import 'constants.dart' as Constants;
 import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
@@ -17,7 +21,7 @@ class Utils {
     return new Map<String,YamlNode>()..addAll({'background': backgroundProperty, 'app-page': appPage});
   }
 
-   static Future<Map<String, dynamic>> loadBackground(YamlMap doc) async {
+  static Future<Map<String, dynamic>> loadBackground(YamlMap doc) async {
     var completer = new Completer<Map<String,dynamic>>();
 
     String imageLink = doc['image'];
@@ -35,23 +39,23 @@ class Utils {
     return new Map<String,dynamic>()..addAll({'image': '', 'color': color});
   }
 
-  static Future<Map<String, dynamic>> loadPage(YamlList doc) async {
-    var completer = new Completer<Map<String,dynamic>>();
-    Map<String, dynamic> pages = new Map<String,dynamic>();
+  static Future<List<IBPage>> loadPage(YamlList doc) async {
+    var completer = new Completer<List<IBPage>>();
+    List<IBPage> pages = new List<IBPage>();
     for (var iPage in doc) {
       var page = iPage['page'];
-      Map<String, dynamic> objects = new Map<String,dynamic>();
+      List<IBObject> objects = new List<IBObject>();
       for (var iObject in page['objects']) {
         var object = iObject['object'];
         switch (object['type']) {
           case Constants.TEXT:
             Map destructText = destructTextObject(object);
-            objects.addAll({'text-${object['index']}': destructText});
+            objects.add(new IBObject('text', destructText));
             break;
           default:
         }
       }
-      pages.addAll({'page-${page['index']}': objects});
+      pages.add(new IBPage(page['index'], objects));
     }
     completer.complete(pages);
     return completer.future;
@@ -81,26 +85,39 @@ class Utils {
       'content': content,
       'user-interaction': userInteraction,
       'properties': properties,
+      'object-actions': object['object-actions'],
     });
   }
 
-  static Map<String, dynamic> createObjectsInPage(Map<String, dynamic> objects, NodeBook rootNode){
-    Map<String, dynamic> spriteObjects = new Map<String, dynamic>();
-    for (var key in objects.keys) {
-      var type = checkRegex(key);
-      var object = objects[key];
-      switch (type) {
+  static List<Node> createObjectsInPage(IBPage page, NodeBook rootNode){
+    List<IBObject> objects = page.objects;
+    List<Node> spriteObjects = new List<Node>();
+    for (var iObject in objects) {
+      Map object = iObject.object;
+      switch (iObject.type) {
         case 'text':
           IBLabel label = new IBLabel(
             object['content'],
             ui.TextAlign.start, 
             object['properties']['text-style'],
             object['size'],
-            rootNode.convertPointToNodeSpace(object['coordinates']),
+            object['coordinates'],
             object['properties']['scale'], 
             object['properties']['rotation'], 
             object['user-interaction']);
-          spriteObjects.addAll({'$key': label});
+          List<CustomAction> actions = createActions(object['object-actions'], label, rootNode);
+          for (var action in actions) {
+            switch (action.event) {
+              case 'auto':
+                label.motions.run(action.motion);
+                break;
+              case 'onClick':
+                label.addActiveAction('onClick', action.motion);
+                break;
+              default:
+            }
+          }
+          spriteObjects.add(label);
         break;
         default:
       }
@@ -109,11 +126,43 @@ class Utils {
     return spriteObjects;
   }
 
-  static String checkRegex(String testString) {
-    RegExp regExpText = new RegExp(r"^text");
-    if (regExpText.hasMatch(testString)) {
-      return 'text';
+  static List<CustomAction> createActions(YamlList objectsAction, Node object, NodeBook rootNode) {
+    List<CustomAction> spriteActions = new List<CustomAction>();
+    for (var iObjAction in objectsAction) {
+      var objAction = iObjAction['object-action'];
+      switch (objAction['type']) {
+        case Constants.SEQUENCE_ACTION:
+          List<Motion> motions = new List<Motion>();
+          YamlList actions = objAction['actions'];
+          for (var iAction in actions) {
+            var action = iAction['action'];
+            Motion motion = createMotion(action, object, rootNode);
+            motions.add(motion);
+          }
+          Motion sequenceMotion = IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0, motions: motions);
+          spriteActions.add(new CustomAction(objAction['active']['type'], sequenceMotion));
+          break;
+        default:
+      }
     }
+    return spriteActions;
+  }
+
+  static Motion createMotion(YamlMap action, Node object, NodeBook rootNode) {
+    switch (action['type']) {
+      case 'move':
+        var parameters = action['parameters'];
+        return IBTranslation.createMotion(
+          parameters['name'], 
+          parameters['duration'] ?? 1.0,
+          setterFunction: (newPos) => object.position = newPos,
+          startVal: Offset(parameters['start-val']['x'], parameters['start-val']['y']),
+          endVal: Offset(parameters['end-val']['x'], parameters['end-val']['y']),);
+        break;
+      default:
+    }
+
+    return null;
   }
 
   static FontWeight getFontWeight(int weight) {

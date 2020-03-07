@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:spritewidget/spritewidget.dart';
+import 'ActiveAction.dart';
 
 class IBLabel extends Label {
   
@@ -12,7 +13,7 @@ class IBLabel extends Label {
   final double _scale;
   final double _rotation;
   final bool _userInteractionEnabled;
-
+  
   IBLabel(
     this._text, 
     this._textAlign, 
@@ -29,6 +30,18 @@ class IBLabel extends Label {
   }
 
   Offset range;
+  List<ActiveAction> onClickActions = new List<ActiveAction>();
+
+  void addActiveAction(String event, Motion motion) {
+    Type type;
+    switch (event) {
+      case 'onClick':
+        type = PointerDownEvent;
+        onClickActions.add(new ActiveAction(type, motion));
+        break;
+      default:
+    }
+  }
 
   @override
   bool isPointInside(Offset point) {

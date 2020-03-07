@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/painting.dart';
+import 'package:sprite_widget/IBPage.dart';
 import 'package:sprite_widget/NodeBook.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
@@ -22,7 +23,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   var doc;
   bool isLoading = true;
-  Map pages;
+  List<IBPage> pages;
   Map background;
   @override
   void initState() {
@@ -57,7 +58,7 @@ class AppState extends State<App> {
 
 class MyWidget extends StatefulWidget {
   final Map background;
-  final Map pages;
+  final List<IBPage> pages;
   MyWidget(this.background, this.pages);
   @override
   MyWidgetState createState() => new MyWidgetState(background, pages);
@@ -66,7 +67,7 @@ class MyWidget extends StatefulWidget {
 class MyWidgetState extends State<MyWidget> {
 
   final Map background;
-  final Map pages;
+  final List<IBPage> pages;
   NodeBook rootNode;
   var size;
   // SpriteSheet _sprites;
@@ -83,10 +84,9 @@ class MyWidgetState extends State<MyWidget> {
   }
 
   loadBook(BuildContext context) {
-    for (var key in pages.keys) {
-      var page = pages[key];
-      Map<String, dynamic> objects = Utils.createObjectsInPage(page, rootNode);
-      for (var spriteObject in objects.values) {
+    for (var page in pages) {
+      List<Node> objects = Utils.createObjectsInPage(page, rootNode);
+      for (var spriteObject in objects) {
         rootNode.addChild(spriteObject);
       }
     }

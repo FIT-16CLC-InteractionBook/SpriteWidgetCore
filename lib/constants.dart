@@ -46,6 +46,9 @@ const MOTION_LINEAR = "EaseLinear";
 //Object type
 const TEXT = 'text';
 
+//Object Aciton type
+const SEQUENCE_ACTION = 'Sequence Action';
+
 
 
 
