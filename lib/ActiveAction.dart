@@ -1,8 +1,9 @@
 import 'package:spritewidget/spritewidget.dart';
+import 'package:yaml/yaml.dart';
 
 class ActiveAction {
   Type type;
-  Motion motion;
+  YamlMap motion;
 
   ActiveAction(this.type, this.motion);
 }

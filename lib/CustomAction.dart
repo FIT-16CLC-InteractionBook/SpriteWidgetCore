@@ -1,4 +1,5 @@
 import 'package:spritewidget/spritewidget.dart';
+import 'package:yaml/yaml.dart';
 
 class CustomAction {
   String event;

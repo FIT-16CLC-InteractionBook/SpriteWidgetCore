@@ -94,7 +94,7 @@ app:
                     index: 1
                     type: "Sequence Action"
                     active:
-                      type: "auto"
+                      type: "onClick"
                     actions:
                       - action:
                           index: 1
@@ -103,7 +103,7 @@ app:
                             name: EaseIn
                             duration: 1.0
                             start-val:
-                              x: 400.0
+                              x: 100.0
                               y: 400.0
                             end-val:  
                               x: 200.0

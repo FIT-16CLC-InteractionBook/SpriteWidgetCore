@@ -105,17 +105,23 @@ class Utils {
             object['properties']['scale'], 
             object['properties']['rotation'], 
             object['user-interaction']);
-          List<CustomAction> actions = createActions(object['object-actions'], label, rootNode);
-          for (var action in actions) {
-            switch (action.event) {
-              case 'auto':
-                label.motions.run(action.motion);
-                break;
-              case 'onClick':
-                label.addActiveAction('onClick', action.motion);
-                break;
-              default:
+          List autoActions = new List();
+          for (var iObjAction in object['object-actions']) {
+            var objAction = iObjAction['object-action'];
+            if (objAction['active']['type'] == 'auto') {
+              autoActions.add(YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+            } else {
+              switch (objAction['active']['type']) {
+                case 'onClick':
+                  label.addActiveAction('onClick', YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+                  break;
+                default:
+              }
             }
+          }
+          List<CustomAction> autoActionsDestruct = createActions(YamlList.wrap(autoActions), label, rootNode);
+          for (var action in autoActionsDestruct) {
+            label.motions.run(action.motion);
           }
           spriteObjects.add(label);
         break;

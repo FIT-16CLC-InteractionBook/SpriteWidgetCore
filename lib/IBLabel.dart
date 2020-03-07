@@ -1,7 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:sprite_widget/CustomAction.dart';
 import 'package:spritewidget/spritewidget.dart';
+import 'package:yaml/yaml.dart';
 import 'ActiveAction.dart';
+import 'utils.dart';
 
 class IBLabel extends Label {
   
@@ -32,7 +35,7 @@ class IBLabel extends Label {
   Offset range;
   List<ActiveAction> onClickActions = new List<ActiveAction>();
 
-  void addActiveAction(String event, Motion motion) {
+  void addActiveAction(String event, YamlMap motion) {
     Type type;
     switch (event) {
       case 'onClick':
@@ -56,6 +59,10 @@ class IBLabel extends Label {
     if (event.type == PointerDownEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
+      for (var action in onClickActions) {
+        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, parent);
+        motions.run(motionDestruct[0].motion);
+      }
     }
     if (event.type == PointerMoveEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
