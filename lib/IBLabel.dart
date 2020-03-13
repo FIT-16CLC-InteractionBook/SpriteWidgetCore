@@ -38,7 +38,7 @@ class IBLabel extends Label {
   void addActiveAction(String event, YamlMap motion) {
     Type type;
     switch (event) {
-      case 'onClick':
+      case 'on-click':
         type = PointerDownEvent;
         onClickActions.add(new ActiveAction(type, motion));
         break;

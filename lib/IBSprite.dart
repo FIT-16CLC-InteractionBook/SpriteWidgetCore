@@ -1,6 +1,10 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:sprite_widget/CustomAction.dart';
 import 'package:spritewidget/spritewidget.dart';
+import 'package:yaml/yaml.dart';
+import 'ActiveAction.dart';
+import 'utils.dart';
 
 class IBSprite extends Sprite {
 
@@ -23,7 +27,18 @@ class IBSprite extends Sprite {
   }
 
   Offset range;
+  List<ActiveAction> onClickActions = new List<ActiveAction>();
 
+  void addActiveAction(String event, YamlMap motion) {
+    Type type;
+    switch (event) {
+      case 'on-click':
+        type = PointerDownEvent;
+        onClickActions.add(new ActiveAction(type, motion));
+        break;
+      default:
+    }
+  }
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
@@ -37,6 +52,10 @@ class IBSprite extends Sprite {
     if (event.type == PointerDownEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
+      for (var action in onClickActions) {
+        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, parent);
+        motions.run(motionDestruct[0].motion);
+      }
     }
     if (event.type == PointerMoveEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);

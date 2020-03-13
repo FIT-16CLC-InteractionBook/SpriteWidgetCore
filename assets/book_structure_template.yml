@@ -70,31 +70,28 @@ app:
                               x: 300.0
                               y: 300.0
                             end-val:  
-                              x: 300.0
-                              y: 100.0
+                              x: 100.0
+                              y: 30.0
           - object:
               index: 2 #1 -> n
-              type: "text"
+              type: "image"
               coordinates:
-                x: 400.0
-                y: 400.0
-                w: 100.0
-                h: 30.0
-              content: 'caccacac' #text only
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
               properties:
                 opacity: 0.6
                 rotation: 0.0
-                fontSize: 30.0 #text only
-                font-weight: 400 #text only
-                font: CrimsonText #text only
-                color: 0xFF42A5F5 #text only
+                scale: 1.0
                 user-interaction: true
               object-actions:
                 - object-action:
                     index: 1
                     type: "Sequence Action"
                     active:
-                      type: "onClick"
+                      type: "auto"
                     actions:
                       - action:
                           index: 1
@@ -120,6 +117,702 @@ app:
                             end-val:  
                               x: 200.0
                               y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 500.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
+    - page:
+        index: 2 #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              index: 1 #1 -> n
+              type: "text"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 30.0
+              content: 'nhuttm hihi' #text only
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
+                font-weight: 400 #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 0.0
+                              y: 0.0
+                            end-val:  
+                              x: 300.0
+                              y: 300.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedOut
+                            duration: 1.0
+                            start-val:
+                              x: 300.0
+                              y: 300.0
+                            end-val:  
+                              x: 100.0
+                              y: 30.0
+          - object:
+              index: 2 #1 -> n
+              type: "image"
+              coordinates:
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                scale: 1.0
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 100.0
+                              y: 400.0
+                            end-val:  
+                              x: 200.0
+                              y: 200.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedIn
+                            duration: 1.0
+                            start-val:
+                              x: 200.0
+                              y: 200.0
+                            end-val:  
+                              x: 200.0
+                              y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 300.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
+    - page:
+        index: 3 #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              index: 1 #1 -> n
+              type: "text"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 30.0
+              content: 'nhuttm hihi' #text only
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
+                font-weight: 400 #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 0.0
+                              y: 0.0
+                            end-val:  
+                              x: 300.0
+                              y: 300.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedOut
+                            duration: 1.0
+                            start-val:
+                              x: 300.0
+                              y: 300.0
+                            end-val:  
+                              x: 100.0
+                              y: 30.0
+          - object:
+              index: 2 #1 -> n
+              type: "image"
+              coordinates:
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                scale: 1.0
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 100.0
+                              y: 400.0
+                            end-val:  
+                              x: 200.0
+                              y: 200.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedIn
+                            duration: 1.0
+                            start-val:
+                              x: 200.0
+                              y: 200.0
+                            end-val:  
+                              x: 200.0
+                              y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 300.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
+    - page:
+        index: 4 #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              index: 1 #1 -> n
+              type: "text"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 30.0
+              content: 'nhuttm hihi' #text only
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
+                font-weight: 400 #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 0.0
+                              y: 0.0
+                            end-val:  
+                              x: 300.0
+                              y: 300.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedOut
+                            duration: 1.0
+                            start-val:
+                              x: 300.0
+                              y: 300.0
+                            end-val:  
+                              x: 100.0
+                              y: 30.0
+          - object:
+              index: 2 #1 -> n
+              type: "image"
+              coordinates:
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                scale: 1.0
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 100.0
+                              y: 400.0
+                            end-val:  
+                              x: 200.0
+                              y: 200.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedIn
+                            duration: 1.0
+                            start-val:
+                              x: 200.0
+                              y: 200.0
+                            end-val:  
+                              x: 200.0
+                              y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 300.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
+    - page:
+        index: 5 #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              index: 1 #1 -> n
+              type: "text"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 30.0
+              content: 'nhuttm hihi' #text only
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
+                font-weight: 400 #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 0.0
+                              y: 0.0
+                            end-val:  
+                              x: 300.0
+                              y: 300.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedOut
+                            duration: 1.0
+                            start-val:
+                              x: 300.0
+                              y: 300.0
+                            end-val:  
+                              x: 100.0
+                              y: 30.0
+          - object:
+              index: 2 #1 -> n
+              type: "image"
+              coordinates:
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                scale: 1.0
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 100.0
+                              y: 400.0
+                            end-val:  
+                              x: 200.0
+                              y: 200.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedIn
+                            duration: 1.0
+                            start-val:
+                              x: 200.0
+                              y: 200.0
+                            end-val:  
+                              x: 200.0
+                              y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 300.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
+    - page:
+        index: 6 #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              index: 1 #1 -> n
+              type: "text"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 30.0
+              content: 'nhuttm hihi' #text only
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
+                font-weight: 400 #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 0.0
+                              y: 0.0
+                            end-val:  
+                              x: 300.0
+                              y: 300.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedOut
+                            duration: 1.0
+                            start-val:
+                              x: 300.0
+                              y: 300.0
+                            end-val:  
+                              x: 100.0
+                              y: 30.0
+          - object:
+              index: 2 #1 -> n
+              type: "image"
+              coordinates:
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                scale: 1.0
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 100.0
+                              y: 400.0
+                            end-val:  
+                              x: 200.0
+                              y: 200.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedIn
+                            duration: 1.0
+                            start-val:
+                              x: 200.0
+                              y: 200.0
+                            end-val:  
+                              x: 200.0
+                              y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 300.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
+    - page:
+        index: 7 #1 -> n
+        music:
+          available:
+            - name: true
+            - name: false
+          worker-music: "link-music"
+          time: 1
+        objects:
+          - object:
+              index: 1 #1 -> n
+              type: "text"
+              coordinates:
+                x: 0.0
+                y: 0.0
+                w: 100.0
+                h: 30.0
+              content: 'nhuttm hihi' #text only
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                fontSize: 30.0 #text only
+                font-weight: 400 #text only
+                font: CrimsonText #text only
+                color: 0xFF42A5F5 #text only
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 0.0
+                              y: 0.0
+                            end-val:  
+                              x: 300.0
+                              y: 300.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedOut
+                            duration: 1.0
+                            start-val:
+                              x: 300.0
+                              y: 300.0
+                            end-val:  
+                              x: 100.0
+                              y: 30.0
+          - object:
+              index: 2 #1 -> n
+              type: "image"
+              coordinates:
+                x: 300.0
+                y: 300.0
+                w: 300.0
+                h: 300.0
+              original-image: 'assets/background.jpg'
+              properties:
+                opacity: 0.6
+                rotation: 0.0
+                scale: 1.0
+                user-interaction: true
+              object-actions:
+                - object-action:
+                    index: 1
+                    type: "Sequence Action"
+                    active:
+                      type: "auto"
+                    actions:
+                      - action:
+                          index: 1
+                          type: "move"
+                          parameters:
+                            name: EaseIn
+                            duration: 1.0
+                            start-val:
+                              x: 100.0
+                              y: 400.0
+                            end-val:  
+                              x: 200.0
+                              y: 200.0
+                      - action:
+                          index: 2
+                          type: "move"
+                          parameters:
+                            name: BouncedIn
+                            duration: 1.0
+                            start-val:
+                              x: 200.0
+                              y: 200.0
+                            end-val:  
+                              x: 200.0
+                              y: 500.0
+          - object:
+              index: 3 #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 300.0
+                h: 300.0
+              image-list:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg
 ...
 
 

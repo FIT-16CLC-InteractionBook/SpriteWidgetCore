@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 import 'package:sprite_widget/CustomAction.dart';
+import 'package:sprite_widget/PageObject.dart';
+import 'package:sprite_widget/IBGallery.dart';
 import 'package:sprite_widget/IBLabel.dart';
 import 'package:sprite_widget/IBObject.dart';
 import 'package:sprite_widget/IBPage.dart';
+import 'package:sprite_widget/IBSprite.dart';
 import 'package:sprite_widget/NodeBook.dart';
 import 'package:flutter/painting.dart';
 import 'package:spritewidget/spritewidget.dart';
@@ -27,13 +31,8 @@ class Utils {
     String imageLink = doc['image'];
     int color = doc['color'];
     if (imageLink != '') {
-      ByteData data = await rootBundle.load(imageLink);
-      ui.decodeImageFromList(Uint8List.view(data.buffer), (ui.Image img) {
-        return completer.complete(new Map<String,dynamic>()..addAll({'image': img, 'color': color}));
-      });
-
-      Map<String, dynamic> result = await completer.future;
-      return result;
+      ui.Image img = await decodeImage(imageLink);
+      return new Map<String,dynamic>()..addAll({'image': img, 'color': color});
     }
 
     return new Map<String,dynamic>()..addAll({'image': '', 'color': color});
@@ -50,8 +49,16 @@ class Utils {
         switch (object['type']) {
           case Constants.TEXT:
             Map destructText = destructTextObject(object);
-            objects.add(new IBObject('text', destructText));
+            objects.add(new IBObject(Constants.TEXT, destructText));
             break;
+          case Constants.IMAGE:
+            Map destructImage = await destructImageObject(object);
+            objects.add(new IBObject(Constants.IMAGE, destructImage));
+            break;
+          case Constants.GALLERY:
+            Map destructGallery = await destructGalleryObject(object);
+            objects.add(new IBObject(Constants.GALLERY, destructGallery));
+          break;
           default:
         }
       }
@@ -89,13 +96,56 @@ class Utils {
     });
   }
 
-  static List<Node> createObjectsInPage(IBPage page, NodeBook rootNode){
+  static Future<Map<String, dynamic>> destructImageObject(YamlMap object) async{
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'], object['coordinates']['y']);
+    ui.Size size = new ui.Size(object['coordinates']['w'], object['coordinates']['h']);
+    bool userInteraction = object['properties']['user-interaction'] ?? false;
+    
+    Map<String, dynamic> properties = new Map<String,dynamic>()..addAll({
+      'rotation': object['properties']['rotation'] ?? 0.0,
+      'scale': object['properties']['scale'] ?? 1.0,
+      'opacity': object['properties']['opacity'] ?? 1.0,
+    });
+
+    ui.Image imageDecode = await decodeImage(object['original-image']);
+
+    Map<String, dynamic> image = new Map<String,dynamic>()..addAll({'original-image': imageDecode});
+
+    return new Map<String, dynamic>()..addAll({
+      'coordinates': coordinates,
+      'size': size,
+      'original-image': image['original-image'],
+      'user-interaction': userInteraction,
+      'properties': properties,
+      'object-actions': object['object-actions'],
+    });
+  }
+
+  static Future<Map<String, dynamic>> destructGalleryObject(YamlMap object) async{
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'], object['coordinates']['y']);
+    ui.Size size = new ui.Size(object['coordinates']['w'], object['coordinates']['h']);
+
+    var futures = List<Future<Uint8List>>();
+    for (var img in object['image-list']) {
+      futures.add(getUInt8Image(img));
+    }
+
+    List<Uint8List> imageList = await Future.wait(futures);
+
+    return new Map<String, dynamic>()..addAll({
+      'coordinates': coordinates,
+      'size': size,
+      'image-list': imageList,
+    });
+  }
+
+  static List<PageObject> createObjectsInPage(IBPage page, NodeBook rootNode){
     List<IBObject> objects = page.objects;
-    List<Node> spriteObjects = new List<Node>();
+    List<PageObject> spriteObjects = new List<PageObject>();
     for (var iObject in objects) {
       Map object = iObject.object;
       switch (iObject.type) {
-        case 'text':
+        case Constants.TEXT:
           IBLabel label = new IBLabel(
             object['content'],
             ui.TextAlign.start, 
@@ -112,8 +162,8 @@ class Utils {
               autoActions.add(YamlMap.wrap(Map()..addAll({'object-action': objAction})));
             } else {
               switch (objAction['active']['type']) {
-                case 'onClick':
-                  label.addActiveAction('onClick', YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+                case 'on-click':
+                  label.addActiveAction('on-click', YamlMap.wrap(Map()..addAll({'object-action': objAction})));
                   break;
                 default:
               }
@@ -123,7 +173,47 @@ class Utils {
           for (var action in autoActionsDestruct) {
             label.motions.run(action.motion);
           }
-          spriteObjects.add(label);
+          spriteObjects.add(new PageObject('node', node: label));
+        break;
+        case Constants.IMAGE:
+          IBSprite sprite = new IBSprite(
+            object['original-image'], 
+            object['size'], 
+            object['coordinates'], 
+            object['properties']['scale'], 
+            object['properties']['rotation'], 
+            object['properties']['opacity'], 
+            object['user-interaction']);
+          List autoActions = new List();
+          for (var iObjAction in object['object-actions']) {
+            var objAction = iObjAction['object-action'];
+            if (objAction['active']['type'] == 'auto') {
+              autoActions.add(YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+            } else {
+              switch (objAction['active']['type']) {
+                case 'on-click':
+                  sprite.addActiveAction('on-click', YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+                  break;
+                default:
+              }
+            }
+          }
+          List<CustomAction> autoActionsDestruct = createActions(YamlList.wrap(autoActions), sprite, rootNode);
+          for (var action in autoActionsDestruct) {
+            sprite.motions.run(action.motion);
+          }
+          spriteObjects.add(new PageObject('node', node: sprite));
+        break;
+        case Constants.GALLERY:
+          Offset newCoordinates = rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(Offset(object['size'].width, object['size'].height));
+          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+          IBGallery galleryWidget = new IBGallery(newSize, object['image-list']);
+          Widget gallery = new Positioned(top: newCoordinates.dy, left: newCoordinates.dx, child: Container(
+               height: newSize.height,
+               width: newSize.width,
+               child: galleryWidget,));
+          spriteObjects.add(new PageObject('widget', widget: gallery));
         break;
         default:
       }
@@ -179,5 +269,20 @@ class Utils {
       default:
         return FontWeight.w400;
     }
+  }
+
+  static Future<ui.Image> decodeImage(String imgSrc) async {
+      var completer = new Completer<ui.Image>();
+      ByteData data = await rootBundle.load(imgSrc);
+      ui.decodeImageFromList(Uint8List.view(data.buffer), (ui.Image img) {
+        return completer.complete(img);
+      });
+
+      return completer.future;
+  }
+
+  static Future<Uint8List> getUInt8Image(String imgSrc) async {
+      ByteData data = await rootBundle.load(imgSrc);
+      return Uint8List.view(data.buffer);
   }
 }

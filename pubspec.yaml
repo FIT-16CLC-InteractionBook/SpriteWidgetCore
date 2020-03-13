@@ -49,6 +49,10 @@ flutter:
     - assets/particle-4.png
     - assets/particle-5.png
     - assets/background.jpg
+    - assets/image1.jpg
+    - assets/image2.jpg
+    - assets/image3.jpg
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

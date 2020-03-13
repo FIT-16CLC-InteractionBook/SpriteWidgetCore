@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/painting.dart';
+import 'package:sprite_widget/PageObject.dart';
 import 'package:sprite_widget/IBPage.dart';
 import 'package:sprite_widget/NodeBook.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
 import 'utils.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(App());
 }
 
 class App extends StatefulWidget {
-   @override
-   AppState createState() => new AppState();
+  @override
+  AppState createState() => new AppState();
 }
 
 class AppState extends State<App> {
@@ -33,7 +35,8 @@ class AppState extends State<App> {
   }
 
   initialData() async {
-    String fileText = await rootBundle.loadString('assets/book_structure_template.yml');
+    String fileText =
+        await rootBundle.loadString('assets/book_structure_template.yml');
     doc = loadYaml(fileText);
     Map main = Utils.loadMainData(doc['app']);
 
@@ -46,13 +49,15 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? MaterialApp(
-      title: 'Title',
-      home: new Container(child: Text('123')),
-    ) : MaterialApp(
-      title: 'Title',
-      home: MyWidget(background, pages),
-    );
+    return isLoading
+        ? MaterialApp(
+            title: 'Title',
+            home: new Container(child: Text('123')),
+          )
+        : MaterialApp(
+            title: 'Title',
+            home: MyWidget(background, pages),
+          );
   }
 }
 
@@ -65,43 +70,66 @@ class MyWidget extends StatefulWidget {
 }
 
 class MyWidgetState extends State<MyWidget> {
-
   final Map background;
+
   final List<IBPage> pages;
-  NodeBook rootNode;
+  static int totalPages;
+  static List<NodeBook> rootNodes;
+
+  bool loading = true;
+  List<List<Widget>> specificObjects;
+
+  List<List<PageObject>> renderPages;
+  List<int> pageRendered;
   var size;
   // SpriteSheet _sprites;
   // ImageMap _images;
   // List<ParticleSystem> _particles = <ParticleSystem>[];
-  MyWidgetState(this.background, this.pages) : super();
+  MyWidgetState(this.background, this.pages) : super() {
+    totalPages = pages.length;
+  }
 
   @override
   void initState() {
     super.initState();
-    rootNode = new NodeBook(background);
+    rootNodes =
+        List<NodeBook>.generate(totalPages, (i) => new NodeBook(background));
+    specificObjects =
+        List<List<Widget>>.generate(totalPages, (i) => new List<Widget>());
+    renderPages = new List<List<PageObject>>();
+    pageRendered = new List<int>();
     // SchedulerBinding.instance.addPostFrameCallback((_) => loadBook(context));
     WidgetsBinding.instance.addPostFrameCallback((_) => loadBook(context));
   }
 
   loadBook(BuildContext context) {
     for (var page in pages) {
-      List<Node> objects = Utils.createObjectsInPage(page, rootNode);
-      for (var spriteObject in objects) {
-        rootNode.addChild(spriteObject);
-      }
+      List<PageObject> pageObject =
+          Utils.createObjectsInPage(page, rootNodes[0]);
+      renderPages.add(pageObject);
     }
+    for (var spriteObject in renderPages[0]) {
+      if (spriteObject.type == 'node')
+        rootNodes[0].addChild(spriteObject.node);
+      else
+        specificObjects[0].add(spriteObject.widget);
+    }
+    pageRendered.add(0);
+    setState(() {
+      loading = false;
+    });
     // Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
     // IBLabel label = new IBLabel(
     //   "123456",
-    //   TextAlign.start, 
+    //   TextAlign.start,
     //   new TextStyle(fontSize: 30, color: Colors.black),
     //   new Size(100.0, 30.0),
     //   a,
-    //   1.0, 
-    //   0.0, 
+    //   1.0,
+    //   0.0,
     //   true);
     // Motion b = Utils.createMotion(
-    //   "BouncedOut", 
+    //   "BouncedOut",
     //   1.0,
     //   setterFunction: (a) => label.position = a,
     //   startVal: label.position,
@@ -120,9 +148,9 @@ class MyWidgetState extends State<MyWidget> {
     //   'assets/particle-4.png',
     //   'assets/particle-5.png',
     // ]).then((List<ui.Image> images) {
-      // ParticleWorld _particleWorld = new ParticleWorld( _images, rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)), const Size(100.0, 100.0));
-      // ParticlePreset.updateParticles(_particleWorld, ParticlePresetType.Fire);
-      // rootNode.addChild(_particleWorld);
+    // ParticleWorld _particleWorld = new ParticleWorld( _images, rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)), const Size(100.0, 100.0));
+    // ParticlePreset.updateParticles(_particleWorld, ParticlePresetType.Fire);
+    // rootNode.addChild(_particleWorld);
     //  });
     // await _loadAssets(bundle);
     // _addParticles(1.0);
@@ -145,112 +173,132 @@ class MyWidgetState extends State<MyWidget> {
   //   _sprites = new SpriteSheet(_images['assets/weathersprites.png'], json);
   // }
 
-  // Completer<ImageInfo> completer = Completer();
-  // Future<ui.Image> getImage(String path) async {
-  //   var img = new NetworkImage(path);
-  //   img.resolve(ImageConfiguration()).addListener(ImageStreamListener((ImageInfo info,bool _){
-  //     completer.complete(info);
-  //   }));
-  //   ImageInfo imageInfo = await completer.future;
-  //   return imageInfo.image;
-  // }
-  
-  
+  addObjectToPage(index) {
+    var pageObjects = renderPages[index];
+    for (var spriteObject in pageObjects) {
+      if (spriteObject.type == 'node')
+        rootNodes[index].addChild(spriteObject.node);
+      else
+        specificObjects[index].add(spriteObject.widget);
+    }
+    pageRendered.add(index);
+    setState(() {
+      loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Align(
-        alignment: Alignment.center,
-        child: AspectRatio(
-          aspectRatio: 4/3,
-          child: new SpriteWidget(rootNode),),
-        ) ;
+    return loading
+        ? Stack(
+            children: List<Widget>.generate(
+                totalPages,
+                (i) => new Align(
+                      alignment: Alignment.center,
+                      child: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: Stack(
+                            children: <Widget>[
+                              new SpriteWidget(rootNodes[i]),
+                              Positioned(
+                                bottom: 0.0,
+                                left: 0.0,
+                                right: 0.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(200, 0, 0, 0),
+                                        Color.fromARGB(0, 0, 0, 0)
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              ...specificObjects[i]
+                                  .map((item) => item)
+                                  .toList(),
+                            ],
+                          )),
+                    )),
+          )
+        : CarouselSlider(
+            aspectRatio: 4 / 3,
+            items: List.generate(
+                totalPages,
+                (i) => new Align(
+                      alignment: Alignment.center,
+                      child: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: Stack(
+                            children: <Widget>[
+                              new SpriteWidget(rootNodes[i]),
+                              Positioned(
+                                bottom: 0.0,
+                                left: 0.0,
+                                right: 0.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(200, 0, 0, 0),
+                                        Color.fromARGB(0, 0, 0, 0)
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              ...specificObjects[i]
+                                  .map((item) => item)
+                                  .toList(),
+                            ],
+                          )),
+                    )),
+            viewportFraction: 1.0,
+            // scrollPhysics: NeverScrollableScrollPhysics(),
+            enableInfiniteScroll: false,
+            onPageChanged: (index) {
+              if (!pageRendered.contains(index)) addObjectToPage(index);
+            },
+          );
   }
 }
 
+// new Align(
+//             alignment: Alignment.center,
+//             child: AspectRatio(
+//               aspectRatio: 4/3,
+//               child:SizedBox(
+//                 child: Stack(children: <Widget>[
+//                 new SpriteWidget(rootNode),
+//                 ...specificObject.map((item) => item).toList(),
+//               ],),
+//               ),),
+//             );
 
-
-// import 'dart:ui' as ui show Image;
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:spritewidget/spritewidget.dart';
-
-// import 'particle_designer.dart';
-
-// void main() {
-//   runApp(new MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: new ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: new MyHomePage(title: 'Particle Designer'),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatefulWidget {
-//   MyHomePage({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   _MyHomePageState createState() => new _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   ImageMap _images;
-//   bool _loaded = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     _images = new ImageMap(rootBundle);
-//     _images.load([
-//       'assets/particle-0.png',
-//       'assets/particle-1.png',
-//       'assets/particle-2.png',
-//       'assets/particle-3.png',
-//       'assets/particle-4.png',
-//       'assets/particle-5.png',
-//     ]).then((List<ui.Image> images) {
-//       setState(() => _loaded = true);
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//       body: _loaded ? new ParticleDesigner(images: _images,) : null,
-//     );
-//   }
-// }
-
-
-// import 'package:flutter/material.dart';
-// import 'IBGallery.dart';
-
-// void main() => runApp(new CarouselDemo());
-
-// class CarouselDemo extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'demo',
-//       home: Scaffold(
-//         appBar: AppBar(title: Text('Carousel slider demo')),
-//         body: Container(
-//           height: 300.0,
-//           width: 300.0,
-//           child: CarouselWithIndicator(Size(300.0, 300.0))) 
-//       ),
-//     );
-//   }
-// }
+// CarouselSlider(
+//             items: List.generate(
+//                 totalPages,
+//                 (i) => new Align(
+//                       alignment: Alignment.center,
+//                       child: AspectRatio(
+//                           aspectRatio: 4 / 3,
+//                           child: Stack(
+//                             children: <Widget>[
+//                               ...specificObjects[i]
+//                                   .map((item) => item)
+//                                   .toList(),
+//                               new SpriteWidget(rootNodes[i]),
+//                             ],
+//                           )),
+//                     )),
+//             viewportFraction: 1.0,
+//             onPageChanged: (index) {
+//               if (!pageRendered.contains(index))
+//                 addObjectToPage(index);
+//             },
+//           );
