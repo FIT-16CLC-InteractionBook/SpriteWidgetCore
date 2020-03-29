@@ -2,7 +2,9 @@ library constants;
 
 //Motion
 const MOTION_TWEEN = "MotionTween";
+const MOTION_TWEEN_ROTATE = "MotionTweenRotate";
 const MOTION_TWEEN_REPEAT = "MotionTweenRepeat";
+const MOTION_REPEAT_FOREVER = "MotionRepeatForever";
 const MOTION_SEQUENCE = "MotionSequence";
 const MOTION_BOUNCED_OUT = "BouncedOut";
 const MOTION_BOUNCED_IN_OUT = "BouncedInOut";
@@ -50,6 +52,8 @@ const GALLERY = 'gallery';
 
 //Object Aciton type
 const SEQUENCE_ACTION = 'Sequence Action';
+const SINGLE_ACTION = 'Single Action';
+
 
 
 

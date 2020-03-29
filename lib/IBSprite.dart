@@ -13,17 +13,16 @@ class IBSprite extends Sprite {
   final Offset _position;
   final double _scale;
   final double _rotation;
-  final double _opacity; 
+  final double _alpha; 
   final bool _userInteractionEnabled; 
 
-  IBSprite(this._image, this._size, this._position, this._scale, this._rotation, this._opacity, this._userInteractionEnabled) : super.fromImage(_image) {
+  IBSprite(this._image, this._size, this._position, this._scale, this._rotation, this._alpha, this._userInteractionEnabled) : super.fromImage(_image) {
     size = _size;
-    position = _position;
+    position = Offset(_position.dx + _size.width / 2, _position.dy + _size.height / 2);
     scale= _scale;
     rotation = _rotation;
-    opacity = _opacity;
+    opacity = _alpha;
     userInteractionEnabled = _userInteractionEnabled;
-    pivot = Offset(0.0, 0.0);
   }
 
   Offset range;
@@ -32,7 +31,7 @@ class IBSprite extends Sprite {
   void addActiveAction(String event, YamlMap motion) {
     Type type;
     switch (event) {
-      case 'on-click':
+      case 'onClick':
         type = PointerDownEvent;
         onClickActions.add(new ActiveAction(type, motion));
         break;
@@ -42,7 +41,8 @@ class IBSprite extends Sprite {
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
-    if (checkPoint.dx >= position.dx && checkPoint.dx <= size.width + position.dx && checkPoint.dy <= size.height + position.dy && checkPoint.dy >= position.dy)
+
+    if (checkPoint.dx >= position.dx - size.width/2 && checkPoint.dx <= size.width + position.dx  - size.width/2 && checkPoint.dy <= size.height + position.dy - size.height / 2 && checkPoint.dy >= position.dy - size.height / 2)
       return true;
 
     return false;
@@ -60,8 +60,8 @@ class IBSprite extends Sprite {
     if (event.type == PointerMoveEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       Offset newPosition = Offset(currentPosition.dx - range.dx, currentPosition.dy - range.dy);
-      if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
-        return false;
+      // if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
+      //   return false;
       this.position = newPosition;
     }
     return true;

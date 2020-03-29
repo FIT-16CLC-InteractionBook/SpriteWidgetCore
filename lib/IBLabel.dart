@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sprite_widget/CustomAction.dart';
@@ -26,7 +28,7 @@ class IBLabel extends Label {
     this._scale, 
     this._rotation, 
     this._userInteractionEnabled) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
-    position = Offset(_position.dx, _position.dy);
+    position = Offset(_position.dx + _size.width / 2, _position.dy);
     scale = _scale;
     rotation = _rotation;
     userInteractionEnabled = _userInteractionEnabled;
@@ -38,7 +40,7 @@ class IBLabel extends Label {
   void addActiveAction(String event, YamlMap motion) {
     Type type;
     switch (event) {
-      case 'on-click':
+      case 'onClick':
         type = PointerDownEvent;
         onClickActions.add(new ActiveAction(type, motion));
         break;
@@ -49,7 +51,7 @@ class IBLabel extends Label {
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
-    if (checkPoint.dx >= position.dx && checkPoint.dx <= _size.width + position.dx && checkPoint.dy <= _size.height + position.dy && checkPoint.dy >= position.dy)
+    if (checkPoint.dx >= position.dx - _size.width/2 && checkPoint.dx <= _size.width + position.dx - _size.width/2 && checkPoint.dy <= _size.height + position.dy && checkPoint.dy >= position.dy)
       return true;
 
     return false;
@@ -67,10 +69,11 @@ class IBLabel extends Label {
     if (event.type == PointerMoveEvent) {
       Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       Offset newPosition = Offset(currentPosition.dx - range.dx, currentPosition.dy - range.dy);
-      if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
-        return false;
+      // if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
+      //   return false;
       this.position = newPosition;
     }
     return true;
   }
+
 }

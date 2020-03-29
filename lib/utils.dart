@@ -26,8 +26,6 @@ class Utils {
   }
 
   static Future<Map<String, dynamic>> loadBackground(YamlMap doc) async {
-    var completer = new Completer<Map<String,dynamic>>();
-
     String imageLink = doc['image'];
     int color = doc['color'];
     if (imageLink != '') {
@@ -69,61 +67,62 @@ class Utils {
   }
 
   static Map<String, dynamic> destructTextObject(YamlMap object){
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'], object['coordinates']['y']);
-    ui.Size size = new ui.Size(object['coordinates']['w'], object['coordinates']['h']);
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
     String content = object['content'];
-    bool userInteraction = object['properties']['user-interaction'] ?? false;
+    bool userInteraction = object['properties']['userInteraction'] ?? false;
     TextStyle textStyle = new TextStyle(
       fontFamily: object['properties']['font'],
-      fontWeight: getFontWeight(object['properties']['font-weight']),
-      fontSize: object['properties']['fontSize'] ?? 14, 
-      color: ui.Color(object['properties']['color'] ?? 0x00000000).withOpacity(object['properties']['opacity'] ?? 1.0),
+      height: 1,
+      fontWeight: getFontWeight(object['properties']['fontWeight']),
+      fontSize: object['properties']['fontSize'].toDouble() ?? 14.0, 
+      color: ui.Color(object['properties']['color'] ?? 0x00000000).withOpacity(object['properties']['alpha']?.toDouble() ?? 1.0),
 
     );
     Map<String, dynamic> properties = new Map<String,dynamic>()..addAll({
-      'rotation': object['properties']['rotation'] ?? 0.0,
+      'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
       'text-style': textStyle,
-      'scale': object['properties']['scale'] ?? 1.0,
+      'scale': object['properties']['scale']?.toDouble() ?? 1.0,
     });
 
     return new Map<String, dynamic>()..addAll({
       'coordinates': coordinates,
       'size': size,
       'content': content,
-      'user-interaction': userInteraction,
+      'userInteraction': userInteraction,
       'properties': properties,
-      'object-actions': object['object-actions'],
+      'objectActions': object['objectActions'],
     });
   }
 
   static Future<Map<String, dynamic>> destructImageObject(YamlMap object) async{
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'], object['coordinates']['y']);
-    ui.Size size = new ui.Size(object['coordinates']['w'], object['coordinates']['h']);
-    bool userInteraction = object['properties']['user-interaction'] ?? false;
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
+    bool userInteraction = object['properties']['userInteraction'] ?? false;
     
     Map<String, dynamic> properties = new Map<String,dynamic>()..addAll({
-      'rotation': object['properties']['rotation'] ?? 0.0,
-      'scale': object['properties']['scale'] ?? 1.0,
-      'opacity': object['properties']['opacity'] ?? 1.0,
+      'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
+      'scale': object['properties']['scale']?.toDouble() ?? 1.0,
+      'alpha': object['properties']['alpha']?.toDouble() ?? 1.0,
     });
 
-    ui.Image imageDecode = await decodeImage(object['original-image']);
+    ui.Image imageDecode = await decodeImage(object['originalImage']);
 
-    Map<String, dynamic> image = new Map<String,dynamic>()..addAll({'original-image': imageDecode});
+    Map<String, dynamic> image = new Map<String,dynamic>()..addAll({'originalImage': imageDecode});
 
     return new Map<String, dynamic>()..addAll({
       'coordinates': coordinates,
       'size': size,
-      'original-image': image['original-image'],
-      'user-interaction': userInteraction,
+      'originalImage': image['originalImage'],
+      'userInteraction': userInteraction,
       'properties': properties,
-      'object-actions': object['object-actions'],
+      'objectActions': object['objectActions'],
     });
   }
 
   static Future<Map<String, dynamic>> destructGalleryObject(YamlMap object) async{
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'], object['coordinates']['y']);
-    ui.Size size = new ui.Size(object['coordinates']['w'], object['coordinates']['h']);
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
 
     var futures = List<Future<Uint8List>>();
     for (var img in object['image-list']) {
@@ -148,51 +147,53 @@ class Utils {
         case Constants.TEXT:
           IBLabel label = new IBLabel(
             object['content'],
-            ui.TextAlign.start, 
+            ui.TextAlign.center, 
             object['properties']['text-style'],
             object['size'],
             object['coordinates'],
             object['properties']['scale'], 
             object['properties']['rotation'], 
-            object['user-interaction']);
+            object['userInteraction']);
           List autoActions = new List();
-          for (var iObjAction in object['object-actions']) {
-            var objAction = iObjAction['object-action'];
-            if (objAction['active']['type'] == 'auto') {
-              autoActions.add(YamlMap.wrap(Map()..addAll({'object-action': objAction})));
-            } else {
-              switch (objAction['active']['type']) {
-                case 'on-click':
-                  label.addActiveAction('on-click', YamlMap.wrap(Map()..addAll({'object-action': objAction})));
-                  break;
-                default:
+          if (object['objectActions'] != null) {
+            for (var iObjAction in object['objectActions']) {
+              var objAction = iObjAction['objectAction'];
+              if (objAction['active']['type'] == 'auto') {
+                autoActions.add(YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
+              } else {
+                switch (objAction['active']['type']) {
+                  case 'onClick':
+                    label.addActiveAction('onClick', YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
+                    break;
+                  default:
+                }
               }
             }
-          }
-          List<CustomAction> autoActionsDestruct = createActions(YamlList.wrap(autoActions), label, rootNode);
-          for (var action in autoActionsDestruct) {
-            label.motions.run(action.motion);
+            List<CustomAction> autoActionsDestruct = createActions(YamlList.wrap(autoActions), label, rootNode);
+            for (var action in autoActionsDestruct) {
+              label.motions.run(action.motion);
+            }
           }
           spriteObjects.add(new PageObject('node', node: label));
         break;
         case Constants.IMAGE:
           IBSprite sprite = new IBSprite(
-            object['original-image'], 
+            object['originalImage'], 
             object['size'], 
             object['coordinates'], 
             object['properties']['scale'], 
             object['properties']['rotation'], 
-            object['properties']['opacity'], 
-            object['user-interaction']);
+            object['properties']['alpha'], 
+            object['userInteraction']);
           List autoActions = new List();
-          for (var iObjAction in object['object-actions']) {
-            var objAction = iObjAction['object-action'];
+          for (var iObjAction in object['objectActions']) {
+            var objAction = iObjAction['objectAction'];
             if (objAction['active']['type'] == 'auto') {
-              autoActions.add(YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+              autoActions.add(YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
             } else {
               switch (objAction['active']['type']) {
-                case 'on-click':
-                  sprite.addActiveAction('on-click', YamlMap.wrap(Map()..addAll({'object-action': objAction})));
+                case 'onClick':
+                  sprite.addActiveAction('onClick', YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
                   break;
                 default:
               }
@@ -225,7 +226,7 @@ class Utils {
   static List<CustomAction> createActions(YamlList objectsAction, Node object, NodeBook rootNode) {
     List<CustomAction> spriteActions = new List<CustomAction>();
     for (var iObjAction in objectsAction) {
-      var objAction = iObjAction['object-action'];
+      var objAction = iObjAction['objectAction'];
       switch (objAction['type']) {
         case Constants.SEQUENCE_ACTION:
           List<Motion> motions = new List<Motion>();
@@ -237,6 +238,11 @@ class Utils {
           }
           Motion sequenceMotion = IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0, motions: motions);
           spriteActions.add(new CustomAction(objAction['active']['type'], sequenceMotion));
+          break;
+        case Constants.SINGLE_ACTION:
+          YamlMap action = objAction['action'];
+          Motion motion = createMotion(action, object, rootNode);
+          spriteActions.add(new CustomAction(objAction['active']['type'], motion));
           break;
         default:
       }
@@ -250,10 +256,24 @@ class Utils {
         var parameters = action['parameters'];
         return IBTranslation.createMotion(
           parameters['name'], 
-          parameters['duration'] ?? 1.0,
+          parameters['duration'].toDouble() ?? 1.0,
           setterFunction: (newPos) => object.position = newPos,
-          startVal: Offset(parameters['start-val']['x'], parameters['start-val']['y']),
-          endVal: Offset(parameters['end-val']['x'], parameters['end-val']['y']),);
+          startVal: Offset(parameters['startVal']['x'].toDouble(), parameters['startVal']['y'].toDouble()),
+          endVal: Offset(parameters['endVal']['x'].toDouble(), parameters['endVal']['y'].toDouble()),);
+        break;
+      case 'rotation':
+        var parameters = action['parameters'];
+        Motion rotate = IBTranslation.createMotion(
+            Constants.MOTION_TWEEN_ROTATE,
+            parameters['duration']?.toDouble() ?? 1.0,
+            setterFunction: (angle) => object.rotation = angle,
+            rotateStartVal: parameters['startVal']?.toDouble(),
+            rotateEndVal: parameters['endVal']?.toDouble() * parameters['direction']);
+        if (parameters['repeat'] != 0) {
+          return IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0 ,numRepeat: parameters['repeat'], motion: rotate);
+        } else {
+          return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0, motion: rotate);
+        }
         break;
       default:
     }
