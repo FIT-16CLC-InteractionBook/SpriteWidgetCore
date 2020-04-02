@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:sprite_widget/CustomAction.dart';
+import 'package:sprite_widget/IBVideo.dart';
 import 'package:sprite_widget/PageObject.dart';
 import 'package:sprite_widget/IBGallery.dart';
 import 'package:sprite_widget/IBLabel.dart';
@@ -56,6 +57,10 @@ class Utils {
           case Constants.GALLERY:
             Map destructGallery = await destructGalleryObject(object);
             objects.add(new IBObject(Constants.GALLERY, destructGallery));
+          break;
+          case Constants.VIDEO:
+            Map destructVideo = destructVideoObject(object);
+            objects.add(new IBObject(Constants.VIDEO, destructVideo));
           break;
           default:
         }
@@ -138,6 +143,17 @@ class Utils {
     });
   }
 
+  static Map<String, dynamic> destructVideoObject(YamlMap object) {
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
+
+    return new Map<String, dynamic>()..addAll({
+      'coordinates': coordinates,
+      'size': size,
+      'video': object['video'],
+    });
+  }
+
   static List<PageObject> createObjectsInPage(IBPage page, NodeBook rootNode){
     List<IBObject> objects = page.objects;
     List<PageObject> spriteObjects = new List<PageObject>();
@@ -215,6 +231,17 @@ class Utils {
                width: newSize.width,
                child: galleryWidget,));
           spriteObjects.add(new PageObject('widget', widget: gallery));
+        break;
+        case Constants.VIDEO:
+          Offset newCoordinates = rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(Offset(object['size'].width, object['size'].height));
+          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+          IBVideo videoWidget = new IBVideo(newSize, object['video']);
+          Widget video = new Positioned(top: newCoordinates.dy, left: newCoordinates.dx, child: Container(
+               height: newSize.height,
+               width: newSize.width,
+               child: videoWidget,));
+          spriteObjects.add(new PageObject('widget', widget: video));
         break;
         default:
       }

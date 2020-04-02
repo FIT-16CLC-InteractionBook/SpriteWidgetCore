@@ -49,6 +49,7 @@ const MOTION_LINEAR = "EaseLinear";
 const TEXT = 'text';
 const IMAGE = 'image';
 const GALLERY = 'gallery';
+const VIDEO = 'video';
 
 //Object Aciton type
 const SEQUENCE_ACTION = 'Sequence Action';

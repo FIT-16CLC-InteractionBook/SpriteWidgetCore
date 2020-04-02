@@ -68,95 +68,10 @@ app:
                               y: 30
           - object:
               index: 2
-              type: text
-              coordinates:
-                x: 0
-                y: 0
-                w: 105
-                h: 32.009765625
-              content: '5678910'
-              properties:
-                scale: 1
-                alpha: 1
-                rotation: 0
-                fontSize: 30
-                fontWeight: 400
-                font: CrimsonText
-                color: 4278190080
-                userInteraction: true
-              objectActions:
-                - objectAction:
-                    index: 1
-                    type: Sequence Action
-                    active:
-                      type: onClick
-                    actions:
-                      - action:
-                          index: 1
-                          type: move
-                          parameters:
-                            name: EaseIn
-                            duration: 1
-                            startVal:
-                              x: 0
-                              y: 0
-                            endVal:
-                              x: 300
-                              y: 300
-                      - action:
-                          index: 2
-                          type: move
-                          parameters:
-                            name: BouncedOut
-                            duration: 1
-                            startVal:
-                              x: 300
-                              y: 300
-                            endVal:
-                              x: 100
-                              y: 30
-          - object:
-              index: 3
-              type: image
+              type: video
               coordinates:
                 x: 0
                 y: 0
                 w: 300
                 h: 300
-              originalImage: 'assets/1.jpg'
-              properties:
-                alpha: 0.6
-                rotation: 0
-                scale: 1
-                userInteraction: true
-              objectActions:
-                - objectAction:
-                    index: 1
-                    type: Sequence Action
-                    active:
-                      type: onClick
-                    actions:
-                      - action:
-                          index: 1
-                          type: move
-                          parameters:
-                            name: EaseIn
-                            duration: 1
-                            startVal:
-                              x: 100
-                              y: 400
-                            endVal:
-                              x: 200
-                              y: 200
-                      - action:
-                          index: 2
-                          type: move
-                          parameters:
-                            name: BouncedOut
-                            duration: 1
-                            startVal:
-                              x: 200
-                              y: 200
-                            endVal:
-                              x: 200
-                              y: 500
+              video: 'assets/video_sample.mp4'

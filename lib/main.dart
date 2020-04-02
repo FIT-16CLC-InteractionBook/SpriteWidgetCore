@@ -11,11 +11,13 @@ import 'package:yaml/yaml.dart';
 import 'utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([]);
-  runApp(App());
-}
+void main() => runApp(App());
+
+// void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   SystemChrome.setEnabledSystemUIOverlays([]);
+//   runApp(VideoPlayerApp());
+// }
 
 class App extends StatefulWidget {
   @override
