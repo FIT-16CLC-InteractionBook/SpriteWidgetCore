@@ -34,7 +34,6 @@ app:
                 fontWeight: 400
                 font: CrimsonText
                 color: 4282557941
-                userInteraction: true
               objectActions:
                 - objectAction:
                     index: 1

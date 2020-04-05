@@ -17,7 +17,6 @@ class IBLabel extends Label {
   final Offset _position;
   final double _scale;
   final double _rotation;
-  final bool _userInteractionEnabled;
   
   IBLabel(
     this._text, 
@@ -26,15 +25,14 @@ class IBLabel extends Label {
     this._size,
     this._position, 
     this._scale, 
-    this._rotation, 
-    this._userInteractionEnabled) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
+    this._rotation) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
     position = Offset(_position.dx + _size.width / 2, _position.dy);
     scale = _scale;
     rotation = _rotation;
-    userInteractionEnabled = _userInteractionEnabled;
+    userInteractionEnabled = true;
   }
 
-  Offset range;
+  // Offset range;
   List<ActiveAction> onClickActions = new List<ActiveAction>();
 
   void addActiveAction(String event, YamlMap motion) {
@@ -59,20 +57,20 @@ class IBLabel extends Label {
 
   @override handleEvent(SpriteBoxEvent event) {
     if (event.type == PointerDownEvent) {
-      Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
-      this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
+      // Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
+      // this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
       for (var action in onClickActions) {
         List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, parent);
         motions.run(motionDestruct[0].motion);
       }
     }
-    if (event.type == PointerMoveEvent) {
-      Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
-      Offset newPosition = Offset(currentPosition.dx - range.dx, currentPosition.dy - range.dy);
-      // if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
-      //   return false;
-      this.position = newPosition;
-    }
+    // if (event.type == PointerMoveEvent) {
+    //   Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
+    //   Offset newPosition = Offset(currentPosition.dx - range.dx, currentPosition.dy - range.dy);
+    //   // if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
+    //   //   return false;
+    //   this.position = newPosition;
+    // }
     return true;
   }
 

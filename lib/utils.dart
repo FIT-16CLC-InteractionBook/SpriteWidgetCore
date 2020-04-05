@@ -75,7 +75,6 @@ class Utils {
     ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
     ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
     String content = object['content'];
-    bool userInteraction = object['properties']['userInteraction'] ?? false;
     TextStyle textStyle = new TextStyle(
       fontFamily: object['properties']['font'],
       height: 1,
@@ -94,7 +93,6 @@ class Utils {
       'coordinates': coordinates,
       'size': size,
       'content': content,
-      'userInteraction': userInteraction,
       'properties': properties,
       'objectActions': object['objectActions'],
     });
@@ -103,7 +101,6 @@ class Utils {
   static Future<Map<String, dynamic>> destructImageObject(YamlMap object) async{
     ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
     ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
-    bool userInteraction = object['properties']['userInteraction'] ?? false;
     
     Map<String, dynamic> properties = new Map<String,dynamic>()..addAll({
       'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
@@ -119,7 +116,6 @@ class Utils {
       'coordinates': coordinates,
       'size': size,
       'originalImage': image['originalImage'],
-      'userInteraction': userInteraction,
       'properties': properties,
       'objectActions': object['objectActions'],
     });
@@ -168,8 +164,7 @@ class Utils {
             object['size'],
             object['coordinates'],
             object['properties']['scale'], 
-            object['properties']['rotation'], 
-            object['userInteraction']);
+            object['properties']['rotation']);
           List autoActions = new List();
           if (object['objectActions'] != null) {
             for (var iObjAction in object['objectActions']) {
@@ -199,8 +194,7 @@ class Utils {
             object['coordinates'], 
             object['properties']['scale'], 
             object['properties']['rotation'], 
-            object['properties']['alpha'], 
-            object['userInteraction']);
+            object['properties']['alpha']);
           List autoActions = new List();
           for (var iObjAction in object['objectActions']) {
             var objAction = iObjAction['objectAction'];

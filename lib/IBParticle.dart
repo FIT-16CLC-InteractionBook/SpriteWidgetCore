@@ -9,7 +9,6 @@ class ParticleWorld extends NodeWithSize {
   final ImageMap images;
   final Offset _position;
   final Size _size;
-  final bool _userInteractionEnabled;
   // optional
   // TEXTURE & COLORS
   int optRedVar; // 0.0 -> 255.0
@@ -58,7 +57,6 @@ class ParticleWorld extends NodeWithSize {
     this.images, 
     this._position, 
     this._size,
-    this._userInteractionEnabled,
     [ optRedVar, optGreenVar , optBlueVar, optAlphaVar,
      optStartRotation, optStartRotationVar, optEndRotation, optEndRotationVar, optStartSize, optStartSizeVar, optEndSize, optEndSizeVar, optRotateToMovement,
      optPosVar, optTangentialAcceleration, optTangentialAccelerationVar, optRadialAcceleration, optRadialAccelerationVar, optSpeed, optSpeedVar, optDirection, optDirectionVar, optGravity,
@@ -72,7 +70,7 @@ class ParticleWorld extends NodeWithSize {
     );
     particleSystem.position = _position;
     particleSystem.insertionOffset = Offset.zero;
-    userInteractionEnabled = _userInteractionEnabled;
+    userInteractionEnabled = true;
     addChild(particleSystem);
   }
 
