@@ -1,5 +1,10 @@
 library constants;
 
+//Motion behaviour
+const NORMAL = 'normal';
+const REPEAT = 'repeat';
+const REPEAT_FOREVER = 'repeat forever';
+
 //Motion
 const MOTION_TWEEN = "MotionTween";
 const MOTION_TWEEN_ROTATE = "MotionTweenRotate";

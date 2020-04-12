@@ -258,12 +258,14 @@ class Utils {
             motions.add(motion);
           }
           Motion sequenceMotion = IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0, motions: motions);
-          spriteActions.add(new CustomAction(objAction['active']['type'], sequenceMotion));
+          Motion finalMotion = createMotionWithBehaviour(sequenceMotion, objAction['motion'], objAction['repeatTimes'] ?? 0);
+          spriteActions.add(new CustomAction(objAction['active']['type'], finalMotion));
           break;
         case Constants.SINGLE_ACTION:
           YamlMap action = objAction['action'];
           Motion motion = createMotion(action, object, rootNode);
-          spriteActions.add(new CustomAction(objAction['active']['type'], motion));
+          Motion finalMotion = createMotionWithBehaviour(motion, objAction['motion'], objAction['repeatTimes'] ?? 0);
+          spriteActions.add(new CustomAction(objAction['active']['type'], finalMotion));
           break;
         default:
       }
@@ -284,17 +286,13 @@ class Utils {
         break;
       case 'rotation':
         var parameters = action['parameters'];
-        Motion rotate = IBTranslation.createMotion(
+        return IBTranslation.createMotion(
             Constants.MOTION_TWEEN_ROTATE,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (angle) => object.rotation = angle,
             rotateStartVal: parameters['startVal']?.toDouble(),
-            rotateEndVal: parameters['endVal']?.toDouble() * parameters['direction']);
-        if (parameters['repeat'] != 0) {
-          return IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0 ,numRepeat: parameters['repeat'], motion: rotate);
-        } else {
-          return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0, motion: rotate);
-        }
+            rotateEndVal: parameters['endVal'].toDouble() * parameters['direction']);
+        
         break;
       default:
     }
@@ -302,6 +300,20 @@ class Utils {
     return null;
   }
 
+  static Motion createMotionWithBehaviour(Motion motion, String behaviour, int numRepeat) {
+    switch (behaviour) {
+      case Constants.NORMAL:
+        return motion;
+      case Constants.REPEAT:
+        return IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0 ,numRepeat: numRepeat, motion: motion);
+      case Constants.REPEAT_FOREVER:
+        return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0, motion: motion);
+      default:
+    }
+
+    return motion;
+  }
+  
   static FontWeight getFontWeight(int weight) {
     switch (weight) {
       case 400:

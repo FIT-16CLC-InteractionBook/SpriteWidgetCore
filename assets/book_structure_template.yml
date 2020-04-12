@@ -38,6 +38,8 @@ app:
                 - objectAction:
                     index: 1
                     type: Sequence Action
+                    motion: repeat
+                    repeatTimes: 20
                     active:
                       type: onClick
                     actions:
@@ -65,12 +67,3 @@ app:
                             endVal:
                               x: 100
                               y: 30
-          - object:
-              index: 2
-              type: video
-              coordinates:
-                x: 0
-                y: 0
-                w: 300
-                h: 300
-              video: 'assets/video_sample.mp4'
