@@ -4,7 +4,7 @@ import 'package:spritewidget/spritewidget.dart';
 class NodeBook extends NodeWithSize {
 
   final Map background;
-  NodeBook(this.background) : super(const Size(1024.0, 768.0)) {
+  NodeBook(this.background) : super(const Size(800.0, 600.0)) {
     
     // Start by adding a background.
     _background = new GradientNode(

@@ -11,59 +11,18 @@ manifest:
   created-at: 11/10/1998
 app:
   background:
-    image: ''
-    color: 4294967295
+    image: ""
+    color: 0xffffffff
   app-page:
     - page:
-        index: 1
+        index: "1"
         objects:
           - object:
-              index: 1
-              type: text
+              index: "1" #1 -> n
+              type: "video"
               coordinates:
-                x: 436.6598061971407
-                y: 2.21915698725336
-                w: 90
-                h: 32.009765625
-              content: '123456'
-              properties:
-                scale: 1
-                alpha: 0.6
-                rotation: 0
-                fontSize: 30
-                fontWeight: 400
-                font: CrimsonText
-                color: 4282557941
-              objectActions:
-                - objectAction:
-                    index: 1
-                    type: Sequence Action
-                    motion: repeat
-                    repeatTimes: 20
-                    active:
-                      type: onClick
-                    actions:
-                      - action:
-                          index: 1
-                          type: move
-                          parameters:
-                            name: EaseIn
-                            duration: 1
-                            startVal:
-                              x: 0
-                              y: 0
-                            endVal:
-                              x: 300
-                              y: 300
-                      - action:
-                          index: 2
-                          type: move
-                          parameters:
-                            name: BouncedOut
-                            duration: 1
-                            startVal:
-                              x: 300
-                              y: 300
-                            endVal:
-                              x: 100
-                              y: 30
+                x: 0.0
+                y: 0.0
+                w: 280.0
+                h: 157.0
+              originalVideo: assets/test2.mp4

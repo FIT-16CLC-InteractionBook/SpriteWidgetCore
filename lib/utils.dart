@@ -146,7 +146,7 @@ class Utils {
     return new Map<String, dynamic>()..addAll({
       'coordinates': coordinates,
       'size': size,
-      'video': object['video'],
+      'originalVideo': object['originalVideo'],
     });
   }
 
@@ -230,7 +230,7 @@ class Utils {
           Offset newCoordinates = rootNode.convertPointToBoxSpace(object['coordinates']);
           Offset sizeConverted = rootNode.convertPointToBoxSpace(Offset(object['size'].width, object['size'].height));
           Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          IBVideo videoWidget = new IBVideo(newSize, object['video']);
+          IBVideo videoWidget = new IBVideo(newSize, object['originalVideo']);
           Widget video = new Positioned(top: newCoordinates.dy, left: newCoordinates.dx, child: Container(
                height: newSize.height,
                width: newSize.width,
@@ -284,7 +284,7 @@ class Utils {
           startVal: Offset(parameters['startVal']['x'].toDouble(), parameters['startVal']['y'].toDouble()),
           endVal: Offset(parameters['endVal']['x'].toDouble(), parameters['endVal']['y'].toDouble()),);
         break;
-      case 'rotation':
+      case 'rotate':
         var parameters = action['parameters'];
         return IBTranslation.createMotion(
             Constants.MOTION_TWEEN_ROTATE,
