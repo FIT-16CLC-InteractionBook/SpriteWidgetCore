@@ -1,4 +1,4 @@
-# sprite_widget
+# ibcore
 
 A new Flutter project.
 

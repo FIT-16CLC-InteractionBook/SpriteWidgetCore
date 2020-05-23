@@ -25,7 +25,7 @@ class GradientNode extends NodeWithSize {
   @override
   void paint(Canvas canvas) {
     applyTransformForPivot(canvas);
-    var img = background['image'];
+    var img = background['image'] ?? '';
     var color = background['color'];
     if (img != '') {
       paintImage(canvas: canvas, rect: Offset.zero & size, image: img, fit: BoxFit.fill);

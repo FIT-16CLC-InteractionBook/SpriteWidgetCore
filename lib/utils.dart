@@ -1,16 +1,17 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:sprite_widget/CustomAction.dart';
-import 'package:sprite_widget/IBVideo.dart';
-import 'package:sprite_widget/PageObject.dart';
-import 'package:sprite_widget/IBGallery.dart';
-import 'package:sprite_widget/IBLabel.dart';
-import 'package:sprite_widget/IBObject.dart';
-import 'package:sprite_widget/IBPage.dart';
-import 'package:sprite_widget/IBSprite.dart';
-import 'package:sprite_widget/NodeBook.dart';
+import 'package:ibcore/CustomAction.dart';
+import 'package:ibcore/IBVideo.dart';
+import 'package:ibcore/PageObject.dart';
+import 'package:ibcore/IBGallery.dart';
+import 'package:ibcore/IBLabel.dart';
+import 'package:ibcore/IBObject.dart';
+import 'package:ibcore/IBPage.dart';
+import 'package:ibcore/IBSprite.dart';
+import 'package:ibcore/NodeBook.dart';
 import 'package:flutter/painting.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'IBTranslation.dart';
@@ -23,7 +24,8 @@ class Utils {
     YamlMap backgroundProperty = doc['background'];
     YamlList appPage = doc['app-page'];
 
-    return new Map<String,YamlNode>()..addAll({'background': backgroundProperty, 'app-page': appPage});
+    return new Map<String, YamlNode>()
+      ..addAll({'background': backgroundProperty, 'app-page': appPage});
   }
 
   static Future<Map<String, dynamic>> loadBackground(YamlMap doc) async {
@@ -31,10 +33,10 @@ class Utils {
     int color = doc['color'];
     if (imageLink != '') {
       ui.Image img = await decodeImage(imageLink);
-      return new Map<String,dynamic>()..addAll({'image': img, 'color': color});
+      return new Map<String, dynamic>()..addAll({'image': img, 'color': color});
     }
 
-    return new Map<String,dynamic>()..addAll({'image': '', 'color': color});
+    return new Map<String, dynamic>()..addAll({'image': '', 'color': color});
   }
 
   static Future<List<IBPage>> loadPage(YamlList doc) async {
@@ -57,11 +59,11 @@ class Utils {
           case Constants.GALLERY:
             Map destructGallery = await destructGalleryObject(object);
             objects.add(new IBObject(Constants.GALLERY, destructGallery));
-          break;
+            break;
           case Constants.VIDEO:
             Map destructVideo = destructVideoObject(object);
             objects.add(new IBObject(Constants.VIDEO, destructVideo));
-          break;
+            break;
           default:
         }
       }
@@ -71,86 +73,103 @@ class Utils {
     return completer.future;
   }
 
-  static Map<String, dynamic> destructTextObject(YamlMap object){
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
-    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
+  static Map<String, dynamic> destructTextObject(YamlMap object) {
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(),
+        object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
     String content = object['content'];
     TextStyle textStyle = new TextStyle(
       fontFamily: object['properties']['font'],
       height: 1,
       fontWeight: getFontWeight(object['properties']['fontWeight']),
-      fontSize: object['properties']['fontSize'].toDouble() ?? 14.0, 
-      color: ui.Color(object['properties']['color'] ?? 0x00000000).withOpacity(object['properties']['alpha']?.toDouble() ?? 1.0),
-
+      fontSize: object['properties']['fontSize'].toDouble() ?? 14.0,
+      color: ui.Color(object['properties']['color'] ?? 0x00000000)
+          .withOpacity(object['properties']['alpha']?.toDouble() ?? 1.0),
     );
-    Map<String, dynamic> properties = new Map<String,dynamic>()..addAll({
-      'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
-      'text-style': textStyle,
-      'scale': object['properties']['scale']?.toDouble() ?? 1.0,
-    });
+    Map<String, dynamic> properties = new Map<String, dynamic>()
+      ..addAll({
+        'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
+        'text-style': textStyle,
+        'scale': object['properties']['scale']?.toDouble() ?? 1.0,
+      });
 
-    return new Map<String, dynamic>()..addAll({
-      'coordinates': coordinates,
-      'size': size,
-      'content': content,
-      'properties': properties,
-      'objectActions': object['objectActions'],
-    });
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinates,
+        'size': size,
+        'content': content,
+        'properties': properties,
+        'objectActions': object['objectActions'],
+      });
   }
 
-  static Future<Map<String, dynamic>> destructImageObject(YamlMap object) async{
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
-    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
-    
-    Map<String, dynamic> properties = new Map<String,dynamic>()..addAll({
-      'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
-      'scale': object['properties']['scale']?.toDouble() ?? 1.0,
-      'alpha': object['properties']['alpha']?.toDouble() ?? 1.0,
-    });
+  static Future<Map<String, dynamic>> destructImageObject(
+      YamlMap object) async {
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(),
+        object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
+
+    Map<String, dynamic> properties = new Map<String, dynamic>()
+      ..addAll({
+        'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
+        'scale': object['properties']['scale']?.toDouble() ?? 1.0,
+        'alpha': object['properties']['alpha']?.toDouble() ?? 1.0,
+      });
 
     ui.Image imageDecode = await decodeImage(object['originalImage']);
 
-    Map<String, dynamic> image = new Map<String,dynamic>()..addAll({'originalImage': imageDecode});
+    Map<String, dynamic> image = new Map<String, dynamic>()
+      ..addAll({'originalImage': imageDecode});
 
-    return new Map<String, dynamic>()..addAll({
-      'coordinates': coordinates,
-      'size': size,
-      'originalImage': image['originalImage'],
-      'properties': properties,
-      'objectActions': object['objectActions'],
-    });
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinates,
+        'size': size,
+        'originalImage': image['originalImage'],
+        'properties': properties,
+        'objectActions': object['objectActions'],
+      });
   }
 
-  static Future<Map<String, dynamic>> destructGalleryObject(YamlMap object) async{
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
-    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
+  static Future<Map<String, dynamic>> destructGalleryObject(
+      YamlMap object) async {
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(),
+        object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
 
     var futures = List<Future<Uint8List>>();
-    for (var img in object['image-list']) {
-      futures.add(getUInt8Image(img));
+    for (var img in object['imageList']) {
+      futures.add(getUInt8Image(img['image']['originalImage']));
     }
 
     List<Uint8List> imageList = await Future.wait(futures);
 
-    return new Map<String, dynamic>()..addAll({
-      'coordinates': coordinates,
-      'size': size,
-      'image-list': imageList,
-    });
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinates,
+        'size': size,
+        'imageList': imageList,
+      });
   }
 
   static Map<String, dynamic> destructVideoObject(YamlMap object) {
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), object['coordinates']['y'].toDouble());
-    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(), object['coordinates']['h'].toDouble());
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(),
+        object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
 
-    return new Map<String, dynamic>()..addAll({
-      'coordinates': coordinates,
-      'size': size,
-      'originalVideo': object['originalVideo'],
-    });
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinates,
+        'size': size,
+        'originalVideo': object['originalVideo'],
+      });
   }
 
-  static List<PageObject> createObjectsInPage(IBPage page, NodeBook rootNode){
+  static List<PageObject> createObjectsInPage(IBPage page, NodeBook rootNode) {
     List<IBObject> objects = page.objects;
     List<PageObject> spriteObjects = new List<PageObject>();
     for (var iObject in objects) {
@@ -158,85 +177,109 @@ class Utils {
       switch (iObject.type) {
         case Constants.TEXT:
           IBLabel label = new IBLabel(
-            object['content'],
-            ui.TextAlign.center, 
-            object['properties']['text-style'],
-            object['size'],
-            object['coordinates'],
-            object['properties']['scale'], 
-            object['properties']['rotation']);
+              object['content'],
+              ui.TextAlign.center,
+              object['properties']['text-style'],
+              object['size'],
+              object['coordinates'],
+              object['properties']['scale'],
+              object['properties']['rotation']);
           List autoActions = new List();
           if (object['objectActions'] != null) {
             for (var iObjAction in object['objectActions']) {
               var objAction = iObjAction['objectAction'];
               if (objAction['active']['type'] == 'auto') {
-                autoActions.add(YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
+                autoActions.add(
+                    YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
               } else {
                 switch (objAction['active']['type']) {
                   case 'onClick':
-                    label.addActiveAction('onClick', YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
+                    label.addActiveAction(
+                        'onClick',
+                        YamlMap.wrap(
+                            Map()..addAll({'objectAction': objAction})));
                     break;
                   default:
                 }
               }
             }
-            List<CustomAction> autoActionsDestruct = createActions(YamlList.wrap(autoActions), label, rootNode);
+            List<CustomAction> autoActionsDestruct =
+                createActions(YamlList.wrap(autoActions), label, rootNode);
             for (var action in autoActionsDestruct) {
               label.motions.run(action.motion);
             }
           }
           spriteObjects.add(new PageObject('node', node: label));
-        break;
+          break;
         case Constants.IMAGE:
           IBSprite sprite = new IBSprite(
-            object['originalImage'], 
-            object['size'], 
-            object['coordinates'], 
-            object['properties']['scale'], 
-            object['properties']['rotation'], 
-            object['properties']['alpha']);
+              object['originalImage'],
+              object['size'],
+              object['coordinates'],
+              object['properties']['scale'],
+              object['properties']['rotation'],
+              object['properties']['alpha']);
           List autoActions = new List();
-          for (var iObjAction in object['objectActions']) {
-            var objAction = iObjAction['objectAction'];
-            if (objAction['active']['type'] == 'auto') {
-              autoActions.add(YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
-            } else {
-              switch (objAction['active']['type']) {
-                case 'onClick':
-                  sprite.addActiveAction('onClick', YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
-                  break;
-                default:
+          if (object['objectActions'] != null) {
+            for (var iObjAction in object['objectActions']) {
+              var objAction = iObjAction['objectAction'];
+              if (objAction['active']['type'] == 'auto') {
+                autoActions.add(
+                    YamlMap.wrap(Map()..addAll({'objectAction': objAction})));
+              } else {
+                switch (objAction['active']['type']) {
+                  case 'onClick':
+                    sprite.addActiveAction(
+                        'onClick',
+                        YamlMap.wrap(
+                            Map()..addAll({'objectAction': objAction})));
+                    break;
+                  default:
+                }
               }
             }
-          }
-          List<CustomAction> autoActionsDestruct = createActions(YamlList.wrap(autoActions), sprite, rootNode);
-          for (var action in autoActionsDestruct) {
-            sprite.motions.run(action.motion);
+            List<CustomAction> autoActionsDestruct =
+                createActions(YamlList.wrap(autoActions), sprite, rootNode);
+            for (var action in autoActionsDestruct) {
+              sprite.motions.run(action.motion);
+            }
           }
           spriteObjects.add(new PageObject('node', node: sprite));
-        break;
+          break;
         case Constants.GALLERY:
-          Offset newCoordinates = rootNode.convertPointToBoxSpace(object['coordinates']);
-          Offset sizeConverted = rootNode.convertPointToBoxSpace(Offset(object['size'].width, object['size'].height));
+          Offset newCoordinates =
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height));
           Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          IBGallery galleryWidget = new IBGallery(newSize, object['image-list']);
-          Widget gallery = new Positioned(top: newCoordinates.dy, left: newCoordinates.dx, child: Container(
-               height: newSize.height,
-               width: newSize.width,
-               child: galleryWidget,));
+          IBGallery galleryWidget = new IBGallery(newSize, object['imageList']);
+          Widget gallery = new Positioned(
+              top: newCoordinates.dy,
+              left: newCoordinates.dx,
+              child: Container(
+                height: newSize.height,
+                width: newSize.width,
+                child: galleryWidget,
+              ));
           spriteObjects.add(new PageObject('widget', widget: gallery));
-        break;
+          break;
         case Constants.VIDEO:
-          Offset newCoordinates = rootNode.convertPointToBoxSpace(object['coordinates']);
-          Offset sizeConverted = rootNode.convertPointToBoxSpace(Offset(object['size'].width, object['size'].height));
+          Offset newCoordinates =
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height));
           Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
           IBVideo videoWidget = new IBVideo(newSize, object['originalVideo']);
-          Widget video = new Positioned(top: newCoordinates.dy, left: newCoordinates.dx, child: Container(
-               height: newSize.height,
-               width: newSize.width,
-               child: videoWidget,));
+          Widget video = new Positioned(
+              top: newCoordinates.dy,
+              left: newCoordinates.dx,
+              child: Container(
+                height: newSize.height,
+                width: newSize.width,
+                child: videoWidget,
+              ));
           spriteObjects.add(new PageObject('widget', widget: video));
-        break;
+          break;
         default:
       }
     }
@@ -244,7 +287,8 @@ class Utils {
     return spriteObjects;
   }
 
-  static List<CustomAction> createActions(YamlList objectsAction, Node object, NodeBook rootNode) {
+  static List<CustomAction> createActions(
+      YamlList objectsAction, Node object, NodeBook rootNode) {
     List<CustomAction> spriteActions = new List<CustomAction>();
     for (var iObjAction in objectsAction) {
       var objAction = iObjAction['objectAction'];
@@ -257,15 +301,21 @@ class Utils {
             Motion motion = createMotion(action, object, rootNode);
             motions.add(motion);
           }
-          Motion sequenceMotion = IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0, motions: motions);
-          Motion finalMotion = createMotionWithBehaviour(sequenceMotion, objAction['motion'], objAction['repeatTimes'] ?? 0);
-          spriteActions.add(new CustomAction(objAction['active']['type'], finalMotion));
+          Motion sequenceMotion = IBTranslation.createMotion(
+              Constants.MOTION_SEQUENCE, 1.0,
+              motions: motions);
+          Motion finalMotion = createMotionWithBehaviour(sequenceMotion,
+              objAction['motion'], objAction['repeatTimes'] ?? 0);
+          spriteActions
+              .add(new CustomAction(objAction['active']['type'], finalMotion));
           break;
         case Constants.SINGLE_ACTION:
           YamlMap action = objAction['action'];
           Motion motion = createMotion(action, object, rootNode);
-          Motion finalMotion = createMotionWithBehaviour(motion, objAction['motion'], objAction['repeatTimes'] ?? 0);
-          spriteActions.add(new CustomAction(objAction['active']['type'], finalMotion));
+          Motion finalMotion = createMotionWithBehaviour(
+              motion, objAction['motion'], objAction['repeatTimes'] ?? 0);
+          spriteActions
+              .add(new CustomAction(objAction['active']['type'], finalMotion));
           break;
         default:
       }
@@ -278,21 +328,24 @@ class Utils {
       case 'move':
         var parameters = action['parameters'];
         return IBTranslation.createMotion(
-          parameters['name'], 
+          parameters['name'],
           parameters['duration'].toDouble() ?? 1.0,
           setterFunction: (newPos) => object.position = newPos,
-          startVal: Offset(parameters['startVal']['x'].toDouble(), parameters['startVal']['y'].toDouble()),
-          endVal: Offset(parameters['endVal']['x'].toDouble(), parameters['endVal']['y'].toDouble()),);
+          startVal: Offset(parameters['startVal']['x'].toDouble(),
+              parameters['startVal']['y'].toDouble()),
+          endVal: Offset(parameters['endVal']['x'].toDouble(),
+              parameters['endVal']['y'].toDouble()),
+        );
         break;
       case 'rotate':
         var parameters = action['parameters'];
-        return IBTranslation.createMotion(
-            Constants.MOTION_TWEEN_ROTATE,
+        return IBTranslation.createMotion(Constants.MOTION_TWEEN_ROTATE,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (angle) => object.rotation = angle,
             rotateStartVal: parameters['startVal']?.toDouble(),
-            rotateEndVal: parameters['endVal'].toDouble() * parameters['direction']);
-        
+            rotateEndVal:
+                parameters['endVal'].toDouble() * parameters['direction']);
+
         break;
       default:
     }
@@ -300,20 +353,23 @@ class Utils {
     return null;
   }
 
-  static Motion createMotionWithBehaviour(Motion motion, String behaviour, int numRepeat) {
+  static Motion createMotionWithBehaviour(
+      Motion motion, String behaviour, int numRepeat) {
     switch (behaviour) {
       case Constants.NORMAL:
         return motion;
       case Constants.REPEAT:
-        return IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0 ,numRepeat: numRepeat, motion: motion);
+        return IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0,
+            numRepeat: numRepeat, motion: motion);
       case Constants.REPEAT_FOREVER:
-        return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0, motion: motion);
+        return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0,
+            motion: motion);
       default:
     }
 
     return motion;
   }
-  
+
   static FontWeight getFontWeight(int weight) {
     switch (weight) {
       case 400:
@@ -325,17 +381,17 @@ class Utils {
   }
 
   static Future<ui.Image> decodeImage(String imgSrc) async {
-      var completer = new Completer<ui.Image>();
-      ByteData data = await rootBundle.load(imgSrc);
-      ui.decodeImageFromList(Uint8List.view(data.buffer), (ui.Image img) {
-        return completer.complete(img);
-      });
+    var completer = new Completer<ui.Image>();
+    Uint8List data = await File(imgSrc).readAsBytes();
+    ui.decodeImageFromList(data, (ui.Image img) {
+      return completer.complete(img);
+    });
 
-      return completer.future;
+    return completer.future;
   }
 
   static Future<Uint8List> getUInt8Image(String imgSrc) async {
-      ByteData data = await rootBundle.load(imgSrc);
-      return Uint8List.view(data.buffer);
+    Uint8List data = await File(imgSrc).readAsBytes();
+    return data;
   }
 }

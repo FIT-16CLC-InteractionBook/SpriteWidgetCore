@@ -19,10 +19,13 @@ app:
         objects:
           - object:
               index: "1" #1 -> n
-              type: "video"
+              type: "gallery"
               coordinates:
                 x: 0.0
                 y: 0.0
-                w: 280.0
-                h: 157.0
-              originalVideo: assets/test2.mp4
+                w: 800.0
+                h: 100.0
+              imageList:
+                - assets/image1.jpg
+                - assets/image2.jpg
+                - assets/image3.jpg

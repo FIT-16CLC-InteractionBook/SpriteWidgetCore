@@ -39,9 +39,7 @@ class _IBGalleryState extends State<IBGallery> {
       imgList,
       (index, i) {
         return Container(
-          margin: EdgeInsets.all(3.0),
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(3.0)),
             child: Stack(children: <Widget>[
               Image.memory(i,
               fit: BoxFit.cover, width: size.width, height: size.height,),

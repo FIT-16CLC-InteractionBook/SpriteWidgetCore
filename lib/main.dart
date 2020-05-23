@@ -1,17 +1,14 @@
 // import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import 'dart:io';
 import 'package:flutter/painting.dart';
-import 'package:sprite_widget/PageObject.dart';
-import 'package:sprite_widget/IBPage.dart';
-import 'package:sprite_widget/NodeBook.dart';
+import 'package:ibcore/PageObject.dart';
+import 'package:ibcore/IBPage.dart';
+import 'package:ibcore/NodeBook.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
 import 'utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
-void main() => runApp(App());
 
 // void main() {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -19,16 +16,21 @@ void main() => runApp(App());
 //   runApp(VideoPlayerApp());
 // }
 
-class App extends StatefulWidget {
+class IBCore extends StatefulWidget {
+  final File fileUrl;
+  IBCore(this.fileUrl): super();
   @override
-  AppState createState() => new AppState();
+  AppState createState() => new AppState(fileUrl);
 }
 
-class AppState extends State<App> {
+class AppState extends State<IBCore> {
   var doc;
   bool isLoading = true;
   List<IBPage> pages;
   Map background;
+  final File fileUrl;
+  AppState(this.fileUrl) : super();
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +40,7 @@ class AppState extends State<App> {
 
   initialData() async {
     String fileText =
-        await rootBundle.loadString('assets/book_structure_template.yml');
+        await this.fileUrl.readAsString();
     doc = loadYaml(fileText);
     Map main = Utils.loadMainData(doc['app']);
 

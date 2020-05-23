@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:sprite_widget/CustomAction.dart';
+import 'package:ibcore/CustomAction.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
 import 'ActiveAction.dart';

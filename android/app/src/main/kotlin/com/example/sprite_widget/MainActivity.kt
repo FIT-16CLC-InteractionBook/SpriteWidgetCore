@@ -1,4 +1,4 @@
-package com.example.sprite_widget
+package com.example.ibcore
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
