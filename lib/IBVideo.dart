@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:video_player/video_player.dart';
 
 class IBVideo extends StatefulWidget {
   final Size size;
-  final String video;
+  final File video;
 
   IBVideo(this.size, this.video);
 
@@ -18,7 +19,7 @@ class IBVideo extends StatefulWidget {
 class _IBVideoState extends State<IBVideo> {
   _IBVideoState(this.size, this.video);
   final Size size;
-  final String video;
+  final File video;
 
   VideoPlayerController _videoPlayerController1;
   VideoPlayerController _videoPlayerController2;
@@ -27,7 +28,7 @@ class _IBVideoState extends State<IBVideo> {
   @override
   void initState() {
     super.initState();
-    _videoPlayerController1 = VideoPlayerController.asset(video);
+    _videoPlayerController1 = VideoPlayerController.file(video);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController1,
       aspectRatio: 3 / 2,

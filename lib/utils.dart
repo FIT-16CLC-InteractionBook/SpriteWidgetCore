@@ -16,7 +16,6 @@ import 'package:flutter/painting.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'IBTranslation.dart';
 import 'constants.dart' as Constants;
-import 'package:flutter/services.dart';
 import 'package:yaml/yaml.dart';
 
 class Utils {
@@ -271,7 +270,8 @@ class Utils {
           Offset sizeConverted = rootNode.convertPointToBoxSpace(
               Offset(object['size'].width, object['size'].height));
           Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          IBVideo videoWidget = new IBVideo(newSize, object['originalVideo']);
+          File videoFile = File(object['originalVideo']);
+          IBVideo videoWidget = new IBVideo(newSize, videoFile);
           Widget video = new Positioned(
               top: newCoordinates.dy,
               left: newCoordinates.dx,
