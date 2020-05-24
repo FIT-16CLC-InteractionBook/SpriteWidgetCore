@@ -45,7 +45,8 @@ class Utils {
     for (var iPage in doc) {
       var page = iPage['page'];
       List<IBObject> objects = new List<IBObject>();
-      for (var iObject in page['objects']) {
+      if (page['objects'] != null) {
+        for (var iObject in page['objects']) {
         var object = iObject['object'];
         switch (object['type']) {
           case Constants.TEXT:
@@ -66,6 +67,7 @@ class Utils {
             break;
           default:
         }
+      }
       }
       pages.add(new IBPage(page['index'], objects));
     }
@@ -310,7 +312,7 @@ class Utils {
               .add(new CustomAction(objAction['active']['type'], finalMotion));
           break;
         case Constants.SINGLE_ACTION:
-          YamlMap action = objAction['action'];
+          YamlMap action = objAction['actions'][0]['action'];
           Motion motion = createMotion(action, object, rootNode);
           Motion finalMotion = createMotionWithBehaviour(
               motion, objAction['motion'], objAction['repeatTimes'] ?? 0);
