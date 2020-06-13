@@ -193,11 +193,15 @@ class MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print('Rerendering...');
+
     return loading
         ? Stack(
             children: List<Widget>.generate(
                 totalPages,
-                (i) => new Align(
+                (i) {
+                  print('Alo');
+                  return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(
                           aspectRatio: 4 / 3,
@@ -226,13 +230,15 @@ class MyWidgetState extends State<MyWidget> {
                                   .toList(),
                             ],
                           )),
-                    )),
+                    );}),
           )
         : CarouselSlider(
             aspectRatio: 4 / 3,
             items: List.generate(
                 totalPages,
-                (i) => new Align(
+                (i) { 
+                  print('Running...');
+                  return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(
                           aspectRatio: 4 / 3,
@@ -261,7 +267,7 @@ class MyWidgetState extends State<MyWidget> {
                                   .toList(),
                             ],
                           )),
-                    )),
+                    );}),
             viewportFraction: 1.0,
             // scrollPhysics: NeverScrollableScrollPhysics(),
             enableInfiniteScroll: false,
