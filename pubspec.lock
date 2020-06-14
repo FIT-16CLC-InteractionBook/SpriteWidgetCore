@@ -48,7 +48,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "464246b9069ddff3dac6339170387bbb0f8fb7a2"
+      resolved-ref: e69112ebc3a00eba939c203ad6558003be01291e
       url: "git://github.com/huanhiendanh/chewie.git"
     source: git
     version: "0.9.10"
@@ -205,6 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  union:
+    dependency: "direct main"
+    description:
+      name: union
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3+1"
   vector_math:
     dependency: transitive
     description:

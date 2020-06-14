@@ -60,11 +60,7 @@ const VIDEO = 'video';
 const SEQUENCE_ACTION = 'Sequence Action';
 const SINGLE_ACTION = 'Single Action';
 
-
-
-
-
-
+const ENV = String.fromEnvironment('ENV', defaultValue: 'Production');
 
 
 

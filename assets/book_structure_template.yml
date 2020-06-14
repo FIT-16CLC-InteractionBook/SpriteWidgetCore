@@ -15,10 +15,10 @@ app:
     color: 0xffffffff
   app-page:
     - page:
-        index: "1"
+        index: 1
         objects:
           - object:
-              index: "1" #1 -> n
+              index: 1 #1 -> n
               type: "gallery"
               coordinates:
                 x: 0.0

@@ -3,10 +3,12 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:union/union.dart';
+import 'constants.dart' as Constants;
 
 class IBVideo extends StatefulWidget {
   final Size size;
-  final File video;
+  final Union2<File, String> video;
 
   IBVideo(this.size, this.video);
 
@@ -19,7 +21,7 @@ class IBVideo extends StatefulWidget {
 class _IBVideoState extends State<IBVideo> {
   _IBVideoState(this.size, this.video);
   final Size size;
-  final File video;
+  final Union2<File, String> video;
 
   VideoPlayerController _videoPlayerController1;
   VideoPlayerController _videoPlayerController2;
@@ -28,7 +30,11 @@ class _IBVideoState extends State<IBVideo> {
   @override
   void initState() {
     super.initState();
-    _videoPlayerController1 = VideoPlayerController.file(video);
+    if (Constants.ENV == 'DEVELOPMENT') {
+      _videoPlayerController1 = VideoPlayerController.asset(video.value);
+    } else {
+      _videoPlayerController1 = VideoPlayerController.file(video.value);
+    }
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController1,
       aspectRatio: 3 / 2,
@@ -64,7 +70,7 @@ class _IBVideoState extends State<IBVideo> {
     return new Container(
       width: size.width,
       height: size.height,
-      color: Colors.redAccent,
+      color: Colors.black,
       child: Chewie(
         controller: _chewieController,
       ),

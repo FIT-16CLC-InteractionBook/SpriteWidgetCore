@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ibcore/CustomAction.dart';
 import 'package:ibcore/IBVideo.dart';
 import 'package:ibcore/PageObject.dart';
@@ -15,6 +16,7 @@ import 'package:ibcore/NodeBook.dart';
 import 'package:flutter/painting.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'IBTranslation.dart';
+import 'package:union/union.dart';
 import 'constants.dart' as Constants;
 import 'package:yaml/yaml.dart';
 
@@ -270,7 +272,12 @@ class Utils {
           Offset sizeConverted = rootNode.convertPointToBoxSpace(
               Offset(object['size'].width, object['size'].height));
           Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          File videoFile = File(object['originalVideo']);
+          Union2<File, String> videoFile;
+          if (Constants.ENV == 'DEVELOPMENT') {
+            videoFile = object['originalVideo'].asSecond();
+          } else {
+            videoFile = File(object['originalVideo']).asFirst();
+          }
           IBVideo videoWidget = new IBVideo(newSize, videoFile);
           Widget video = new Positioned(
               top: newCoordinates.dy,
@@ -384,7 +391,13 @@ class Utils {
 
   static Future<ui.Image> decodeImage(String imgSrc) async {
     var completer = new Completer<ui.Image>();
-    Uint8List data = await File(imgSrc).readAsBytes();
+    Uint8List data;
+    if (Constants.ENV == 'DEVELOPMENT') {
+      ByteData src = await rootBundle.load(imgSrc);
+      data = Uint8List.view(src.buffer);
+    } else {
+      data = await File(imgSrc).readAsBytes();
+    }
     ui.decodeImageFromList(data, (ui.Image img) {
       return completer.complete(img);
     });
@@ -393,7 +406,13 @@ class Utils {
   }
 
   static Future<Uint8List> getUInt8Image(String imgSrc) async {
-    Uint8List data = await File(imgSrc).readAsBytes();
+    Uint8List data;
+    if (Constants.ENV == 'DEVELOPMENT') {
+      ByteData src = await rootBundle.load(imgSrc);
+      data = Uint8List.view(src.buffer);
+    } else {
+      data = await File(imgSrc).readAsBytes();
+    }
     return data;
   }
 }

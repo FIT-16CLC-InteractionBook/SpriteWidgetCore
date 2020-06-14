@@ -1,12 +1,16 @@
 // import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:ibcore/PageObject.dart';
 import 'package:ibcore/IBPage.dart';
 import 'package:ibcore/NodeBook.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
+import 'package:union/union.dart';
 import 'utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -17,7 +21,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 // }
 
 class IBCore extends StatefulWidget {
-  final File fileUrl;
+  final Union2<File, String> fileUrl;
   final Orientation orientation;
   IBCore(this.fileUrl, this.orientation): super();
   @override
@@ -29,7 +33,7 @@ class AppState extends State<IBCore> {
   bool isLoading = true;
   List<IBPage> pages;
   Map background;
-  final File fileUrl;
+  final Union2<File, String> fileUrl;
   final Orientation orientation;
   AppState(this.fileUrl, this.orientation) : super();
 
@@ -40,9 +44,23 @@ class AppState extends State<IBCore> {
     WidgetsBinding.instance.addPostFrameCallback((_) => initialData());
   }
 
+  Future<String> loadDocString(Union2<File,String> union) async {
+    var completer = new Completer<String>();
+    
+    this.fileUrl.switchCase((File value) async { 
+      String fileText = await value.readAsString();
+      return completer.complete(fileText);
+    }, (String value) async { 
+      String fileText = await rootBundle.loadString(value);
+      return completer.complete(fileText);
+    });
+
+    return completer.future;
+  }
+
   initialData() async {
-    String fileText =
-        await this.fileUrl.readAsString();
+    String fileText = await this.loadDocString(this.fileUrl);
+    print(fileText);
     doc = loadYaml(fileText);
     Map main = Utils.loadMainData(doc['app']);
 
