@@ -18,9 +18,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class IBCore extends StatefulWidget {
   final File fileUrl;
-  IBCore(this.fileUrl): super();
+  final Orientation orientation;
+  IBCore(this.fileUrl, this.orientation): super();
   @override
-  AppState createState() => new AppState(fileUrl);
+  AppState createState() => new AppState(fileUrl, orientation);
 }
 
 class AppState extends State<IBCore> {
@@ -29,7 +30,8 @@ class AppState extends State<IBCore> {
   List<IBPage> pages;
   Map background;
   final File fileUrl;
-  AppState(this.fileUrl) : super();
+  final Orientation orientation;
+  AppState(this.fileUrl, this.orientation) : super();
 
   @override
   void initState() {
