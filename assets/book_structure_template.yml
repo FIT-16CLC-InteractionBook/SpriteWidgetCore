@@ -15,17 +15,56 @@ app:
     color: 0xffffffff
   app-page:
     - page:
-        index: 1
+        index: "1"
         objects:
+          # - object:
+          #     index: "1" #1 -> n
+          #     type: "gallery"
+          #     coordinates:
+          #       x: 0.0
+          #       y: 0.0
+          #       w: 300.0
+          #       h: 400.0
+          #     imageList:
+          #       - image:
+          #           index: "1"
+          #           name: "image1"
+          #           originalImage: assets/image1.jpg
+          #       - image:
+          #           index: "2"
+          #           name: "image2"
+          #           originalImage: assets/image2.jpg
+          #       - image:
+          #           index: "3"
+          #           name: "image3"
+          #           originalImage: assets/image3.jpg
           - object:
-              index: 1 #1 -> n
-              type: "gallery"
-              coordinates:
-                x: 0.0
-                y: 0.0
-                w: 800.0
-                h: 100.0
-              imageList:
-                - assets/image1.jpg
-                - assets/image2.jpg
-                - assets/image3.jpg
+                index: "2" #1 -> n
+                type: "image"
+                name: "demo"
+                coordinates:
+                  x: 300.0
+                  y: 100.0
+                  w: 300.0
+                  h: 300.0
+                originalImage: assets/image3.jpg
+                properties:
+                  alpha: 1
+                  rotation: 0
+                  scale: 1
+                objectActions:
+                  - objectAction:
+                      index: "1"
+                      type: "Single Action"
+                      motion: "repeat forever"
+                      active:
+                        type: auto
+                      actions:
+                        - action:
+                            index: "1"
+                            type: "scale"
+                            parameters:
+                              duration: 0.5
+                              startVal: 0.5
+                              endVal: 2.0
+                

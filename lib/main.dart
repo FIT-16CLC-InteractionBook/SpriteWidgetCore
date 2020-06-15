@@ -60,7 +60,6 @@ class AppState extends State<IBCore> {
 
   initialData() async {
     String fileText = await this.loadDocString(this.fileUrl);
-    print(fileText);
     doc = loadYaml(fileText);
     Map main = Utils.loadMainData(doc['app']);
 
@@ -213,14 +212,11 @@ class MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print('Rerendering...');
-
     return loading
         ? Stack(
             children: List<Widget>.generate(
                 totalPages,
                 (i) {
-                  print('Alo');
                   return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(
@@ -257,7 +253,6 @@ class MyWidgetState extends State<MyWidget> {
             items: List.generate(
                 totalPages,
                 (i) { 
-                  print('Running...');
                   return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(

@@ -345,16 +345,22 @@ class Utils {
           endVal: Offset(parameters['endVal']['x'].toDouble(),
               parameters['endVal']['y'].toDouble()),
         );
-        break;
       case 'rotate':
         var parameters = action['parameters'];
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_ROTATE,
             parameters['duration']?.toDouble() ?? 1.0,
-            setterFunction: (angle) => object.rotation = angle,
-            rotateStartVal: parameters['startVal']?.toDouble(),
-            rotateEndVal:
+            setterFunction: (angle) => object.scale = angle,
+            propStartVal: parameters['startVal']?.toDouble(),
+            propEndVal:
                 parameters['endVal'].toDouble() * parameters['direction']);
-
+      case 'scale':
+        var parameters = action['parameters'];
+        return IBTranslation.createMotion(Constants.MOTION_TWEEN_SCALE,
+            parameters['duration']?.toDouble() ?? 1.0,
+            setterFunction: (scale) => object.scale = scale,
+            propStartVal: parameters['startVal']?.toDouble(),
+            propEndVal:
+                parameters['endVal'].toDouble());
         break;
       default:
     }

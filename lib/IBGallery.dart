@@ -68,7 +68,7 @@ class _IBGalleryState extends State<IBGallery> {
 
     return Column(children: [
       CarouselSlider(
-        height: size.height,
+        height: size.height - 8,
         items: child,
         viewportFraction: 1.0,
         onPageChanged: (index) {
@@ -77,24 +77,24 @@ class _IBGalleryState extends State<IBGallery> {
           });
         },
       ),
-      // Row(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: map<Widget>(
-      //     imgList,
-      //     (index, url) {
-      //       return Container(
-      //         width: 1.0,
-      //         height: 1.0,
-      //         margin: EdgeInsets.symmetric(vertical: 1.0, horizontal: 2.0),
-      //         decoration: BoxDecoration(
-      //             shape: BoxShape.circle,
-      //             color: _current == index
-      //                 ? Color.fromRGBO(0, 0, 0, 0.9)
-      //                 : Color.fromRGBO(0, 0, 0, 0.4)),
-      //       );
-      //     },
-      //   ),
-      // ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: map<Widget>(
+          imgList,
+          (index, url) {
+            return Container(
+              width: 5.0,
+              height: 5.0,
+              margin: EdgeInsets.symmetric(vertical: 1.5, horizontal: 1.5),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _current == index
+                      ? Color.fromRGBO(0, 0, 0, 0.9)
+                      : Color.fromRGBO(0, 0, 0, 0.4)),
+            );
+          },
+        ),
+      ),
     ]);
   }
 }

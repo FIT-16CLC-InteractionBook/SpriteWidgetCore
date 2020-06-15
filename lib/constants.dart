@@ -8,6 +8,7 @@ const REPEAT_FOREVER = 'repeat forever';
 //Motion
 const MOTION_TWEEN = "MotionTween";
 const MOTION_TWEEN_ROTATE = "MotionTweenRotate";
+const MOTION_TWEEN_SCALE= "MotionTweenScale";
 const MOTION_TWEEN_REPEAT = "MotionTweenRepeat";
 const MOTION_REPEAT_FOREVER = "MotionRepeatForever";
 const MOTION_SEQUENCE = "MotionSequence";

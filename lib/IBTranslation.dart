@@ -7,8 +7,8 @@ class IBTranslation {
       {Function(dynamic) setterFunction,
       Offset startVal,
       Offset endVal,
-      double rotateStartVal,
-      double rotateEndVal,
+      double propStartVal,
+      double propEndVal,
       int numRepeat,
       Motion motion,
       List<Motion> motions}) {
@@ -21,10 +21,11 @@ class IBTranslation {
           duration,
         );
       case Constants.MOTION_TWEEN_ROTATE:
+      case Constants.MOTION_TWEEN_SCALE:
         return new MotionTween<double>(
           setterFunction,
-          rotateStartVal,
-          rotateEndVal,
+          propStartVal,
+          propEndVal,
           duration,
         );
       case Constants.MOTION_TWEEN_REPEAT:
