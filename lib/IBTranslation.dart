@@ -21,6 +21,7 @@ class IBTranslation {
           duration,
         );
       case Constants.MOTION_TWEEN_ROTATE:
+      case Constants.MOTION_TWEEN_OPACITY:
       case Constants.MOTION_TWEEN_SCALE:
         return new MotionTween<double>(
           setterFunction,

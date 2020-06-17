@@ -332,7 +332,7 @@ class Utils {
     return spriteActions;
   }
 
-  static Motion createMotion(YamlMap action, Node object, NodeBook rootNode) {
+  static Motion createMotion(YamlMap action, dynamic object, NodeBook rootNode) {
     switch (action['type']) {
       case 'move':
         var parameters = action['parameters'];
@@ -358,6 +358,15 @@ class Utils {
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_SCALE,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (scale) => object.scale = scale,
+            propStartVal: parameters['startVal']?.toDouble(),
+            propEndVal:
+                parameters['endVal'].toDouble());
+        break;
+      case 'opacity':
+        var parameters = action['parameters'];
+        return IBTranslation.createMotion(Constants.MOTION_TWEEN_OPACITY,
+            parameters['duration']?.toDouble() ?? 1.0,
+            setterFunction: (opacity) => object.opacity = opacity,
             propStartVal: parameters['startVal']?.toDouble(),
             propEndVal:
                 parameters['endVal'].toDouble());

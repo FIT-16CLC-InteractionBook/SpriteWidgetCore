@@ -60,11 +60,18 @@ app:
                       active:
                         type: auto
                       actions:
+                        # - action:
+                        #     index: "1"
+                        #     type: "scale"
+                        #     parameters:
+                        #       duration: 0.5
+                        #       startVal: 0.5
+                        #       endVal: 2.0
                         - action:
                             index: "1"
-                            type: "scale"
+                            type: "opacity"
                             parameters:
                               duration: 0.5
-                              startVal: 0.5
-                              endVal: 2.0
+                              startVal: 1.0
+                              endVal: 0.4
                 
