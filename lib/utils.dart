@@ -207,7 +207,7 @@ class Utils {
               }
             }
             List<CustomAction> autoActionsDestruct =
-                createActions(YamlList.wrap(autoActions), label, rootNode);
+                createActions(YamlList.wrap(autoActions), label, object['size'] ,rootNode);
             for (var action in autoActionsDestruct) {
               label.motions.run(action.motion);
             }
@@ -242,7 +242,7 @@ class Utils {
               }
             }
             List<CustomAction> autoActionsDestruct =
-                createActions(YamlList.wrap(autoActions), sprite, rootNode);
+                createActions(YamlList.wrap(autoActions), sprite, object['size'], rootNode);
             for (var action in autoActionsDestruct) {
               sprite.motions.run(action.motion);
             }
@@ -297,7 +297,7 @@ class Utils {
   }
 
   static List<CustomAction> createActions(
-      YamlList objectsAction, Node object, NodeBook rootNode) {
+      YamlList objectsAction, Node object, Size size, NodeBook rootNode) {
     List<CustomAction> spriteActions = new List<CustomAction>();
     for (var iObjAction in objectsAction) {
       var objAction = iObjAction['objectAction'];
@@ -307,7 +307,7 @@ class Utils {
           YamlList actions = objAction['actions'];
           for (var iAction in actions) {
             var action = iAction['action'];
-            Motion motion = createMotion(action, object, rootNode);
+            Motion motion = createMotion(action, object, size, rootNode);
             motions.add(motion);
           }
           Motion sequenceMotion = IBTranslation.createMotion(
@@ -320,7 +320,7 @@ class Utils {
           break;
         case Constants.SINGLE_ACTION:
           YamlMap action = objAction['actions'][0]['action'];
-          Motion motion = createMotion(action, object, rootNode);
+          Motion motion = createMotion(action, object, size, rootNode);
           Motion finalMotion = createMotionWithBehaviour(
               motion, objAction['motion'], objAction['repeatTimes'] ?? 0);
           spriteActions
@@ -332,7 +332,7 @@ class Utils {
     return spriteActions;
   }
 
-  static Motion createMotion(YamlMap action, dynamic object, NodeBook rootNode) {
+  static Motion createMotion(YamlMap action, dynamic object, Size size, NodeBook rootNode) {
     switch (action['type']) {
       case 'move':
         var parameters = action['parameters'];
@@ -340,10 +340,10 @@ class Utils {
           parameters['name'],
           parameters['duration'].toDouble() ?? 1.0,
           setterFunction: (newPos) => object.position = newPos,
-          startVal: Offset(parameters['startVal']['x'].toDouble(),
-              parameters['startVal']['y'].toDouble()),
-          endVal: Offset(parameters['endVal']['x'].toDouble(),
-              parameters['endVal']['y'].toDouble()),
+          startVal: Offset((parameters['startVal']['x'] + size.width / 2).toDouble(),
+              (parameters['startVal']['y'] + size.height / 2).toDouble()),
+          endVal: Offset((parameters['endVal']['x'] + size.width / 2).toDouble(),
+              (parameters['endVal']['y'] + size.height / 2).toDouble()),
         );
       case 'rotate':
         var parameters = action['parameters'];

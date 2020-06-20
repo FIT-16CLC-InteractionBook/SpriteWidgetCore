@@ -30,6 +30,7 @@ class IBLabel extends Label {
     scale = _scale;
     rotation = _rotation;
     userInteractionEnabled = true;
+    
   }
 
   // Offset range;
@@ -60,7 +61,7 @@ class IBLabel extends Label {
       // Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       // this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
       for (var action in onClickActions) {
-        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, parent);
+        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, _size, parent);
         motions.run(motionDestruct[0].motion);
       }
     }
