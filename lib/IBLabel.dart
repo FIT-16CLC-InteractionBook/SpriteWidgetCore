@@ -71,7 +71,7 @@ class IBLabel extends Label {
     //   // if (newPosition.dx < 0 || newPosition.dx > 1024.0 - _size.width || newPosition.dy < 0 || newPosition.dy > 768.0 - _size.height)
     //   //   return false;
     //   this.position = newPosition;
-    // } 
+    // }
     return true;
   }
 
