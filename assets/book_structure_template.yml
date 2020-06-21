@@ -40,22 +40,25 @@ app:
           #           originalImage: assets/image3.jpg
           - object:
                 index: "2" #1 -> n
-                type: "image"
-                name: "demo"
+                type: text
                 coordinates:
-                  x: 300.0
-                  y: 100.0
-                  w: 300.0
-                  h: 300.0
-                originalImage: assets/image3.jpg
+                  x: 436.6598061971407
+                  y: 2.21915698725336
+                  w: 90
+                  h: 32.009765625
+                content: '123456'
                 properties:
-                  alpha: 1
-                  rotation: 0
                   scale: 1
+                  alpha: 0.6
+                  rotation: 0
+                  fontSize: 30
+                  fontWeight: 400
+                  font: CrimsonText
+                  color: 4282557941
                 objectActions:
                   - objectAction:
                       index: "1"
-                      type: "Single Action"
+                      type: "Sequence Action"
                       motion: "repeat forever"
                       active:
                         type: auto
@@ -69,7 +72,14 @@ app:
                         #       endVal: 2.0
                         - action:
                             index: "1"
-                            type: "opacity"
+                            type: "scale"
+                            parameters:
+                              duration: 0.5
+                              startVal: 1.0
+                              endVal: 0.4
+                        - action:
+                            index: "2"
+                            type: "scale"
                             parameters:
                               duration: 0.5
                               startVal: 1.0
