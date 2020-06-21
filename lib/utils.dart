@@ -307,14 +307,15 @@ class Utils {
     List<CustomAction> spriteActions = new List<CustomAction>();
     for (var iObjAction in objectsAction) {
       var objAction = iObjAction['objectAction'];
+      oldProp.addAll({ 'motion': objAction['motion'], 'repeatTimes': objAction['repeatTimes'] ?? 0 });
       switch (objAction['type']) {
         case Constants.SEQUENCE_ACTION:
           List<Motion> motions = new List<Motion>();
           YamlList actions = objAction['actions'];
           for (var iAction in actions) {
-            var action = iAction['action'];
+            YamlMap action = iAction['action'];
             Motion motion;
-            if (iAction == actions.first) {
+            if (iAction == actions.last) {
               motion = createMotion(action, object, size, rootNode, oldProp: oldProp);
             } else {
               motion = createMotion(action, object, size, rootNode);
@@ -343,7 +344,9 @@ class Utils {
     return spriteActions;
   }
 
+
   static Motion createMotion(YamlMap action, dynamic object, Size size, NodeBook rootNode, { Map<String, dynamic> oldProp }) {
+    int repeatTime = 0;
     switch (action['type']) {
       case 'move':
         var parameters = action['parameters'];
@@ -355,15 +358,30 @@ class Utils {
           parameters['name'],
           parameters['duration'].toDouble() ?? 1.0,
           setterFunction: (newPos) {
-            if (oldProp != null && newPos == startVal) {
-              object.position = oldProp['position'];
-              object.rotation = oldProp['rotation'];
-              object.scale = oldProp['scale'];
-              if (object.runtimeType != IBLabel) {
-                object.opacity = oldProp['opacity'];
+            object.position = newPos;
+            if (oldProp != null && newPos == endVal) {
+              switch (oldProp['motion']) {
+                case Constants.REPEAT:
+                  repeatTime++;
+                  if (repeatTime == oldProp['repeatTimes']) return;
+                  object.position = oldProp['position'];
+                  object.rotation = oldProp['rotation'];
+                  object.scale = oldProp['scale'];
+                  if (object.runtimeType != IBLabel) {
+                    object.opacity = oldProp['opacity'];
+                  }
+                  break;
+                case Constants.REPEAT_FOREVER:
+                  object.position = oldProp['position'];
+                  object.rotation = oldProp['rotation'];
+                  object.scale = oldProp['scale'];
+                  if (object.runtimeType != IBLabel) {
+                    object.opacity = oldProp['opacity'];
+                  }
+                  break;
+                default:
               }
             }
-            object.position = newPos;
           },
           startVal: startVal,
           endVal: endVal,
@@ -375,15 +393,30 @@ class Utils {
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_ROTATE,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (angle) {
-              if (oldProp != null && angle == startVal) {
-                object.position = oldProp['position'];
-                object.rotation = oldProp['rotation'];
-                object.scale = oldProp['scale'];
-                if (object.runtimeType != IBLabel) {
-                  object.opacity = oldProp['opacity'];
+              object.rotation = angle;
+              if (oldProp != null && angle == endVal) {
+                switch (oldProp['motion']) {
+                  case Constants.REPEAT:
+                    repeatTime++;
+                    if (repeatTime == oldProp['repeatTimes']) return;
+                    object.position = oldProp['position'];
+                    object.rotation = oldProp['rotation'];
+                    object.scale = oldProp['scale'];
+                    if (object.runtimeType != IBLabel) {
+                      object.opacity = oldProp['opacity'];
+                    }
+                    break;
+                  case Constants.REPEAT_FOREVER:
+                    object.position = oldProp['position'];
+                    object.rotation = oldProp['rotation'];
+                    object.scale = oldProp['scale'];
+                    if (object.runtimeType != IBLabel) {
+                      object.opacity = oldProp['opacity'];
+                    }
+                    break;
+                  default:
                 }
               }
-              object.rotation = angle;
             },
             propStartVal: startVal,
             propEndVal: endVal);
@@ -394,15 +427,30 @@ class Utils {
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_SCALE,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (scale) {
-              if (oldProp != null && scale == startVal) {
-                object.position = oldProp['position'];
-                object.rotation = oldProp['rotation'];
-                object.scale = oldProp['scale'];
-                if (object.runtimeType != IBLabel) {
-                  object.opacity = oldProp['opacity'];
+              object.scale = scale;
+              if (oldProp != null && scale == endVal) {
+                switch (oldProp['motion']) {
+                  case Constants.REPEAT:
+                    repeatTime++;
+                    if (repeatTime == oldProp['repeatTimes']) return;
+                    object.position = oldProp['position'];
+                    object.rotation = oldProp['rotation'];
+                    object.scale = oldProp['scale'];
+                    if (object.runtimeType != IBLabel) {
+                      object.opacity = oldProp['opacity'];
+                    }
+                    break;
+                  case Constants.REPEAT_FOREVER:
+                    object.position = oldProp['position'];
+                    object.rotation = oldProp['rotation'];
+                    object.scale = oldProp['scale'];
+                    if (object.runtimeType != IBLabel) {
+                      object.opacity = oldProp['opacity'];
+                    }
+                    break;
+                  default:
                 }
               }
-              object.scale = scale;
             },
             propStartVal: startVal,
             propEndVal: endVal);
@@ -414,15 +462,30 @@ class Utils {
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_OPACITY,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (opacity) {
-              if (oldProp != null && opacity == startVal) {
-                object.position = oldProp['position'];
-                object.rotation = oldProp['rotation'];
-                object.scale = oldProp['scale'];
-                if (object.runtimeType != IBLabel) {
-                  object.opacity = oldProp['opacity'];
+              object.opacity = opacity;
+              if (oldProp != null && opacity == endVal) {
+                switch (oldProp['motion']) {
+                  case Constants.REPEAT:
+                    repeatTime++;
+                    if (repeatTime == oldProp['repeatTimes']) return;
+                    object.position = oldProp['position'];
+                    object.rotation = oldProp['rotation'];
+                    object.scale = oldProp['scale'];
+                    if (object.runtimeType != IBLabel) {
+                      object.opacity = oldProp['opacity'];
+                    }
+                    break;
+                  case Constants.REPEAT_FOREVER:
+                    object.position = oldProp['position'];
+                    object.rotation = oldProp['rotation'];
+                    object.scale = oldProp['scale'];
+                    if (object.runtimeType != IBLabel) {
+                      object.opacity = oldProp['opacity'];
+                    }
+                    break;
+                  default:
                 }
               }
-              object.opacity = opacity;
             },
             propStartVal: startVal,
             propEndVal: endVal);
@@ -439,10 +502,11 @@ class Utils {
       case Constants.NORMAL:
         return motion;
       case Constants.REPEAT:
-        return IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 2.0,
-            numRepeat: numRepeat, motion: motion);
+        Motion repeatMotion = IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0,
+            numRepeat: numRepeat - 1, motion: motion);
+        return IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0, motions: List<Motion>()..add(repeatMotion)..add(motion));
       case Constants.REPEAT_FOREVER:
-        return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 2.0,
+        return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0,
             motion: motion);
       default:
     }
