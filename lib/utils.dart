@@ -336,40 +336,71 @@ class Utils {
     switch (action['type']) {
       case 'move':
         var parameters = action['parameters'];
+        Offset oldPos = object.position;
+        Offset startVal = Offset((parameters['startVal']['x'] + size.width / 2).toDouble(),
+              (parameters['startVal']['y'] + size.height / 2).toDouble());
+        Offset endVal = Offset((parameters['endVal']['x'] + size.width / 2).toDouble(),
+              (parameters['endVal']['y'] + size.height / 2).toDouble());
         return IBTranslation.createMotion(
           parameters['name'],
           parameters['duration'].toDouble() ?? 1.0,
-          setterFunction: (newPos) => object.position = newPos,
-          startVal: Offset((parameters['startVal']['x'] + size.width / 2).toDouble(),
-              (parameters['startVal']['y'] + size.height / 2).toDouble()),
-          endVal: Offset((parameters['endVal']['x'] + size.width / 2).toDouble(),
-              (parameters['endVal']['y'] + size.height / 2).toDouble()),
+          setterFunction: (newPos) {
+            object.position = newPos;
+            if (newPos == endVal) {
+              object.position = oldPos;
+            }
+          },
+          startVal: startVal,
+          endVal: endVal,
         );
       case 'rotate':
         var parameters = action['parameters'];
+        double oldRotate = object.rotation;
+        double startVal = parameters['startVal'].toDouble();
+        double endVal = parameters['endVal'].toDouble() * parameters['direction'];
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_ROTATE,
             parameters['duration']?.toDouble() ?? 1.0,
-            setterFunction: (angle) => object.scale = angle,
-            propStartVal: parameters['startVal']?.toDouble(),
-            propEndVal:
-                parameters['endVal'].toDouble() * parameters['direction']);
+            setterFunction: (angle) {
+              object.rotation = angle;
+              if (angle == endVal) {
+                object.rotation = oldRotate;
+              }
+            },
+            propStartVal: startVal,
+            propEndVal: endVal);
       case 'scale':
         var parameters = action['parameters'];
+        double oldScale = object.scale;
+        double startVal = parameters['startVal'].toDouble();
+        double endVal = parameters['endVal'].toDouble();
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_SCALE,
             parameters['duration']?.toDouble() ?? 1.0,
-            setterFunction: (scale) => object.scale = scale,
-            propStartVal: parameters['startVal']?.toDouble(),
-            propEndVal:
-                parameters['endVal'].toDouble());
+            setterFunction: (scale) {
+              object.scale = scale;
+              if (scale == endVal) {
+                object.scale = oldScale;
+              }
+            },
+            propStartVal: startVal,
+            propEndVal: endVal);
         break;
       case 'opacity':
         var parameters = action['parameters'];
+        double oldOpacity = object.opacity;
+        double startVal = parameters['startVal'].toDouble();
+        double endVal = parameters['endVal'].toDouble();
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_OPACITY,
             parameters['duration']?.toDouble() ?? 1.0,
-            setterFunction: (opacity) => object.opacity = opacity,
-            propStartVal: parameters['startVal']?.toDouble(),
-            propEndVal:
-                parameters['endVal'].toDouble());
+            setterFunction: (opacity) {
+              object.opacity = opacity;
+                print("oldOpacity: $oldOpacity");
+              if (opacity == endVal) {
+                print("run");
+                object.scale = oldOpacity;
+              }
+            },
+            propStartVal: startVal,
+            propEndVal: endVal);
         break;
       default:
     }
