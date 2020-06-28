@@ -5,6 +5,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ibcore/CustomAction.dart';
+import 'package:ibcore/IBKaraokeText.dart';
+import 'package:ibcore/IBSound.dart';
 import 'package:ibcore/IBVideo.dart';
 import 'package:ibcore/PageObject.dart';
 import 'package:ibcore/IBGallery.dart';
@@ -14,11 +16,13 @@ import 'package:ibcore/IBPage.dart';
 import 'package:ibcore/IBSprite.dart';
 import 'package:ibcore/NodeBook.dart';
 import 'package:flutter/painting.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'IBTranslation.dart';
 import 'package:union/union.dart';
 import 'constants.dart' as Constants;
 import 'package:yaml/yaml.dart';
+import 'package:ibcore/KaraokeTextObject.dart';
 
 class Utils {
   static Map<String, YamlNode> loadMainData(YamlMap doc) {
@@ -65,6 +69,12 @@ class Utils {
           case Constants.VIDEO:
             Map destructVideo = destructVideoObject(object);
             objects.add(new IBObject(Constants.VIDEO, destructVideo));
+            break;
+          case Constants.SOUND:
+            Map destructSound = destructSoundObject(object);
+            // Map destructKaraoke = destructKaraokeText(object['objectTexts']);
+            objects.add(new IBObject(Constants.SOUND, destructSound));
+            // objects.add(new IBObject(Constants.KARAOKE, destructKaraoke));
             break;
           default:
         }
@@ -169,6 +179,73 @@ class Utils {
         'coordinates': coordinates,
         'size': size,
         'originalVideo': object['originalVideo'],
+      });
+  }
+
+  static Map<String, dynamic> destructSoundObject(YamlMap object) {
+    ui.Offset coordinatesSound = new ui.Offset(object['coordinates']['x'].toDouble(), 
+        object['coordinates']['y'].toDouble());
+    ui.Size sizeSound = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
+
+    ui.Offset coordinatesKaraoke = new ui.Offset(object['objectTexts']['coordinates']['x'].toDouble(), 
+        object['objectTexts']['coordinates']['y'].toDouble());
+    ui.Size sizeKaraoke = new ui.Size(object['objectTexts']['coordinates']['w'].toDouble(),
+        object['objectTexts']['coordinates']['h'].toDouble());
+    TextStyle textStyle = new TextStyle(
+      fontFamily: object['objectTexts']['properties']['font'],
+      height: 1,
+      fontWeight: getFontWeight(object['objectTexts']['properties']['fontWeight']),
+      fontSize: object['objectTexts']['properties']['fontSize'].toDouble() ?? 14.0,
+      color: ui.Color(object['objectTexts']['properties']['color'] ?? 0x00000000)
+          .withOpacity(object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
+    );
+    var listTexts = object['objectTexts']['listTexts'];
+    List<String> contents = listTexts.map((text) {
+      return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
+    });
+    
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinatesSound,
+        'size': sizeSound,
+        'originalSound': object['originalSound'],
+        'karaokeText': {
+          'coordinates': coordinatesKaraoke,
+          'size': sizeKaraoke,
+          'colorSubtitle': object['colorSubtitle'],
+          'textStyle': textStyle,
+          'contents': contents
+        } 
+      });
+  }
+
+  static Map<String, dynamic> destructKaraokeText(YamlMap object, ) {
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), 
+        object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
+    TextStyle textStyle = new TextStyle(
+      fontFamily: object['properties']['font'],
+      height: 1,
+      fontWeight: getFontWeight(object['properties']['fontWeight']),
+      fontSize: object['properties']['fontSize'].toDouble() ?? 14.0,
+      color: ui.Color(object['properties']['color'] ?? 0x00000000)
+          .withOpacity(object['properties']['alpha']?.toDouble() ?? 1.0),
+    );
+
+    var listTexts = object['listTexts'];
+    List<String> contents = listTexts.map((text) {
+      return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
+    });
+
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinates,
+        'size': size,
+        'colorSubtitle': object['colorSubtitle'],
+        'textStyle': textStyle,
+        'contents': contents
       });
   }
 
@@ -288,6 +365,51 @@ class Utils {
                 child: videoWidget,
               ));
           spriteObjects.add(new PageObject('widget', widget: video));
+          break;
+        case Constants.SOUND:
+          Offset newCoordinatesSound = 
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConvertedSound = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height));
+          Size newSizeSound = new Size(sizeConverted.dx, sizeConverted.dy);
+          String soundFilePath = object['originalSound'];
+          AudioPlayer _player = new AudioPlayer();
+          _player.setFilePath(soundFilePath).catchError((error) {
+            print(error);
+          });
+          Stream<Duration> myStream = _player.getPositionStream();
+          IBSound soundWidget = new IBSound(newSizeSound, _player);
+          Widget sound = new Positioned(
+            top: newCoordinatesSound.dy,
+            left: newCoordinatesSound.dx,
+            child: Container(
+              height: newSizeSound.height,
+              width: newSizeSound.width,
+              child: soundWidget,
+            )
+          );
+          spriteObjects.add(new PageObject('widget', widget: sound));
+
+
+          break;
+        case Constants.KARAOKE:
+          Offset newCoordinates = 
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height)
+          );
+          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+          IBKaraokeText karaokeTextWidget = new IBKaraokeText(newSize);
+          Widget karaokeText = new Positioned(
+            top: newCoordinates.dy,
+            left: newCoordinates.dx,
+            child: Container(
+              height: newSize.height,
+              width: newSize.width,
+              child: karaokeTextWidget
+            )
+          );
+          spriteObjects.add(new PageObject('widget', widget: karaokeText));
           break;
         default:
       }

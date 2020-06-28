@@ -57,6 +57,8 @@ const TEXT = 'text';
 const IMAGE = 'image';
 const GALLERY = 'gallery';
 const VIDEO = 'video';
+const SOUND = 'sound';
+const KARAOKE = 'karaoke';
 
 //Object Aciton type
 const SEQUENCE_ACTION = 'Sequence Action';
