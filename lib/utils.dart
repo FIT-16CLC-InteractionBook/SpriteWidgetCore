@@ -4,21 +4,24 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ibcore/CustomAction.dart';
-import 'package:ibcore/IBVideo.dart';
-import 'package:ibcore/PageObject.dart';
-import 'package:ibcore/IBGallery.dart';
-import 'package:ibcore/IBLabel.dart';
-import 'package:ibcore/IBObject.dart';
-import 'package:ibcore/IBPage.dart';
-import 'package:ibcore/IBSprite.dart';
-import 'package:ibcore/NodeBook.dart';
 import 'package:flutter/painting.dart';
 import 'package:spritewidget/spritewidget.dart';
-import 'IBTranslation.dart';
 import 'package:union/union.dart';
-import 'constants.dart' as Constants;
 import 'package:yaml/yaml.dart';
+
+import 'package:ibcore/constants/constants.dart' as Constants;
+
+import 'package:ibcore/interfaces/CustomAction.dart';
+import 'package:ibcore/interfaces/PageObject.dart';
+import 'package:ibcore/interfaces/IBObject.dart';
+import 'package:ibcore/interfaces/IBPage.dart';
+
+import 'package:ibcore/core/IBVideo.dart';
+import 'package:ibcore/core/IBGallery.dart';
+import 'package:ibcore/core/IBLabel.dart';
+import 'package:ibcore/core/NodeBook.dart';
+import 'package:ibcore/core/IBSprite.dart';
+import 'package:ibcore/core/IBTranslation.dart';
 
 class Utils {
   static Map<String, YamlNode> loadMainData(YamlMap doc) {
@@ -264,7 +267,7 @@ class Utils {
                 width: newSize.width,
                 child: galleryWidget,
               ));
-          spriteObjects.add(new PageObject('widget', widget: gallery));
+          spriteObjects.add(new PageObject('widget', widget: gallery, rawObject: iObject));
           break;
         case Constants.VIDEO:
           Offset newCoordinates =
@@ -287,7 +290,7 @@ class Utils {
                 width: newSize.width,
                 child: videoWidget,
               ));
-          spriteObjects.add(new PageObject('widget', widget: video));
+          spriteObjects.add(new PageObject('widget', widget: video, rawObject: iObject));
           break;
         default:
       }
@@ -549,5 +552,53 @@ class Utils {
       data = await File(imgSrc).readAsBytes();
     }
     return data;
+  }
+
+  static PageObject reCalculateSpecificObjects(IBObject iObject, NodeBook rootNode) {
+      Map object = iObject.object;
+      switch (iObject.type) {
+        case Constants.GALLERY:
+          Offset newCoordinates =
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height));
+          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+          IBGallery galleryWidget = new IBGallery(newSize, object['imageList']);
+          Widget gallery = new Positioned(
+              top: newCoordinates.dy,
+              left: newCoordinates.dx,
+              child: Container(
+                height: newSize.height,
+                width: newSize.width,
+                child: galleryWidget,
+              ));
+          return new PageObject('widget', widget: gallery, rawObject: iObject); 
+        case Constants.VIDEO:
+          Offset newCoordinates =
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height));
+          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+          Union2<File, String> videoFile;
+          if (Constants.ENV == 'DEVELOPMENT') {
+            videoFile = object['originalVideo'].asSecond();
+          } else {
+            videoFile = File(object['originalVideo']).asFirst();
+          }
+          IBVideo videoWidget = new IBVideo(newSize, videoFile);
+          Widget video = new Positioned(
+              top: newCoordinates.dy,
+              left: newCoordinates.dx,
+              child: Container(
+                height: newSize.height,
+                width: newSize.width,
+                child: videoWidget,
+              ));
+          return new PageObject('widget', widget: video, rawObject: iObject);
+          break;
+        default:
+    }
+
+    return new PageObject('none');
   }
 }

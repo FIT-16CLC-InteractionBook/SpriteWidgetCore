@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:union/union.dart';
-import 'constants.dart' as Constants;
+import 'package:ibcore/constants/constants.dart' as Constants;
 
 class IBVideo extends StatefulWidget {
   final Size size;

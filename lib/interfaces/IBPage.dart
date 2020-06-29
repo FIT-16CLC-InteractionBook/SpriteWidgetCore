@@ -1,4 +1,4 @@
-import 'package:ibcore/IBObject.dart';
+import 'package:ibcore/interfaces/IBObject.dart';
 
 class IBPage {
   String index;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spritewidget/spritewidget.dart';
-import 'constants.dart' as Constants;
+import 'package:ibcore/constants/constants.dart' as Constants;
 
 class IBTranslation {
   static Motion createMotion(String motionName, double duration,

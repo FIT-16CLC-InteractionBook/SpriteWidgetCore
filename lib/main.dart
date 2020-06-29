@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:ibcore/PageObject.dart';
-import 'package:ibcore/IBPage.dart';
-import 'package:ibcore/NodeBook.dart';
+import 'package:ibcore/interfaces/PageObject.dart';
+import 'package:ibcore/interfaces/IBPage.dart';
+import 'package:ibcore/core/NodeBook.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
 import 'package:union/union.dart';
-import 'utils.dart';
+import 'package:ibcore/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 // void main() {
@@ -79,7 +79,7 @@ class AppState extends State<IBCore> {
           )
         : MaterialApp(
             title: 'Title',
-            home: MyWidget(background, pages),
+            home: MyWidget(background, pages, orientation),
           );
   }
 }
@@ -87,29 +87,32 @@ class AppState extends State<IBCore> {
 class MyWidget extends StatefulWidget {
   final Map background;
   final List<IBPage> pages;
-  MyWidget(this.background, this.pages);
+  final Orientation orientation;
+  
+  MyWidget(this.background, this.pages, this.orientation);
   @override
-  MyWidgetState createState() => new MyWidgetState(background, pages);
+  MyWidgetState createState() => new MyWidgetState(background, pages, orientation);
 }
 
-class MyWidgetState extends State<MyWidget> {
+class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   final Map background;
-
   final List<IBPage> pages;
+  final Orientation orientation;
+
   static int totalPages;
   static List<NodeBook> rootNodes;
 
+  bool first = true;
   bool loading = true;
-  List<List<Widget>> specificObjects;
 
   List<List<PageObject>> renderPages;
+  List<List<Widget>> specificObjects;
   List<int> pageRendered;
-  var size;
-  // SpriteSheet _sprites;
-  // ImageMap _images;
-  // List<ParticleSystem> _particles = <ParticleSystem>[];
-  MyWidgetState(this.background, this.pages) : super() {
+  Orientation currentOrientation;
+  
+  MyWidgetState(this.background, this.pages, this.orientation) : super() {
     totalPages = pages.length;
+    currentOrientation = orientation;
   }
 
   @override
@@ -121,9 +124,51 @@ class MyWidgetState extends State<MyWidget> {
         List<List<Widget>>.generate(totalPages, (i) => new List<Widget>());
     renderPages = new List<List<PageObject>>();
     pageRendered = new List<int>();
-    // SchedulerBinding.instance.addPostFrameCallback((_) => loadBook(context));
     WidgetsBinding.instance.addPostFrameCallback((_) => loadBook(context));
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // @override
+  // void didChangeMetrics() {
+  //   // if (currentOrientation != orientation) {
+  //   //   print('123');
+  //   // }
+
+  //   if (!loading && !first) {
+  //       var timer = Timer(Duration(seconds: 2), () {
+  //         List<List<PageObject>> newRenderPages = new List<List<PageObject>>();
+  //         List<List<Widget>> newSpecificObjects = List<List<Widget>>.generate(totalPages, (i) => new List<Widget>());
+  //         renderPages.asMap().forEach((index, page) {
+  //           List<PageObject> pageObjects = new List<PageObject>();
+  //           page.forEach((spriteObject) {
+  //             if (spriteObject.type == 'widget') {
+  //               PageObject newSpriteObject = Utils.reCalculateSpecificObjects(spriteObject.rawObject, rootNodes[0]);
+  //               pageObjects.add(newSpriteObject);
+  //               if (specificObjects[index].length != 0) {
+  //                 newSpecificObjects[index].add(newSpriteObject.widget);
+  //               }
+  //             } else {
+  //               pageObjects.add(spriteObject);
+  //             }
+  //           });
+  //           newRenderPages.add(pageObjects);
+  //         });
+
+  //         setState(() {
+  //           renderPages = newRenderPages;
+  //           specificObjects = newSpecificObjects;
+  //         });
+  //       });
+  //   } else {
+  //     first = false;
+  //   }
+  // }
 
   loadBook(BuildContext context) {
     for (var page in pages) {
@@ -141,60 +186,7 @@ class MyWidgetState extends State<MyWidget> {
     setState(() {
       loading = false;
     });
-    // Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
-    // IBLabel label = new IBLabel(
-    //   "123456",
-    //   TextAlign.start,
-    //   new TextStyle(fontSize: 30, color: Colors.black),
-    //   new Size(100.0, 30.0),
-    //   a,
-    //   1.0,
-    //   0.0,
-    //   true);
-    // Motion b = Utils.createMotion(
-    //   "BouncedOut",
-    //   1.0,
-    //   setterFunction: (a) => label.position = a,
-    //   startVal: label.position,
-    //   endVal: rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)),
-    //   numRepeat: 20);
-    // ui.Image image =
-    // Offset a = rootNode.convertPointToNodeSpace(const Offset(0.0,0.0));
-    // ui.Image image = await getImage("https://picsum.photos/250?image=9");
-    // IBSprite sprite = new IBSprite(image, new Size(200.0, 200.0), a, 1, 0, 1, true);
-    // _images = new ImageMap(rootBundle);
-    //  _images.load([
-    //   'assets/particle-0.png',
-    //   'assets/particle-1.png',
-    //   'assets/particle-2.png',
-    //   'assets/particle-3.png',
-    //   'assets/particle-4.png',
-    //   'assets/particle-5.png',
-    // ]).then((List<ui.Image> images) {
-    // ParticleWorld _particleWorld = new ParticleWorld( _images, rootNode.convertPointToNodeSpace(const Offset(300.0,300.0)), const Size(100.0, 100.0));
-    // ParticlePreset.updateParticles(_particleWorld, ParticlePresetType.Fire);
-    // rootNode.addChild(_particleWorld);
-    //  });
-    // await _loadAssets(bundle);
-    // _addParticles(1.0);
-    // _addParticles(1.5);
-    // _addParticles(2.0);
-    // AudioPlayer audioPlayer = AudioPlayer();
-    // int result = await audioPlayer.play("http://www.hochmuth.com/mp3/Haydn_Cello_Concerto_D-1.mp3");
   }
-
-  // Future<Null> _loadAssets(AssetBundle bundle) async {
-  //   _images = new ImageMap(bundle);
-  //   // Load images using an ImageMap
-  //   _images = new ImageMap(bundle);
-  //   await _images.load(<String>[
-  //     'assets/weathersprites.png',
-  //   ]);
-
-  //   // Load the sprite sheet, which contains snowflakes and rain drops.
-  //   String json = await DefaultAssetBundle.of(context).loadString('assets/test.json');
-  //   _sprites = new SpriteSheet(_images['assets/weathersprites.png'], json);
-  // }
 
   addObjectToPage(index) {
     var pageObjects = renderPages[index];
@@ -292,38 +284,3 @@ class MyWidgetState extends State<MyWidget> {
           );
   }
 }
-
-// new Align(
-//             alignment: Alignment.center,
-//             child: AspectRatio(
-//               aspectRatio: 4/3,
-//               child:SizedBox(
-//                 child: Stack(children: <Widget>[
-//                 new SpriteWidget(rootNode),
-//                 ...specificObject.map((item) => item).toList(),
-//               ],),
-//               ),),
-//             );
-
-// CarouselSlider(
-//             items: List.generate(
-//                 totalPages,
-//                 (i) => new Align(
-//                       alignment: Alignment.center,
-//                       child: AspectRatio(
-//                           aspectRatio: 4 / 3,
-//                           child: Stack(
-//                             children: <Widget>[
-//                               ...specificObjects[i]
-//                                   .map((item) => item)
-//                                   .toList(),
-//                               new SpriteWidget(rootNodes[i]),
-//                             ],
-//                           )),
-//                     )),
-//             viewportFraction: 1.0,
-//             onPageChanged: (index) {
-//               if (!pageRendered.contains(index))
-//                 addObjectToPage(index);
-//             },
-//           );
