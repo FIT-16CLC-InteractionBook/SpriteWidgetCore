@@ -183,6 +183,7 @@ class Utils {
   }
 
   static Map<String, dynamic> destructSoundObject(YamlMap object) {
+    print('Destruct Sound Object');
     ui.Offset coordinatesSound = new ui.Offset(object['coordinates']['x'].toDouble(), 
         object['coordinates']['y'].toDouble());
     ui.Size sizeSound = new ui.Size(object['coordinates']['w'].toDouble(),
@@ -201,7 +202,7 @@ class Utils {
           .withOpacity(object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
     );
     var listTexts = object['objectTexts']['listTexts'];
-    List<String> contents = listTexts.map((text) {
+    List<KaraokeText> contents = listTexts.map((text) {
       return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
     });
     
@@ -367,17 +368,18 @@ class Utils {
           spriteObjects.add(new PageObject('widget', widget: video));
           break;
         case Constants.SOUND:
+          print('Implement Sound');
           Offset newCoordinatesSound = 
               rootNode.convertPointToBoxSpace(object['coordinates']);
           Offset sizeConvertedSound = rootNode.convertPointToBoxSpace(
               Offset(object['size'].width, object['size'].height));
-          Size newSizeSound = new Size(sizeConverted.dx, sizeConverted.dy);
+          Size newSizeSound = new Size(sizeConvertedSound.dx, sizeConvertedSound.dy);
           String soundFilePath = object['originalSound'];
           AudioPlayer _player = new AudioPlayer();
           _player.setFilePath(soundFilePath).catchError((error) {
             print(error);
           });
-          Stream<Duration> myStream = _player.getPositionStream();
+          Stream<Duration> soundStream = _player.getPositionStream();
           IBSound soundWidget = new IBSound(newSizeSound, _player);
           Widget sound = new Positioned(
             top: newCoordinatesSound.dy,
@@ -390,27 +392,50 @@ class Utils {
           );
           spriteObjects.add(new PageObject('widget', widget: sound));
 
-
-          break;
-        case Constants.KARAOKE:
-          Offset newCoordinates = 
-              rootNode.convertPointToBoxSpace(object['coordinates']);
-          Offset sizeConverted = rootNode.convertPointToBoxSpace(
-              Offset(object['size'].width, object['size'].height)
+          Offset newCoordinatesKaraokeText = 
+              rootNode.convertPointToBoxSpace(object['karaokeText']['coordinates']);
+          Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
+              Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
           );
-          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          IBKaraokeText karaokeTextWidget = new IBKaraokeText(newSize);
+          Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
+          IBKaraokeText karaokeTextWidget = new IBKaraokeText(
+            newSizeKaraoke, 
+            object['karaokeText']['contents'],
+            object['karaokeText']['colorSubtitle'],
+            object['karaokeText']['textStyle'],
+            soundStream
+          );
           Widget karaokeText = new Positioned(
-            top: newCoordinates.dy,
-            left: newCoordinates.dx,
+            top: newCoordinatesKaraokeText.dy,
+            left: newCoordinatesKaraokeText.dx,
             child: Container(
-              height: newSize.height,
-              width: newSize.width,
+              height: newSizeKaraoke.height,
+              width: newSizeKaraoke.width,
               child: karaokeTextWidget
             )
           );
+
           spriteObjects.add(new PageObject('widget', widget: karaokeText));
           break;
+        // case Constants.KARAOKE:
+        //   Offset newCoordinates = 
+        //       rootNode.convertPointToBoxSpace(object['coordinates']);
+        //   Offset sizeConverted = rootNode.convertPointToBoxSpace(
+        //       Offset(object['size'].width, object['size'].height)
+        //   );
+        //   Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+        //   IBKaraokeText karaokeTextWidget = new IBKaraokeText();
+        //   Widget karaokeText = new Positioned(
+        //     top: newCoordinates.dy,
+        //     left: newCoordinates.dx,
+        //     child: Container(
+        //       height: newSize.height,
+        //       width: newSize.width,
+        //       child: karaokeTextWidget
+        //     )
+        //   );
+        //   spriteObjects.add(new PageObject('widget', widget: karaokeText));
+        //   break;
         default:
       }
     }
