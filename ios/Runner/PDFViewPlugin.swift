@@ -24,11 +24,10 @@ public class PDFViewPlugin: NSObject, FlutterPlatformView {
             (call: FlutterMethodCall, result: FlutterResult) -> Void in
             switch(call.method) {
                 case "changePage":
-                    let currentPage = PDFChildView.rootView.pdfView?.document?.page(at: 1);
-                    PDFChildView.rootView.pdfView?.go(to: currentPage!);
-                    break;
+                    let nextPage = PDFChildView.rootView.pdfViewPublish.pdfView?.document?.page(at: 1);
+                    PDFChildView.rootView.pdfViewPublish.pdfView?.go(to: nextPage!);
             default:
-                return;
+                result(call.method)
             }
         })
     }

@@ -8,6 +8,10 @@
 import SwiftUI
 import PDFKit
 
+class PDFDataObject: ObservableObject {
+    @Published var pdfView: PDFView? = nil;
+}
+
 class FetchApi {
     func getPDF(completion: @escaping (PDFView) -> ()) {
         let documentUrl = URL(string: "https://ncu.rcnpv.com.tw/Uploads/20131231103232738561744.pdf");
@@ -61,6 +65,8 @@ struct PDFKitView: View {
 struct PDFViewController: View {
     @State var pdfView: PDFView? = nil;
     
+    @ObservedObject var pdfViewPublish: PDFDataObject = PDFDataObject();
+    
     @ViewBuilder
     var body: some View {
         if pdfView != nil {
@@ -68,7 +74,8 @@ struct PDFViewController: View {
         } else {
             Text("wait for render pdf").onAppear {
                 FetchApi().getPDF { (pdfViewContent) in
-                    self.pdfView = pdfViewContent
+                    self.pdfView = pdfViewContent;
+                    self.pdfViewPublish.pdfView = pdfViewContent;
                 }
             }
         }
@@ -81,4 +88,10 @@ struct PDFViewController_Previews: PreviewProvider {
     }
 }
 
-var PDFChildView = UIHostingController(rootView: PDFViewController())
+struct DraftView: View {
+    var body: some View {
+        Text("draf view")
+    }
+}
+
+var PDFChildView = UIHostingController(rootView: PDFViewController());

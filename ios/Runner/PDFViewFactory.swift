@@ -12,7 +12,7 @@ public class PDFViewFactory: NSObject, FlutterPlatformViewFactory {
          arguments args: Any?
      ) -> FlutterPlatformView {
          let channel = FlutterMethodChannel(
-             name: "webview" + String(viewId),
+             name: "pdfview" + String(viewId),
              binaryMessenger: controller as! FlutterBinaryMessenger
          )
          return PDFViewPlugin(frame, viewId: viewId, channel: channel, args: args)

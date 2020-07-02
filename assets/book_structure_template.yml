@@ -82,4 +82,72 @@ app:
           #                     duration: 0.5
           #                     startVal: 1.0
           #                     endVal: 0.4
+    - page:
+        index: "2"
+        objects:
+          - object:
+              index: "1" #1 -> n
+              type: "gallery"
+              coordinates:
+                x: 100.0
+                y: 100.0
+                w: 200.0
+                h: 200.0
+              imageList:
+                - image:
+                    index: "1"
+                    name: "image1"
+                    originalImage: assets/image1.jpg
+                - image:
+                    index: "2"
+                    name: "image2"
+                    originalImage: assets/image2.jpg
+                - image:
+                    index: "3"
+                    name: "image3"
+                    originalImage: assets/image3.jpg
+          # - object:
+          #       index: "2" #1 -> n
+          #       type: "image"
+          #       name: "demo"
+          #       coordinates:
+          #         x: 300.0
+          #         y: 100.0
+          #         w: 300.0
+          #         h: 300.0
+          #       originalImage: assets/image3.jpg
+          #       properties:
+          #         alpha: 1
+          #         rotation: 0
+          #         scale: 1
+          #       objectActions:
+          #         - objectAction:
+          #             index: "1"
+          #             type: "Sequence Action"
+          #             motion: "repeat"
+          #             repeatTimes: 5
+          #             active:
+          #               type: auto
+          #             actions:
+          #               # - action:
+          #               #     index: "1"
+          #               #     type: "scale"
+          #               #     parameters:
+          #               #       duration: 0.5
+          #               #       startVal: 0.5
+          #               #       endVal: 2.0
+          #               - action:
+          #                   index: "1"
+          #                   type: "scale"
+          #                   parameters:
+          #                     duration: 0.5
+          #                     startVal: 2.0
+          #                     endVal: 1.0
+          #               - action:
+          #                   index: "2"
+          #                   type: "opacity"
+          #                   parameters:
+          #                     duration: 0.5
+          #                     startVal: 1.0
+          #                     endVal: 0.4
                 
