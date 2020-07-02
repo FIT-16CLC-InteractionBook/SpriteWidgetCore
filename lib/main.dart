@@ -13,7 +13,7 @@ import 'package:yaml/yaml.dart';
 import 'package:union/union.dart';
 import 'package:ibcore/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
+import 'package:PDFViewer/PDFViewer.dart';
 // void main() {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   SystemChrome.setEnabledSystemUIOverlays([]);
@@ -106,6 +106,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   bool first = true;
   bool loading = true;
 
+  PDFViewer pdfViewer = new PDFViewer();
   List<List<PageObject>> renderPages;
   List<List<Widget>> specificObjects;
   List<int> pageRendered;
@@ -252,6 +253,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                           aspectRatio: 4 / 3,
                           child: Stack(
                             children: <Widget>[
+                              pdfViewer,
                               new SpriteWidget(rootNodes[i]),
                               Positioned(
                                 bottom: 0.0,
@@ -280,6 +282,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
             // scrollPhysics: NeverScrollableScrollPhysics(),
             enableInfiniteScroll: false,
             onPageChanged: (index) {
+              pdfViewer.pdfViewController.changePage(index);
               if (!pageRendered.contains(index)) addObjectToPage(index);
             },
           );

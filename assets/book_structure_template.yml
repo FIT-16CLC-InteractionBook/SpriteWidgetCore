@@ -21,10 +21,10 @@ app:
               index: "1" #1 -> n
               type: "gallery"
               coordinates:
-                x: 490.0
-                y: 290.0
-                w: 300.0
-                h: 300.0
+                x: 100.0
+                y: 100.0
+                w: 200.0
+                h: 200.0
               imageList:
                 - image:
                     index: "1"
