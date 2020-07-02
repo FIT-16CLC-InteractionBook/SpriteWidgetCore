@@ -34,7 +34,7 @@ class GradientNode extends NodeWithSize {
       Paint gradientPaint = new Paint()..shader = new LinearGradient(
         begin: FractionalOffset.topLeft,
         end: FractionalOffset.bottomLeft,
-        colors: <Color>[Color(color), Color(color)],
+        colors: <Color>[Color(0x00000000), Color(0x00000000)],
         stops: <double>[0.0, 1.0]
       ).createShader(rect);
 
