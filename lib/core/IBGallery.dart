@@ -14,8 +14,8 @@ class IBGallery extends StatefulWidget {
 }
 
 class _IBGalleryState extends State<IBGallery> {
-  static Size size;
-  static List<Uint8List> imgList;
+  Size size;
+  List<Uint8List> imgList;
 
   _IBGalleryState(_size, _imgList) : super() {
     size = _size;

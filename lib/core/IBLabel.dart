@@ -1,27 +1,34 @@
-import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:ibcore/CustomAction.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
-import 'ActiveAction.dart';
-import 'utils.dart';
+import 'package:ibcore/interfaces/CustomAction.dart';
+import 'package:ibcore/interfaces/ActiveAction.dart';
+import 'package:ibcore/utils.dart';
 
-class IBSprite extends Sprite {
-
-  final ui.Image _image;
+class IBLabel extends Label {
+  
+  final String _text;
+  final TextAlign _textAlign;
+  final TextStyle _textStyle;
   final Size _size;
   final Offset _position;
   final double _scale;
   final double _rotation;
-  final double _alpha; 
-
-  IBSprite(this._image, this._size, this._position, this._scale, this._rotation, this._alpha) : super.fromImage(_image) {
-    size = _size;
-    position = Offset(_position.dx + _size.width / 2, _position.dy + _size.height / 2);
-    scale= _scale;
+  
+  IBLabel(
+    this._text, 
+    this._textAlign, 
+    this._textStyle,
+    this._size,
+    this._position, 
+    this._scale, 
+    this._rotation) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
+    position = Offset(_position.dx + _size.width / 2, _position.dy);
+    scale = _scale;
     rotation = _rotation;
-    opacity = _alpha;
     userInteractionEnabled = true;
+    
   }
 
   // Offset range;
@@ -37,10 +44,11 @@ class IBSprite extends Sprite {
       default:
     }
   }
+
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
-    if (checkPoint.dx >= position.dx - size.width/2 && checkPoint.dx <= size.width + position.dx  - size.width/2 && checkPoint.dy <= size.height + position.dy - size.height / 2 && checkPoint.dy >= position.dy - size.height / 2)
+    if (checkPoint.dx >= position.dx - _size.width/2 && checkPoint.dx <= _size.width + position.dx - _size.width/2 && checkPoint.dy <= _size.height + position.dy && checkPoint.dy >= position.dy)
       return true;
 
     return false;
@@ -51,7 +59,7 @@ class IBSprite extends Sprite {
       // Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       // this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
       for (var action in onClickActions) {
-        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, size, parent);
+        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, _size, parent);
         motions.run(motionDestruct[0].motion);
       }
     }
@@ -64,4 +72,5 @@ class IBSprite extends Sprite {
     // }
     return true;
   }
+
 }

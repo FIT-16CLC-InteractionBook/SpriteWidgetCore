@@ -52,16 +52,22 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
 
   @override 
   Widget build(BuildContext buildContext) {
-    return RichText(
-      text: TextSpan(
-        style: textStyle,
-        children: listTexts.map((text) {
-          return TextSpan(
-            text: text.content,
-            style: text.isPlayed ? TextStyle(color: Colors.red) : null,
-          );
-        }).toList()
-      )
+    print(size.width);
+    print(size.height);
+    return Container(
+      height: size.height,
+      width: size.width,
+      child: RichText(
+        text: TextSpan(
+          style: textStyle,
+          children: listTexts.map((text) {
+            return TextSpan(
+              text: text.content,
+              style: text.isPlayed ? TextStyle(color: Colors.red) : null,
+            );
+          }).toList()
+        )
+      ),
     );
   }
 }
