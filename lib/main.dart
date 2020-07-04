@@ -212,7 +212,6 @@ class MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print('rendering...');
     return loading
         ? Stack(
             children: List<Widget>.generate(

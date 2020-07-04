@@ -183,7 +183,6 @@ class Utils {
   }
 
   static Map<String, dynamic> destructSoundObject(YamlMap object) {
-    print('Destruct Sound Object');
     ui.Offset coordinatesSound = new ui.Offset(object['coordinates']['x'].toDouble(), 
         object['coordinates']['y'].toDouble());
     ui.Size sizeSound = new ui.Size(object['coordinates']['w'].toDouble(),
@@ -201,11 +200,16 @@ class Utils {
       color: ui.Color(object['objectTexts']['properties']['color'] ?? 0x00000000)
           .withOpacity(object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
     );
+
     var listTexts = object['objectTexts']['listTexts'];
-    List<KaraokeText> contents = listTexts.map((text) {
-      return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
-    });
-    
+    // List<KaraokeText> contents = listTexts.map((text) {
+    //   return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
+    // }).toList<KaraokeText>();
+    List<KaraokeText> contents = [];
+    for (var i = 0; i < listTexts.length; i++) {
+      contents.add(new KaraokeText(content: listTexts[i]['text']['content'], start: listTexts[i]['text']['start'], end: listTexts[i]['text']['end'], index: i));
+    }
+
     return new Map<String, dynamic>()
       ..addAll({
         'coordinates': coordinatesSound,
@@ -214,39 +218,10 @@ class Utils {
         'karaokeText': {
           'coordinates': coordinatesKaraoke,
           'size': sizeKaraoke,
-          'colorSubtitle': object['colorSubtitle'],
+          'colorSubtitle': object['objectTexts']['colorSubtitle'],
           'textStyle': textStyle,
           'contents': contents
         } 
-      });
-  }
-
-  static Map<String, dynamic> destructKaraokeText(YamlMap object, ) {
-    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(), 
-        object['coordinates']['y'].toDouble());
-    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
-        object['coordinates']['h'].toDouble());
-    TextStyle textStyle = new TextStyle(
-      fontFamily: object['properties']['font'],
-      height: 1,
-      fontWeight: getFontWeight(object['properties']['fontWeight']),
-      fontSize: object['properties']['fontSize'].toDouble() ?? 14.0,
-      color: ui.Color(object['properties']['color'] ?? 0x00000000)
-          .withOpacity(object['properties']['alpha']?.toDouble() ?? 1.0),
-    );
-
-    var listTexts = object['listTexts'];
-    List<String> contents = listTexts.map((text) {
-      return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
-    });
-
-    return new Map<String, dynamic>()
-      ..addAll({
-        'coordinates': coordinates,
-        'size': size,
-        'colorSubtitle': object['colorSubtitle'],
-        'textStyle': textStyle,
-        'contents': contents
       });
   }
 
@@ -379,6 +354,7 @@ class Utils {
           _player.setFilePath(soundFilePath).catchError((error) {
             print(error);
           });
+          // _player.setAsset('assets/yeuthiyeu.mp3').catchError((error) => print(error));
           Stream<Duration> soundStream = _player.getPositionStream();
           IBSound soundWidget = new IBSound(newSizeSound, _player);
           Widget sound = new Positioned(

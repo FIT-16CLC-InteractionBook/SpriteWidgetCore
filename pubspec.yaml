@@ -62,6 +62,8 @@ flutter:
     - assets/image3.jpg
     - assets/test1.jpg
     - assets/test2.mp4
+    - assets/1.yml
+    - assets/yeuthiyeu.mp3
 
 
   # The following line ensures that the Material Icons font is

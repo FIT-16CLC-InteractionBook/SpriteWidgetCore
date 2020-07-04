@@ -20,6 +20,7 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
   final String highlightColor;
   final TextStyle textStyle;
   final Stream<Duration> soundStream;
+  int counter = -1;
 
   _IBKaraokeTextState(this.size, this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
 
@@ -27,20 +28,37 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
   void initState() {
     super.initState();
     soundStream.listen((event) {
-      print(event);
+      var serializedEvent = event.toString();
+      var aftercut = serializedEvent.split('.')[0];
+      if (counter < listTexts.length) {
+        if (counter == -1) {
+          counter = counter + 1;
+          return;
+        }
+        if (aftercut == listTexts[counter].start && !listTexts[counter].isPlayed) {
+          listTexts[counter].isPlayed = true;
+          setState(() {});
+          return;
+        }
+        if (aftercut == listTexts[counter].end && listTexts[counter].isPlayed) {
+          listTexts[counter].isPlayed = false;
+          setState(() {
+            counter = counter + 1;
+          });
+        }
+      }
     });
   }
 
   @override 
   Widget build(BuildContext buildContext) {
-    print('Build Textspan');
     return RichText(
       text: TextSpan(
         style: textStyle,
         children: listTexts.map((text) {
           return TextSpan(
             text: text.content,
-            style: TextStyle(color: Color(int.parse(highlightColor))),
+            style: text.isPlayed ? TextStyle(color: Colors.red) : null,
           );
         }).toList()
       )

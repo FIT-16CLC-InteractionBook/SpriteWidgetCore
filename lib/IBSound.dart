@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
 
 class IBSound extends StatefulWidget {
   final AudioPlayer _player;
@@ -23,7 +21,6 @@ class _IBSoundState extends State<IBSound> {
   void initState() {
     super.initState();
     AudioPlayer.setIosCategory(IosCategory.playback);
-    _player = AudioPlayer();
   }
 
   static Widget _buildSoundButton(var state, Size size, var buffering, AudioPlayer _player) {
@@ -35,16 +32,20 @@ class _IBSoundState extends State<IBSound> {
         child: CircularProgressIndicator(),
       );
     else if (state == AudioPlaybackState.playing) 
-      return IconButton(
-        icon: Icon(Icons.pause),
-        iconSize: size.width,
-        onPressed: _player.pause,
+      return Container(
+        child: IconButton(
+          icon: Icon(Icons.pause),
+          iconSize: size.width,
+          onPressed: _player.pause,
+        ),
       );
-    else 
-      return IconButton(
-        icon: Icon(Icons.pause),
-        iconSize: size.width,
-        onPressed: _player.play,
+    else
+      return Container(
+        child: IconButton(
+          icon: Icon(Icons.play_arrow),
+          iconSize: size.width,
+          onPressed: _player.play,
+        ),
       );
   }
 

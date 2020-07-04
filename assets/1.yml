@@ -1,0 +1,68 @@
+version: 1
+manifest:
+  author:
+    name: nguyen minh duc
+  app-name: SubtitTest
+  categories:
+    - horror
+    - history
+    - romantic
+    - children
+  created-at: 28-6-2020
+orientation: ''
+initializePDF: ''
+app:
+  background:
+    image: ''
+    color: 4294967295
+  app-page:
+    - page:
+        index: 02c47031-8c12-4d43-9b82-fb5677e01e1b
+        objects:
+          - object:
+              index: c9f95b4c-a943-4362-a718-8b1030cf57d4
+              type: sound
+              name: LoiNho.mp3
+              coordinates:
+                x: 477
+                y: 207
+                w: 80
+                h: 80
+              originalSound: >-
+                https://storage.googleapis.com/interactive-book/15cce59e-b23b-40f6-867f-85135c533708/34ef0c9d-3f12-41f5-9446-67174c7d2fce/Attribute-785f4968-d3c8-42ff-9345-0c52e84bb8d5.mp3
+              objectTexts:
+                index: a34da80b-1831-4864-88f9-b4b048584d65
+                type: textSub
+                coordinates:
+                  x: 238.80806841169084
+                  y: 221.42857142857144
+                  w: 112.2442626953125
+                  h: 64.63634033203124
+                content: |-
+                  123
+                  456789
+                properties:
+                  alpha: 1
+                  rotation: 0
+                  scale: 1
+                  font: Inter
+                  fontSize: 15
+                  fontWeight: 400
+                  color: 4278190080
+                colorSubtitle: '#000000'
+                listTexts:
+                  - text:
+                      index: 89c212e4-a629-4a4e-8724-7aad03f868ed
+                      content: '123'
+                      start: '0:00:00'
+                      end: '0:00:03'
+                  - text:
+                      index: 4eab8e0e-af0e-4f80-9ba5-81c91ef65e64
+                      content: '456'
+                      start: '0:00:03'
+                      end: '0:00:07'
+                  - text:
+                      index: 847cbe82-89bf-4465-af3b-52dc567cbd34
+                      content: '789'
+                      start: '0:00:07'
+                      end: '0:00:10'
