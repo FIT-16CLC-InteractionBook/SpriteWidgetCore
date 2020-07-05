@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 public class PDFViewPlugin: NSObject, FlutterPlatformView {
     let frame: CGRect
@@ -23,9 +24,12 @@ public class PDFViewPlugin: NSObject, FlutterPlatformView {
         channel.setMethodCallHandler({
             (call: FlutterMethodCall, result: FlutterResult) -> Void in
             switch(call.method) {
+                case "initializePDF":
+                    PDFChildView.rootView.pdfViewPublish.pdfUrl = call.arguments as? String;
+                break
                 case "changePage":
-                    let nextPage = PDFChildView.rootView.pdfViewPublish.pdfView?.document?.page(at: 1);
-                    PDFChildView.rootView.pdfViewPublish.pdfView?.go(to: nextPage!);
+                    let nextPage = PDFChildView.rootView.pdfViewPublish.pdfView?.document?.page(at: call.arguments as! Int);
+                        PDFChildView.rootView.pdfViewPublish.pdfView?.go(to: nextPage!);
             default:
                 result(call.method)
             }
@@ -33,6 +37,6 @@ public class PDFViewPlugin: NSObject, FlutterPlatformView {
     }
     
     public func view() -> UIView {
-        return PDFChildView.view
+        return PDFChildView.view;
     }
 }
