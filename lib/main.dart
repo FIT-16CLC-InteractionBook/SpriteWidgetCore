@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:ibcore/interfaces/PageObject.dart';
 import 'package:ibcore/interfaces/IBPage.dart';
@@ -12,13 +13,7 @@ import 'package:spritewidget/spritewidget.dart';
 import 'package:yaml/yaml.dart';
 import 'package:union/union.dart';
 import 'package:ibcore/utils.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:PDFViewer/PDFViewer.dart';
-// void main() {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   SystemChrome.setEnabledSystemUIOverlays([]);
-//   runApp(VideoPlayerApp());
-// }
 
 class IBCore extends StatefulWidget {
   final Union2<File, String> fileUrl;
@@ -99,14 +94,16 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   final Map background;
   final List<IBPage> pages;
   final Orientation orientation;
+  final PageController _pageController = PageController(initialPage: 0, keepPage: true);
 
   static int totalPages;
   static List<NodeBook> rootNodes;
 
   bool first = true;
   bool loading = true;
+  var curPage = 0;
 
-  PDFViewer pdfViewer = new PDFViewer();
+  PDFViewer pdfViewer = new PDFViewer(pdfUrl: "https://ncu.rcnpv.com.tw/Uploads/20131231103232738561744.pdf");
   List<List<PageObject>> renderPages;
   List<List<Widget>> specificObjects;
   List<int> pageRendered;
@@ -214,7 +211,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                   return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(
-                          aspectRatio: 4 / 3,
+                          aspectRatio: 3 / 4,
                           child: Stack(
                             children: <Widget>[
                               new SpriteWidget(rootNodes[i]),
@@ -242,49 +239,54 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                           )),
                     );}),
           )
-        : CarouselSlider(
-            aspectRatio: 4 / 3,
-            items: List.generate(
-                totalPages,
-                (i) { 
-                  return new Align(
-                      alignment: Alignment.center,
-                      child: AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: Stack(
-                            children: <Widget>[
-                              pdfViewer,
-                              new SpriteWidget(rootNodes[i]),
-                              Positioned(
-                                bottom: 0.0,
-                                left: 0.0,
-                                right: 0.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(200, 0, 0, 0),
-                                        Color.fromARGB(0, 0, 0, 0)
-                                      ],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
+          : Align(
+                alignment: Alignment.center,
+                child: AspectRatio(
+                    aspectRatio: 3 / 4,
+                    child: 
+                      NotificationListener(
+                        onNotification: (scrollNotification) {
+                          if (scrollNotification is ScrollEndNotification) {
+                            pdfViewer?.pdfViewController?.changePage(curPage);
+                            if (!pageRendered.contains(curPage)) addObjectToPage(curPage);
+                          }
+                        },
+                        child: Stack(children: <Widget>[
+                          Container(color: Color.fromARGB(1, 242, 242, 242)),
+                          pdfViewer,
+                          PageView(
+                            controller: _pageController,
+                            onPageChanged: (i) {
+                              curPage = i;
+                            },
+                            children: 
+                              List.generate(totalPages, (i) { return Stack(
+                                children: <Widget>[
+                                  new SpriteWidget(rootNodes[i]),
+                                  Positioned(
+                                    bottom: 0.0,
+                                    left: 0.0,
+                                    right: 0.0,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color.fromARGB(200, 0, 0, 0),
+                                            Color.fromARGB(0, 0, 0, 0)
+                                          ],
+                                          begin: Alignment.bottomCenter,
+                                          end: Alignment.topCenter,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              ...specificObjects[i]
-                                  .map((item) => item)
-                                  .toList(),
-                            ],
-                          )),
-                    );}),
-            viewportFraction: 1.0,
-            // scrollPhysics: NeverScrollableScrollPhysics(),
-            enableInfiniteScroll: false,
-            onPageChanged: (index) {
-              pdfViewer.pdfViewController.changePage(index);
-              if (!pageRendered.contains(index)) addObjectToPage(index);
-            },
-          );
+                                  ...specificObjects[i]
+                                      .map((item) => item)
+                                      .toList(),
+                                ],
+                              );})
+                          ),
+                        ],
+                      ))));
   }
 }

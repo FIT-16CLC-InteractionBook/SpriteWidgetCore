@@ -10,19 +10,23 @@ import PDFKit
 
 class PDFDataObject: ObservableObject {
     @Published var pdfView: PDFView? = nil;
+    @Published var pdfUrl: String? = nil;
 }
 
 class FetchApi {
-    func getPDF(completion: @escaping (PDFView) -> ()) {
-        let documentUrl = URL(string: "https://ncu.rcnpv.com.tw/Uploads/20131231103232738561744.pdf");
+    func getPDF(url: String, completion: @escaping (PDFView) -> ()) {
+        print(url);
+        let documentUrl = URL(string: url);
         let pdfView = PDFView();
         if let pdfDocument = PDFDocument(url: documentUrl!) {
             pdfView.autoresizesSubviews = true
             pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            pdfView.pageShadowsEnabled = false
             pdfView.autoScales = true
             pdfView.displayMode = .singlePage
-            pdfView.displaysPageBreaks = true
+            pdfView.displayDirection = .horizontal
             pdfView.document = pdfDocument
+            
             // pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
             // pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             // pdfView.displayDirection = .vertical
@@ -69,28 +73,19 @@ struct PDFViewController: View {
     
     @ViewBuilder
     var body: some View {
+        if self.pdfViewPublish.pdfUrl == nil {
+            Text("wait for render pdf")
+        } else
         if pdfView != nil {
             PDFKitView(pdfView: pdfView!)
         } else {
             Text("wait for render pdf").onAppear {
-                FetchApi().getPDF { (pdfViewContent) in
+                FetchApi().getPDF(url:  self.pdfViewPublish.pdfUrl!) { (pdfViewContent) in
                     self.pdfView = pdfViewContent;
                     self.pdfViewPublish.pdfView = pdfViewContent;
                 }
             }
         }
-    }
-}
-
-struct PDFViewController_Previews: PreviewProvider {
-    static var previews: some View {
-        PDFViewController()
-    }
-}
-
-struct DraftView: View {
-    var body: some View {
-        Text("draf view")
     }
 }
 
