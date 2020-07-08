@@ -252,7 +252,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                           }
                         },
                         child: Stack(children: <Widget>[
-                          Container(color: Color.fromARGB(1, 242, 242, 242)),
+                          Container(color: Color.fromARGB(255, 242, 242, 242)),
                           pdfViewer,
                           PageView(
                             controller: _pageController,
