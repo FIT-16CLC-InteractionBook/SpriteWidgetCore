@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ibcore/interfaces/CustomAction.dart';
-import 'package:ibcore/IBKaraokeText.dart';
+import 'package:ibcore/core/IBKaraokeText.dart';
 import 'package:ibcore/core/IBSound.dart';
 import 'package:ibcore/core/IBVideo.dart';
 import 'package:ibcore/interfaces/PageObject.dart';
@@ -20,7 +20,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:union/union.dart';
 import 'package:yaml/yaml.dart';
-import 'package:ibcore/KaraokeTextObject.dart';
+import 'package:ibcore/interfaces/KaraokeTextObject.dart';
 import 'package:ibcore/constants/constants.dart' as Constants;
 import 'package:ibcore/core/IBTranslation.dart';
 
@@ -349,9 +349,7 @@ class Utils {
               Offset(object['size'].width, object['size'].height));
           Size newSizeSound = new Size(sizeConvertedSound.dx, sizeConvertedSound.dy);
           String soundFilePath = object['originalSound'];
-          print(soundFilePath);
           File file = File(soundFilePath);
-          print(file.existsSync());
           AudioPlayer _player = new AudioPlayer();
           _player.setFilePath(soundFilePath).catchError((error) {
             print(error);
@@ -372,12 +370,11 @@ class Utils {
 
           Offset newCoordinatesKaraokeText = 
               rootNode.convertPointToBoxSpace(object['karaokeText']['coordinates']);
-          Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
-              Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
-          );
-          Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
+          // Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
+          //     Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
+          // );
+          // Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
           IBKaraokeText karaokeTextWidget = new IBKaraokeText(
-            newSizeKaraoke, 
             object['karaokeText']['contents'],
             object['karaokeText']['colorSubtitle'],
             object['karaokeText']['textStyle'],
@@ -387,8 +384,8 @@ class Utils {
             top: newCoordinatesKaraokeText.dy,
             left: newCoordinatesKaraokeText.dx,
             child: Container(
-              height: newSizeKaraoke.height,
-              width: newSizeKaraoke.width,
+              // height: newSizeKaraoke.height,
+              // width: newSizeKaraoke.width,
               child: karaokeTextWidget
             )
           );

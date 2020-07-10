@@ -79,7 +79,7 @@ class AppState extends State<IBCore> {
           )
         : MaterialApp(
             title: 'Title',
-            home: 
+            home:
               MyWidget(background, pages, orientation),    
         );
   }

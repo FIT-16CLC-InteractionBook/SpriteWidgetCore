@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:ibcore/KaraokeTextObject.dart';
+import 'package:ibcore/interfaces/KaraokeTextObject.dart';
 
 class IBKaraokeText extends StatefulWidget {
-  final Size size;
   final List<KaraokeText> listTexts;
   final String highlightColor;
   final TextStyle textStyle;
   final  Stream<Duration> soundStream;
 
-  IBKaraokeText(this.size, this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
+  IBKaraokeText(this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
 
   @override
-  _IBKaraokeTextState createState() => _IBKaraokeTextState(size, listTexts, highlightColor, textStyle, soundStream);
+  _IBKaraokeTextState createState() => _IBKaraokeTextState(listTexts, highlightColor, textStyle, soundStream);
 }
 
 class _IBKaraokeTextState extends State<IBKaraokeText> {
-  final Size size;
   final List<KaraokeText> listTexts;
   final String highlightColor;
   final TextStyle textStyle;
   final Stream<Duration> soundStream;
   int counter = -1;
+  bool isReload = false;
 
-  _IBKaraokeTextState(this.size, this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
+  _IBKaraokeTextState(this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
 
   @override
   void initState() {
     super.initState();
     soundStream.listen((event) {
+      if (counter == listTexts.length) {
+        counter = 0;
+        isReload = true;
+      }
       var serializedEvent = event.toString();
       var aftercut = serializedEvent.split('.')[0];
       if (counter < listTexts.length) {
@@ -36,6 +39,10 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
           return;
         }
         if (aftercut == listTexts[counter].start && !listTexts[counter].isPlayed) {
+          if (isReload == true) {
+            isReload = false;
+            return;
+          }
           listTexts[counter].isPlayed = true;
           setState(() {});
           return;
@@ -52,12 +59,7 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
 
   @override 
   Widget build(BuildContext buildContext) {
-    print(size.width);
-    print(size.height);
-    return Container(
-      height: size.height,
-      width: size.width,
-      child: RichText(
+    return RichText(
         text: TextSpan(
           style: textStyle,
           children: listTexts.map((text) {
@@ -67,7 +69,6 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
             );
           }).toList()
         )
-      ),
-    );
+      );
   }
 }
