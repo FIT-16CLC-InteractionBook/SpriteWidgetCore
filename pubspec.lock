@@ -4,9 +4,11 @@ packages:
   PDFViewer:
     dependency: "direct main"
     description:
-      path: pdfviewer
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "00debbe1020cd19598eb91cb6b0a32b497a1102b"
+      url: "git://github.com/FIT-16CLC-InteractionBook/PDFViewer.git"
+    source: git
     version: "0.0.1"
   archive:
     dependency: transitive
