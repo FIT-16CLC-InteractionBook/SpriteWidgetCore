@@ -126,7 +126,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
       pdfViewer = new PDFViewer(pdfUrl: this.initializePDF);
       isPDFRender = true;
     }
-    size = this.orientationBook == 'potrait' ? Size(600.0, 800.0) : Size(800.0, 600.0);
+    size = this.orientationBook == 'portrait' ? Size(600.0, 800.0) : Size(800.0, 600.0);
   }
 
   @override
@@ -226,7 +226,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                   return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(
-                          aspectRatio: this.orientationBook == 'potrait' ? 3 / 4 : 4 / 3,
+                          aspectRatio: this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
                           child: Stack(
                             children: <Widget>[
                               new SpriteWidget(rootNodes[i]),
@@ -257,10 +257,10 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
           : Align(
                 alignment: Alignment.center,
                 child: AspectRatio(
-                    aspectRatio: this.orientationBook == 'potrait' ? 3 / 4 : 4 / 3,
+                    aspectRatio: this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
                     child: Stack(children: <Widget>[
                           Container(color: Color.fromARGB(255, 242, 242, 242)),
-                          pdfViewer,
+                          pdfViewer ?? Container(),
                           PageView(
                             controller: _pageController,
                             onPageChanged: (i) {
