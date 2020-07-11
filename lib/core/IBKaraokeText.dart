@@ -20,11 +20,16 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
   final Stream<Duration> soundStream;
   int counter = -1;
   bool isReload = false;
+  Color hexColor;
 
   _IBKaraokeTextState(this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
 
+
   @override
   void initState() {
+    String subStringColor = highlightColor.substring(1);
+    int convertedColor = int.parse('0xff' + subStringColor);
+    hexColor = Color(convertedColor);
     super.initState();
     soundStream.listen((event) {
       if (counter == listTexts.length) {
@@ -65,7 +70,7 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
           children: listTexts.map((text) {
             return TextSpan(
               text: text.content,
-              style: text.isPlayed ? TextStyle(color: Colors.red) : null,
+              style: text.isPlayed ? TextStyle(color: hexColor) : null,
             );
           }).toList()
         )
