@@ -27,6 +27,8 @@ class AppState extends State<IBCore> {
   var doc;
   bool isLoading = true;
   List<IBPage> pages;
+  String initializePDF;
+  String orientationBook;
   Map background;
   final Union2<File, String> fileUrl;
   final Orientation orientation;
@@ -56,10 +58,13 @@ class AppState extends State<IBCore> {
   initialData() async {
     String fileText = await this.loadDocString(this.fileUrl);
     doc = loadYaml(fileText);
+    Map manifest = Utils.loadManifest(doc['manifest']);
     Map main = Utils.loadMainData(doc['app']);
 
     background = await Utils.loadBackground(main['background']);
     pages = await Utils.loadPage(main['app-page']);
+    initializePDF = manifest['initializePDF'] ?? '';
+    orientationBook = manifest['orientation'] ?? '';
     setState(() {
       isLoading = false;
     });
@@ -74,9 +79,8 @@ class AppState extends State<IBCore> {
           )
         : MaterialApp(
             title: 'Title',
-            home:
-              MyWidget(background, pages, orientation),    
-        );
+            home: MyWidget(background, pages, orientation, initializePDF, orientationBook),
+          );
   }
 }
 
@@ -84,10 +88,12 @@ class MyWidget extends StatefulWidget {
   final Map background;
   final List<IBPage> pages;
   final Orientation orientation;
+  final String initializePDF;
+  final String orientationBook;
   
-  MyWidget(this.background, this.pages, this.orientation);
+  MyWidget(this.background, this.pages, this.orientation, this.initializePDF, this.orientationBook);
   @override
-  MyWidgetState createState() => new MyWidgetState(background, pages, orientation);
+  MyWidgetState createState() => new MyWidgetState(background, pages, orientation, this.initializePDF, this.orientationBook);
 }
 
 class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
@@ -95,30 +101,39 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   final List<IBPage> pages;
   final Orientation orientation;
   final PageController _pageController = PageController(initialPage: 0, keepPage: true);
+  final String initializePDF;
+  final String orientationBook;
 
   static int totalPages;
   static List<NodeBook> rootNodes;
 
   bool first = true;
   bool loading = true;
+  bool isPDFRender = false;
   var curPage = 0;
+  Size size = Size(600.0, 800.0);
 
-  PDFViewer pdfViewer = new PDFViewer(pdfUrl: "https://ncu.rcnpv.com.tw/Uploads/20131231103232738561744.pdf");
+  PDFViewer pdfViewer;
   List<List<PageObject>> renderPages;
   List<List<Widget>> specificObjects;
   List<int> pageRendered;
   Orientation currentOrientation;
   
-  MyWidgetState(this.background, this.pages, this.orientation) : super() {
+  MyWidgetState(this.background, this.pages, this.orientation, this.initializePDF, this.orientationBook) : super() {
     totalPages = pages.length;
     currentOrientation = orientation;
+    if (this.initializePDF != '') {
+      pdfViewer = new PDFViewer(pdfUrl: this.initializePDF);
+      isPDFRender = true;
+    }
+    size = this.orientationBook == 'potrait' ? Size(600.0, 800.0) : Size(800.0, 600.0);
   }
 
   @override
   void initState() {
     super.initState();
     rootNodes =
-        List<NodeBook>.generate(totalPages, (i) => new NodeBook(background));
+        List<NodeBook>.generate(totalPages, (i) => new NodeBook(background, this.size, isPDFRender));
     specificObjects =
         List<List<Widget>>.generate(totalPages, (i) => new List<Widget>());
     renderPages = new List<List<PageObject>>();
@@ -211,7 +226,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                   return new Align(
                       alignment: Alignment.center,
                       child: AspectRatio(
-                          aspectRatio: 3 / 4,
+                          aspectRatio: this.orientationBook == 'potrait' ? 3 / 4 : 4 / 3,
                           child: Stack(
                             children: <Widget>[
                               new SpriteWidget(rootNodes[i]),
@@ -242,22 +257,16 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
           : Align(
                 alignment: Alignment.center,
                 child: AspectRatio(
-                    aspectRatio: 3 / 4,
-                    child: 
-                      NotificationListener(
-                        onNotification: (scrollNotification) {
-                          if (scrollNotification is ScrollEndNotification) {
-                            pdfViewer?.pdfViewController?.changePage(curPage);
-                            if (!pageRendered.contains(curPage)) addObjectToPage(curPage);
-                          }
-                        },
-                        child: Stack(children: <Widget>[
+                    aspectRatio: this.orientationBook == 'potrait' ? 3 / 4 : 4 / 3,
+                    child: Stack(children: <Widget>[
                           Container(color: Color.fromARGB(255, 242, 242, 242)),
                           pdfViewer,
                           PageView(
                             controller: _pageController,
                             onPageChanged: (i) {
                               curPage = i;
+                              pdfViewer?.pdfViewController?.changePage(curPage);
+                              if (!pageRendered.contains(curPage)) addObjectToPage(curPage);
                             },
                             children: 
                               List.generate(totalPages, (i) { return Stack(
@@ -287,6 +296,6 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                               );})
                           ),
                         ],
-                      ))));
+                      )));
   }
 }
