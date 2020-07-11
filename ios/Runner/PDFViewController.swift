@@ -23,8 +23,9 @@ class FetchApi {
             pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             pdfView.pageShadowsEnabled = false
             pdfView.autoScales = true
-            pdfView.displayMode = .singlePage
+            pdfView.displayMode = .singlePageContinuous
             pdfView.displayDirection = .horizontal
+            pdfView.usePageViewController(true, withViewOptions: nil)
             pdfView.document = pdfDocument
             
             // pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit

@@ -33,6 +33,14 @@ class Utils {
       ..addAll({'background': backgroundProperty, 'app-page': appPage});
   }
 
+  static Map<String, String> loadManifest(YamlMap doc) {
+    String orientation = doc['orientation'];
+    String initializePDF = doc['initializePDF'];
+
+    return new Map<String, String>()
+      ..addAll({'orientation': orientation, 'initializePDF': initializePDF});
+  }
+
   static Future<Map<String, dynamic>> loadBackground(YamlMap doc) async {
     String imageLink = doc['image'];
     int color = doc['color'];
