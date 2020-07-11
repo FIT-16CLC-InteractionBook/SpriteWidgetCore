@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ibcore/interfaces/KaraokeTextObject.dart';
 
@@ -21,17 +23,18 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
   int counter = -1;
   bool isReload = false;
   Color hexColor;
+  StreamSubscription<Duration> subscription;
 
   _IBKaraokeTextState(this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
 
 
   @override
   void initState() {
+    super.initState();
     String subStringColor = highlightColor.substring(1);
     int convertedColor = int.parse('0xff' + subStringColor);
     hexColor = Color(convertedColor);
-    super.initState();
-    soundStream.listen((event) {
+    subscription = soundStream.listen((event) {
       if (counter == listTexts.length) {
         counter = 0;
         isReload = true;
@@ -60,6 +63,12 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   @override 

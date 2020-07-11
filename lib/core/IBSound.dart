@@ -17,10 +17,9 @@ class _IBSoundState extends State<IBSound> {
 
   _IBSoundState(this.size, this._player);
 
-  @override
-  void initState() {
-    super.initState();
-    AudioPlayer.setIosCategory(IosCategory.playback);
+  void dispose() {
+    _player.pause();
+    super.dispose();
   }
 
   static Widget _buildSoundButton(var state, Size size, var buffering, AudioPlayer _player) {
@@ -34,7 +33,7 @@ class _IBSoundState extends State<IBSound> {
     else if (state == AudioPlaybackState.playing) 
       return Container(
         child: IconButton(
-          icon: Icon(Icons.pause),
+          icon: Icon(Icons.pause_circle_outline),
           iconSize: size.width,
           onPressed: _player.pause,
         ),
@@ -42,7 +41,7 @@ class _IBSoundState extends State<IBSound> {
     else
       return Container(
         child: IconButton(
-          icon: Icon(Icons.play_arrow),
+          icon: Icon(Icons.play_circle_outline),
           iconSize: size.width,
           onPressed: _player.play,
         ),

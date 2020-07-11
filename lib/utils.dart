@@ -343,19 +343,20 @@ class Utils {
           spriteObjects.add(new PageObject('widget', widget: video, rawObject: iObject));
           break;
         case Constants.SOUND:
+          print('Build Sound object');
           Offset newCoordinatesSound = 
               rootNode.convertPointToBoxSpace(object['coordinates']);
           Offset sizeConvertedSound = rootNode.convertPointToBoxSpace(
               Offset(object['size'].width, object['size'].height));
           Size newSizeSound = new Size(sizeConvertedSound.dx, sizeConvertedSound.dy);
           String soundFilePath = object['originalSound'];
-          File file = File(soundFilePath);
           AudioPlayer _player = new AudioPlayer();
+          AudioPlayer.setIosCategory(IosCategory.playback);
           _player.setFilePath(soundFilePath).catchError((error) {
             print(error);
           });
           // _player.setAsset('assets/yeuthiyeu.mp3').catchError((error) => print(error));
-          Stream<Duration> soundStream = _player.getPositionStream();
+          Stream<Duration> soundStream = _player.getPositionStream().asBroadcastStream();
           IBSound soundWidget = new IBSound(newSizeSound, _player);
           Widget sound = new Positioned(
             top: newCoordinatesSound.dy,
