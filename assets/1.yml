@@ -20,49 +20,76 @@ app:
         index: 02c47031-8c12-4d43-9b82-fb5677e01e1b
         objects:
           - object:
-              index: c9f95b4c-a943-4362-a718-8b1030cf57d4
+              index: bb99e552-4d29-44af-a807-9575d1e907cf
               type: sound
-              name: LoiNho.mp3
+              name: abc.mp3
               coordinates:
-                x: 477
-                y: 207
-                w: 80
-                h: 80
+                x: 356
+                y: 247
+                w: 100
+                h: 100
               originalSound: >-
-                https://storage.googleapis.com/interactive-book/15cce59e-b23b-40f6-867f-85135c533708/34ef0c9d-3f12-41f5-9446-67174c7d2fce/Attribute-785f4968-d3c8-42ff-9345-0c52e84bb8d5.mp3
+                https://storage.googleapis.com/interactive-book/15cce59e-b23b-40f6-867f-85135c533708/34ef0c9d-3f12-41f5-9446-67174c7d2fce/Attribute-14ee7072-414a-4251-b037-9093bd41802f.mp3
               objectTexts:
-                index: a34da80b-1831-4864-88f9-b4b048584d65
+                index: 35611905-85ae-4287-8e7b-912917ebe712
                 type: textSub
                 coordinates:
-                  x: 238.80806841169084
-                  y: 221.42857142857144
-                  w: 112.2442626953125
-                  h: 64.63634033203124
+                  x: 0
+                  y: 0
+                  w: 109.19740295410156
+                  h: 64.63634033203125
                 content: |-
-                  123
-                  456789
+                  123456
+                  789111
                 properties:
                   alpha: 1
                   rotation: 0
                   scale: 1
                   font: Inter
-                  fontSize: 15
+                  fontSize: 30
                   fontWeight: 400
                   color: 4278190080
-                colorSubtitle: '#000000'
+                colorSubtitle: '#0e44f6'
                 listTexts:
                   - text:
-                      index: 89c212e4-a629-4a4e-8724-7aad03f868ed
+                      index: 44edbd27-567a-4333-8031-8d9792d02fd5
                       content: '123'
                       start: '0:00:00'
-                      end: '0:00:03'
+                      end: '0:00:05'
                   - text:
-                      index: 4eab8e0e-af0e-4f80-9ba5-81c91ef65e64
-                      content: '456'
-                      start: '0:00:03'
-                      end: '0:00:07'
+                      index: 821c8d4a-0c63-4ea7-a1dd-5121f7d7a88c
+                      content: |
+                        456
+                      start: '0:00:16'
+                      end: '0:00:17'
                   - text:
-                      index: 847cbe82-89bf-4465-af3b-52dc567cbd34
+                      index: abdf9f3d-6572-4486-b0c8-1331724c8590
                       content: '789'
-                      start: '0:00:07'
-                      end: '0:00:10'
+                      start: '0:00:18'
+                      end: '0:00:20'
+                  - text:
+                      index: c5efd2f1-feef-4bf0-9a4e-4c99558dd6d3
+                      content: '111'
+                      start: '0:00:22'
+                      end: '0:00:25'
+    - page:
+        index: '2'
+        objects:
+          - object:
+              index: 45f6ee85-be8f-4569-ab73-f948518f85f4
+              type: text
+              coordinates:
+                x: 315.7142857142857
+                y: 212.85714285714286
+                w: 91.22509765625
+                h: 32.93181152343749
+              content: dkmm
+              properties:
+                alpha: 1
+                rotation: 0
+                scale: 1
+                font: Inter
+                fontSize: 30
+                fontWeight: 600
+                color: 4278190080
+              objectActions: []

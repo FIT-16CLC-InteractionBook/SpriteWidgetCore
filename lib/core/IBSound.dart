@@ -17,10 +17,9 @@ class _IBSoundState extends State<IBSound> {
 
   _IBSoundState(this.size, this._player);
 
-  @override
-  void initState() {
-    super.initState();
-    AudioPlayer.setIosCategory(IosCategory.playback);
+  void dispose() {
+    _player.pause();
+    super.dispose();
   }
 
   static Widget _buildSoundButton(var state, Size size, var buffering, AudioPlayer _player) {
