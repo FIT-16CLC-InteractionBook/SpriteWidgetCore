@@ -8,6 +8,7 @@ import 'package:ibcore/interfaces/CustomAction.dart';
 import 'package:ibcore/core/IBKaraokeText.dart';
 import 'package:ibcore/core/IBSound.dart';
 import 'package:ibcore/core/IBVideo.dart';
+import 'package:ibcore/interfaces/KaraokeCounterObject.dart';
 import 'package:ibcore/interfaces/PageObject.dart';
 import 'package:ibcore/core/IBGallery.dart';
 import 'package:ibcore/core/IBLabel.dart';
@@ -351,7 +352,6 @@ class Utils {
           spriteObjects.add(new PageObject('widget', widget: video, rawObject: iObject));
           break;
         case Constants.SOUND:
-          print('Build Sound object');
           Offset newCoordinatesSound = 
               rootNode.convertPointToBoxSpace(object['coordinates']);
           Offset sizeConvertedSound = rootNode.convertPointToBoxSpace(
@@ -364,7 +364,6 @@ class Utils {
             print(error);
           });
           // _player.setAsset('assets/yeuthiyeu.mp3').catchError((error) => print(error));
-          Stream<Duration> soundStream = _player.getPositionStream().asBroadcastStream();
           IBSound soundWidget = new IBSound(newSizeSound, _player);
           Widget sound = new Positioned(
             top: newCoordinatesSound.dy,
@@ -383,11 +382,13 @@ class Utils {
           //     Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
           // );
           // Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
+          KaraokeCounterObject kCounterObject = KaraokeCounterObject(-1, false);
           IBKaraokeText karaokeTextWidget = new IBKaraokeText(
             object['karaokeText']['contents'],
             object['karaokeText']['colorSubtitle'],
             object['karaokeText']['textStyle'],
-            soundStream
+            _player,
+            kCounterObject
           );
           Widget karaokeText = new Positioned(
             top: newCoordinatesKaraokeText.dy,

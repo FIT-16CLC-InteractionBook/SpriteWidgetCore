@@ -1,31 +1,35 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ibcore/interfaces/KaraokeCounterObject.dart';
 import 'package:ibcore/interfaces/KaraokeTextObject.dart';
+import 'package:just_audio/just_audio.dart';
 
 class IBKaraokeText extends StatefulWidget {
   final List<KaraokeText> listTexts;
   final String highlightColor;
   final TextStyle textStyle;
-  final  Stream<Duration> soundStream;
+  // final  Stream<Duration> soundStream;
+  final AudioPlayer _player;
+  final KaraokeCounterObject kCounterObject;
 
-  IBKaraokeText(this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
+  IBKaraokeText(this.listTexts, this.highlightColor, this.textStyle, this._player, this.kCounterObject);
 
   @override
-  _IBKaraokeTextState createState() => _IBKaraokeTextState(listTexts, highlightColor, textStyle, soundStream);
+  _IBKaraokeTextState createState() => _IBKaraokeTextState(listTexts, highlightColor, textStyle, _player, kCounterObject);
 }
 
 class _IBKaraokeTextState extends State<IBKaraokeText> {
   final List<KaraokeText> listTexts;
   final String highlightColor;
   final TextStyle textStyle;
-  final Stream<Duration> soundStream;
-  int counter = -1;
-  bool isReload = false;
+  // final Stream<Duration> soundStream;
   Color hexColor;
   StreamSubscription<Duration> subscription;
+  final AudioPlayer _player;
+  final KaraokeCounterObject kCounterObject;
 
-  _IBKaraokeTextState(this.listTexts, this.highlightColor, this.textStyle, this.soundStream);
+  _IBKaraokeTextState(this.listTexts, this.highlightColor, this.textStyle, this._player, this.kCounterObject);
 
 
   @override
@@ -34,31 +38,32 @@ class _IBKaraokeTextState extends State<IBKaraokeText> {
     String subStringColor = highlightColor.substring(1);
     int convertedColor = int.parse('0xff' + subStringColor);
     hexColor = Color(convertedColor);
-    subscription = soundStream.listen((event) {
-      if (counter == listTexts.length) {
-        counter = 0;
-        isReload = true;
+    Stream<Duration> soundStream = _player.getPositionStream();
+    subscription = soundStream.listen((event) { 
+      if (kCounterObject.counter == listTexts.length) {
+        kCounterObject.counter = 0;
+        kCounterObject.isReload = true;
       }
       var serializedEvent = event.toString();
       var aftercut = serializedEvent.split('.')[0];
-      if (counter < listTexts.length) {
-        if (counter == -1) {
-          counter = counter + 1;
+      if (kCounterObject.counter < listTexts.length) {
+        if (kCounterObject.counter == -1) {
+          kCounterObject.counter = kCounterObject.counter + 1;
           return;
         }
-        if (aftercut == listTexts[counter].start && !listTexts[counter].isPlayed) {
-          if (isReload == true) {
-            isReload = false;
+        if (aftercut == listTexts[kCounterObject.counter].start && !listTexts[kCounterObject.counter].isPlayed) {
+          if (kCounterObject.isReload) {
+            kCounterObject.isReload = false;
             return;
           }
-          listTexts[counter].isPlayed = true;
+          listTexts[kCounterObject.counter].isPlayed = true;
           setState(() {});
           return;
         }
-        if (aftercut == listTexts[counter].end && listTexts[counter].isPlayed) {
-          listTexts[counter].isPlayed = false;
+        if (aftercut == listTexts[kCounterObject.counter].end && listTexts[kCounterObject.counter].isPlayed) {
+          listTexts[kCounterObject.counter].isPlayed = false;
           setState(() {
-            counter = counter + 1;
+            kCounterObject.counter = kCounterObject.counter + 1;
           });
         }
       }

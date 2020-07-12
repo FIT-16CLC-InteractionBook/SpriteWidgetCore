@@ -38,8 +38,17 @@ class _IBSoundState extends State<IBSound> {
           onPressed: _player.pause,
         ),
       );
-    else
+    else if (state == AudioPlaybackState.completed) {
+      _player.stop();
       return Container(
+        child: IconButton(
+          icon: Icon(Icons.play_circle_outline),
+          iconSize: size.width,
+          onPressed: _player.play,
+        ),
+      );
+    } 
+    else return Container(
         child: IconButton(
           icon: Icon(Icons.play_circle_outline),
           iconSize: size.width,
