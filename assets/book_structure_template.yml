@@ -3,8 +3,8 @@ manifest:
   author:
     name: nhuttm
   app-name: test-book
-  orientation: potrait
-  initializePDF: https://storage.googleapis.com/interactive-book/8f31c13c-1b8d-4e58-86f2-87d44381bf36/4bac70f2-0d9f-462a-b6e7-6e6baaf281f2/Attribute-6621210b-a741-4dd9-9435-f7d23baf333d.pdf
+  orientation: portrait
+  initializePDF: ''
   categories:
     - horror
     - history

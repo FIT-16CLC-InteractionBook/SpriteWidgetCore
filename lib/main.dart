@@ -18,7 +18,7 @@ import 'package:PDFViewer/PDFViewer.dart';
 class IBCore extends StatefulWidget {
   final Union2<File, String> fileUrl;
   final Orientation orientation;
-  IBCore(this.fileUrl, this.orientation): super();
+  IBCore(this.fileUrl, this.orientation) : super();
   @override
   AppState createState() => new AppState(fileUrl, orientation);
 }
@@ -41,13 +41,13 @@ class AppState extends State<IBCore> {
     WidgetsBinding.instance.addPostFrameCallback((_) => initialData());
   }
 
-  Future<String> loadDocString(Union2<File,String> union) async {
+  Future<String> loadDocString(Union2<File, String> union) async {
     var completer = new Completer<String>();
-    
-    this.fileUrl.switchCase((File value) async { 
+
+    this.fileUrl.switchCase((File value) async {
       String fileText = await value.readAsString();
       return completer.complete(fileText);
-    }, (String value) async { 
+    }, (String value) async {
       String fileText = await rootBundle.loadString(value);
       return completer.complete(fileText);
     });
@@ -79,7 +79,8 @@ class AppState extends State<IBCore> {
           )
         : MaterialApp(
             title: 'Title',
-            home: MyWidget(background, pages, orientation, initializePDF, orientationBook),
+            home: MyWidget(
+                background, pages, orientation, initializePDF, orientationBook),
           );
   }
 }
@@ -90,17 +91,20 @@ class MyWidget extends StatefulWidget {
   final Orientation orientation;
   final String initializePDF;
   final String orientationBook;
-  
-  MyWidget(this.background, this.pages, this.orientation, this.initializePDF, this.orientationBook);
+
+  MyWidget(this.background, this.pages, this.orientation, this.initializePDF,
+      this.orientationBook);
   @override
-  MyWidgetState createState() => new MyWidgetState(background, pages, orientation, this.initializePDF, this.orientationBook);
+  MyWidgetState createState() => new MyWidgetState(
+      background, pages, orientation, this.initializePDF, this.orientationBook);
 }
 
 class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   final Map background;
   final List<IBPage> pages;
   final Orientation orientation;
-  final PageController _pageController = PageController(initialPage: 0, keepPage: true);
+  final PageController _pageController =
+      PageController(initialPage: 0, keepPage: true);
   final String initializePDF;
   final String orientationBook;
 
@@ -110,7 +114,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   bool first = true;
   bool loading = true;
   bool isPDFRender = false;
-  var curPage = 0;
+  var curPage = 1;
   Size size = Size(600.0, 800.0);
 
   PDFViewer pdfViewer;
@@ -118,22 +122,26 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   List<List<Widget>> specificObjects;
   List<int> pageRendered;
   Orientation currentOrientation;
-  
-  MyWidgetState(this.background, this.pages, this.orientation, this.initializePDF, this.orientationBook) : super() {
+
+  MyWidgetState(this.background, this.pages, this.orientation,
+      this.initializePDF, this.orientationBook)
+      : super() {
     totalPages = pages.length;
     currentOrientation = orientation;
     if (this.initializePDF != '') {
       pdfViewer = new PDFViewer(pdfUrl: this.initializePDF);
       isPDFRender = true;
     }
-    size = this.orientationBook == 'portrait' ? Size(600.0, 800.0) : Size(800.0, 600.0);
+    size = this.orientationBook == 'portrait'
+        ? Size(600.0, 800.0)
+        : Size(800.0, 600.0);
   }
 
   @override
   void initState() {
     super.initState();
-    rootNodes =
-        List<NodeBook>.generate(totalPages, (i) => new NodeBook(background, this.size, isPDFRender));
+    rootNodes = List<NodeBook>.generate(
+        totalPages, (i) => new NodeBook(background, this.size, isPDFRender));
     specificObjects =
         List<List<Widget>>.generate(totalPages, (i) => new List<Widget>());
     renderPages = new List<List<PageObject>>();
@@ -220,82 +228,118 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return loading
         ? Stack(
-            children: List<Widget>.generate(
-                totalPages,
-                (i) {
-                  return new Align(
-                      alignment: Alignment.center,
-                      child: AspectRatio(
-                          aspectRatio: this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
-                          child: Stack(
-                            children: <Widget>[
-                              new SpriteWidget(rootNodes[i]),
-                              Positioned(
-                                bottom: 0.0,
-                                left: 0.0,
-                                right: 0.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(200, 0, 0, 0),
-                                        Color.fromARGB(0, 0, 0, 0)
-                                      ],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              ...specificObjects[i]
-                                  .map((item) => item)
-                                  .toList(),
-                            ],
-                          )),
-                    );}),
-          )
-          : Align(
+            children: List<Widget>.generate(totalPages, (i) {
+              return new Align(
                 alignment: Alignment.center,
                 child: AspectRatio(
-                    aspectRatio: this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
-                    child: Stack(children: <Widget>[
-                          Container(color: Color.fromARGB(255, 242, 242, 242)),
+                    aspectRatio:
+                        this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
+                    child: Stack(
+                      children: <Widget>[
+                        new SpriteWidget(rootNodes[i]),
+                        Positioned(
+                          bottom: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromARGB(200, 0, 0, 0),
+                                  Color.fromARGB(0, 0, 0, 0)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ...specificObjects[i].map((item) => item).toList(),
+                      ],
+                    )),
+              );
+            }),
+          )
+        : Stack(
+            children: <Widget>[
+              Container(color: Color.fromARGB(255, 242, 242, 242)),
+              Align(
+                  alignment: Alignment.center,
+                  child: AspectRatio(
+                      aspectRatio:
+                          this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(color: Colors.white),
                           pdfViewer ?? Container(),
                           PageView(
-                            controller: _pageController,
-                            onPageChanged: (i) {
-                              curPage = i;
-                              pdfViewer?.pdfViewController?.changePage(curPage);
-                              if (!pageRendered.contains(curPage)) addObjectToPage(curPage);
-                            },
-                            children: 
-                              List.generate(totalPages, (i) { return Stack(
-                                children: <Widget>[
-                                  new SpriteWidget(rootNodes[i]),
-                                  Positioned(
-                                    bottom: 0.0,
-                                    left: 0.0,
-                                    right: 0.0,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color.fromARGB(200, 0, 0, 0),
-                                            Color.fromARGB(0, 0, 0, 0)
-                                          ],
-                                          begin: Alignment.bottomCenter,
-                                          end: Alignment.topCenter,
+                              controller: _pageController,
+                              onPageChanged: (i) {
+                                setState(() {
+                                  curPage = i + 1;
+                                });
+                                pdfViewer?.pdfViewController?.changePage(i);
+                                if (!pageRendered.contains(i))
+                                  addObjectToPage(i);
+                              },
+                              children: List.generate(totalPages, (i) {
+                                return Stack(
+                                  children: <Widget>[
+                                    new SpriteWidget(rootNodes[i]),
+                                    Positioned(
+                                      bottom: 0.0,
+                                      left: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color.fromARGB(200, 0, 0, 0),
+                                              Color.fromARGB(0, 0, 0, 0)
+                                            ],
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  ...specificObjects[i]
-                                      .map((item) => item)
-                                      .toList(),
-                                ],
-                              );})
-                          ),
+                                    ...specificObjects[i]
+                                        .map((item) => item)
+                                        .toList(),
+                                  ],
+                                );
+                              })),
                         ],
-                      )));
+                      ))),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 20,
+                  color: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                          flex: 3,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "$curPage of $totalPages pages",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black87,
+                                  decoration: TextDecoration.none,
+                                  fontFamily: "Inter"),
+                            ),
+                          )),
+                      Flexible(flex: 7, child: Container(color: Colors.white))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
   }
 }

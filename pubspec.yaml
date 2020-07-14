@@ -51,6 +51,13 @@ flutter:
     - family: CrimsonText
       fonts:
         - asset: fonts/CrimsonText-Regular.ttf
+    - family: Inter
+      fonts:
+        - asset: fonts/Inter-Bold.woff2
+        - asset: fonts/Inter-Medium.woff2
+        - asset: fonts/Inter-SemiBold.woff2
+        - asset: fonts/Inter-Thin.woff2
+
   assets:
     - assets/book_structure_template.yml
     - assets/1.jpg
