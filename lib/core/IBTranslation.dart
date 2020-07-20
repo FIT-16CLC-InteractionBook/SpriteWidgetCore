@@ -23,6 +23,7 @@ class IBTranslation {
       case Constants.MOTION_TWEEN_ROTATE:
       case Constants.MOTION_TWEEN_OPACITY:
       case Constants.MOTION_TWEEN_SCALE:
+      case Constants.MOTION_TWEEN_SKEW:
         return new MotionTween<double>(
           setterFunction,
           propStartVal,

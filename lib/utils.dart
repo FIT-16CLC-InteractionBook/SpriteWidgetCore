@@ -61,33 +61,33 @@ class Utils {
       List<IBObject> objects = new List<IBObject>();
       if (page['objects'] != null) {
         for (var iObject in page['objects']) {
-        var object = iObject['object'];
-        switch (object['type']) {
-          case Constants.TEXT:
-            Map destructText = destructTextObject(object);
-            objects.add(new IBObject(Constants.TEXT, destructText));
-            break;
-          case Constants.IMAGE:
-            Map destructImage = await destructImageObject(object);
-            objects.add(new IBObject(Constants.IMAGE, destructImage));
-            break;
-          case Constants.GALLERY:
-            Map destructGallery = await destructGalleryObject(object);
-            objects.add(new IBObject(Constants.GALLERY, destructGallery));
-            break;
-          case Constants.VIDEO:
-            Map destructVideo = destructVideoObject(object);
-            objects.add(new IBObject(Constants.VIDEO, destructVideo));
-            break;
-          case Constants.SOUND:
-            Map destructSound = destructSoundObject(object);
-            // Map destructKaraoke = destructKaraokeText(object['objectTexts']);
-            objects.add(new IBObject(Constants.SOUND, destructSound));
-            // objects.add(new IBObject(Constants.KARAOKE, destructKaraoke));
-            break;
-          default:
+          var object = iObject['object'];
+          switch (object['type']) {
+            case Constants.TEXT:
+              Map destructText = destructTextObject(object);
+              objects.add(new IBObject(Constants.TEXT, destructText));
+              break;
+            case Constants.IMAGE:
+              Map destructImage = await destructImageObject(object);
+              objects.add(new IBObject(Constants.IMAGE, destructImage));
+              break;
+            case Constants.GALLERY:
+              Map destructGallery = await destructGalleryObject(object);
+              objects.add(new IBObject(Constants.GALLERY, destructGallery));
+              break;
+            case Constants.VIDEO:
+              Map destructVideo = destructVideoObject(object);
+              objects.add(new IBObject(Constants.VIDEO, destructVideo));
+              break;
+            case Constants.SOUND:
+              Map destructSound = destructSoundObject(object);
+              // Map destructKaraoke = destructKaraokeText(object['objectTexts']);
+              objects.add(new IBObject(Constants.SOUND, destructSound));
+              // objects.add(new IBObject(Constants.KARAOKE, destructKaraoke));
+              break;
+            default:
+          }
         }
-      }
       }
       pages.add(new IBPage(page['index'], objects));
     }
@@ -192,22 +192,29 @@ class Utils {
   }
 
   static Map<String, dynamic> destructSoundObject(YamlMap object) {
-    ui.Offset coordinatesSound = new ui.Offset(object['coordinates']['x'].toDouble(), 
+    ui.Offset coordinatesSound = new ui.Offset(
+        object['coordinates']['x'].toDouble(),
         object['coordinates']['y'].toDouble());
     ui.Size sizeSound = new ui.Size(object['coordinates']['w'].toDouble(),
         object['coordinates']['h'].toDouble());
 
-    ui.Offset coordinatesKaraoke = new ui.Offset(object['objectTexts']['coordinates']['x'].toDouble(), 
+    ui.Offset coordinatesKaraoke = new ui.Offset(
+        object['objectTexts']['coordinates']['x'].toDouble(),
         object['objectTexts']['coordinates']['y'].toDouble());
-    ui.Size sizeKaraoke = new ui.Size(object['objectTexts']['coordinates']['w'].toDouble(),
+    ui.Size sizeKaraoke = new ui.Size(
+        object['objectTexts']['coordinates']['w'].toDouble(),
         object['objectTexts']['coordinates']['h'].toDouble());
     TextStyle textStyle = new TextStyle(
       fontFamily: object['objectTexts']['properties']['font'],
       height: 1,
-      fontWeight: getFontWeight(object['objectTexts']['properties']['fontWeight']),
-      fontSize: object['objectTexts']['properties']['fontSize'].toDouble() ?? 14.0,
-      color: ui.Color(object['objectTexts']['properties']['color'] ?? 0x00000000)
-          .withOpacity(object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
+      fontWeight:
+          getFontWeight(object['objectTexts']['properties']['fontWeight']),
+      fontSize:
+          object['objectTexts']['properties']['fontSize'].toDouble() ?? 14.0,
+      color: ui.Color(
+              object['objectTexts']['properties']['color'] ?? 0x00000000)
+          .withOpacity(
+              object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
     );
 
     var listTexts = object['objectTexts']['listTexts'];
@@ -216,7 +223,11 @@ class Utils {
     // }).toList<KaraokeText>();
     List<KaraokeText> contents = [];
     for (var i = 0; i < listTexts.length; i++) {
-      contents.add(new KaraokeText(content: listTexts[i]['text']['content'], start: listTexts[i]['text']['start'], end: listTexts[i]['text']['end'], index: i));
+      contents.add(new KaraokeText(
+          content: listTexts[i]['text']['content'],
+          start: listTexts[i]['text']['start'],
+          end: listTexts[i]['text']['end'],
+          index: i));
     }
 
     return new Map<String, dynamic>()
@@ -230,7 +241,7 @@ class Utils {
           'colorSubtitle': object['objectTexts']['colorSubtitle'],
           'textStyle': textStyle,
           'contents': contents
-        } 
+        }
       });
   }
 
@@ -268,8 +279,8 @@ class Utils {
                 }
               }
             }
-            List<CustomAction> autoActionsDestruct =
-                createActions(YamlList.wrap(autoActions), label, object['size'] ,rootNode);
+            List<CustomAction> autoActionsDestruct = createActions(
+                YamlList.wrap(autoActions), label, object['size'], rootNode);
             for (var action in autoActionsDestruct) {
               label.motions.run(action.motion);
             }
@@ -303,8 +314,8 @@ class Utils {
                 }
               }
             }
-            List<CustomAction> autoActionsDestruct =
-                createActions(YamlList.wrap(autoActions), sprite, object['size'], rootNode);
+            List<CustomAction> autoActionsDestruct = createActions(
+                YamlList.wrap(autoActions), sprite, object['size'], rootNode);
             for (var action in autoActionsDestruct) {
               sprite.motions.run(action.motion);
             }
@@ -326,7 +337,8 @@ class Utils {
                 width: newSize.width,
                 child: galleryWidget,
               ));
-          spriteObjects.add(new PageObject('widget', widget: gallery, rawObject: iObject));
+          spriteObjects.add(
+              new PageObject('widget', widget: gallery, rawObject: iObject));
           break;
         case Constants.VIDEO:
           Offset newCoordinates =
@@ -349,14 +361,16 @@ class Utils {
                 width: newSize.width,
                 child: videoWidget,
               ));
-          spriteObjects.add(new PageObject('widget', widget: video, rawObject: iObject));
+          spriteObjects
+              .add(new PageObject('widget', widget: video, rawObject: iObject));
           break;
         case Constants.SOUND:
-          Offset newCoordinatesSound = 
+          Offset newCoordinatesSound =
               rootNode.convertPointToBoxSpace(object['coordinates']);
           Offset sizeConvertedSound = rootNode.convertPointToBoxSpace(
               Offset(object['size'].width, object['size'].height));
-          Size newSizeSound = new Size(sizeConvertedSound.dx, sizeConvertedSound.dy);
+          Size newSizeSound =
+              new Size(sizeConvertedSound.dx, sizeConvertedSound.dy);
           String soundFilePath = object['originalSound'];
           AudioPlayer _player = new AudioPlayer();
           AudioPlayer.setIosCategory(IosCategory.playback);
@@ -366,44 +380,40 @@ class Utils {
           // _player.setAsset('assets/yeuthiyeu.mp3').catchError((error) => print(error));
           IBSound soundWidget = new IBSound(newSizeSound, _player);
           Widget sound = new Positioned(
-            top: newCoordinatesSound.dy,
-            left: newCoordinatesSound.dx,
-            child: Container(
-              height: newSizeSound.height,
-              width: newSizeSound.width,
-              child: soundWidget,
-            )
-          );
+              top: newCoordinatesSound.dy,
+              left: newCoordinatesSound.dx,
+              child: Container(
+                height: newSizeSound.height,
+                width: newSizeSound.width,
+                child: soundWidget,
+              ));
           spriteObjects.add(new PageObject('widget', widget: sound));
 
-          Offset newCoordinatesKaraokeText = 
-              rootNode.convertPointToBoxSpace(object['karaokeText']['coordinates']);
+          Offset newCoordinatesKaraokeText = rootNode
+              .convertPointToBoxSpace(object['karaokeText']['coordinates']);
           // Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
           //     Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
           // );
           // Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
           KaraokeCounterObject kCounterObject = KaraokeCounterObject(-1, false);
           IBKaraokeText karaokeTextWidget = new IBKaraokeText(
-            object['karaokeText']['contents'],
-            object['karaokeText']['colorSubtitle'],
-            object['karaokeText']['textStyle'],
-            _player,
-            kCounterObject
-          );
+              object['karaokeText']['contents'],
+              object['karaokeText']['colorSubtitle'],
+              object['karaokeText']['textStyle'],
+              _player,
+              kCounterObject);
           Widget karaokeText = new Positioned(
-            top: newCoordinatesKaraokeText.dy,
-            left: newCoordinatesKaraokeText.dx,
-            child: Container(
-              // height: newSizeKaraoke.height,
-              // width: newSizeKaraoke.width,
-              child: karaokeTextWidget
-            )
-          );
+              top: newCoordinatesKaraokeText.dy,
+              left: newCoordinatesKaraokeText.dx,
+              child: Container(
+                  // height: newSizeKaraoke.height,
+                  // width: newSizeKaraoke.width,
+                  child: karaokeTextWidget));
 
           spriteObjects.add(new PageObject('widget', widget: karaokeText));
           break;
         // case Constants.KARAOKE:
-        //   Offset newCoordinates = 
+        //   Offset newCoordinates =
         //       rootNode.convertPointToBoxSpace(object['coordinates']);
         //   Offset sizeConverted = rootNode.convertPointToBoxSpace(
         //       Offset(object['size'].width, object['size'].height)
@@ -430,16 +440,22 @@ class Utils {
 
   static List<CustomAction> createActions(
       YamlList objectsAction, dynamic object, Size size, NodeBook rootNode) {
-    Map<String, dynamic> oldProp = new Map<String, dynamic>()..addAll({ 
-      'rotation': object.rotation,
-      'opacity': object.runtimeType != IBLabel ? object.opacity: 1.0,
-      'position': object.position,
-      'scale': object.scale,
-    });
+    Map<String, dynamic> oldProp = new Map<String, dynamic>()
+      ..addAll({
+        'rotation': object.rotation,
+        'opacity': object.runtimeType != IBLabel ? object.opacity : 1.0,
+        'position': object.position,
+        'scale': object.scale,
+        'skewX': object.skewX,
+        'skewY': object.skewY,
+      });
     List<CustomAction> spriteActions = new List<CustomAction>();
     for (var iObjAction in objectsAction) {
       var objAction = iObjAction['objectAction'];
-      oldProp.addAll({ 'motion': objAction['motion'], 'repeatTimes': objAction['repeatTimes'] ?? 0 });
+      oldProp.addAll({
+        'motion': objAction['motion'],
+        'repeatTimes': objAction['repeatTimes'] ?? 0
+      });
       switch (objAction['type']) {
         case Constants.SEQUENCE_ACTION:
           List<Motion> motions = new List<Motion>();
@@ -448,7 +464,8 @@ class Utils {
             YamlMap action = iAction['action'];
             Motion motion;
             if (iAction == actions.last) {
-              motion = createMotion(action, object, size, rootNode, oldProp: oldProp);
+              motion = createMotion(action, object, size, rootNode,
+                  oldProp: oldProp);
             } else {
               motion = createMotion(action, object, size, rootNode);
             }
@@ -464,7 +481,8 @@ class Utils {
           break;
         case Constants.SINGLE_ACTION:
           YamlMap action = objAction['actions'][0]['action'];
-          Motion motion = createMotion(action, object, size, rootNode, oldProp: oldProp);
+          Motion motion =
+              createMotion(action, object, size, rootNode, oldProp: oldProp);
           Motion finalMotion = createMotionWithBehaviour(
               motion, objAction['motion'], objAction['repeatTimes'] ?? 0);
           spriteActions
@@ -476,16 +494,19 @@ class Utils {
     return spriteActions;
   }
 
-
-  static Motion createMotion(YamlMap action, dynamic object, Size size, NodeBook rootNode, { Map<String, dynamic> oldProp }) {
+  static Motion createMotion(
+      YamlMap action, dynamic object, Size size, NodeBook rootNode,
+      {Map<String, dynamic> oldProp}) {
     int repeatTime = 0;
     switch (action['type']) {
       case 'move':
         var parameters = action['parameters'];
-        Offset startVal = Offset((parameters['startVal']['x'] + size.width / 2).toDouble(),
-              (parameters['startVal']['y'] + size.height / 2).toDouble());
-        Offset endVal = Offset((parameters['endVal']['x'] + size.width / 2).toDouble(),
-              (parameters['endVal']['y'] + size.height / 2).toDouble());
+        Offset startVal = Offset(
+            (parameters['startVal']['x'] + size.width / 2).toDouble(),
+            (parameters['startVal']['y'] + size.height / 2).toDouble());
+        Offset endVal = Offset(
+            (parameters['endVal']['x'] + size.width / 2).toDouble(),
+            (parameters['endVal']['y'] + size.height / 2).toDouble());
         return IBTranslation.createMotion(
           parameters['name'],
           parameters['duration'].toDouble() ?? 1.0,
@@ -499,6 +520,8 @@ class Utils {
                   object.position = oldProp['position'];
                   object.rotation = oldProp['rotation'];
                   object.scale = oldProp['scale'];
+                  object.skewX = oldProp['skewX'];
+                  object.skewY = oldProp['skewY'];
                   if (object.runtimeType != IBLabel) {
                     object.opacity = oldProp['opacity'];
                   }
@@ -507,6 +530,8 @@ class Utils {
                   object.position = oldProp['position'];
                   object.rotation = oldProp['rotation'];
                   object.scale = oldProp['scale'];
+                  object.skewX = oldProp['skewX'];
+                  object.skewY = oldProp['skewY'];
                   if (object.runtimeType != IBLabel) {
                     object.opacity = oldProp['opacity'];
                   }
@@ -521,71 +546,74 @@ class Utils {
       case 'rotate':
         var parameters = action['parameters'];
         double startVal = parameters['startVal'].toDouble();
-        double endVal = parameters['endVal'].toDouble() * parameters['direction'];
+        double endVal =
+            parameters['endVal'].toDouble() * parameters['direction'];
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_ROTATE,
-            parameters['duration']?.toDouble() ?? 1.0,
-            setterFunction: (angle) {
-              object.rotation = angle;
-              if (oldProp != null && angle == endVal) {
-                switch (oldProp['motion']) {
-                  case Constants.REPEAT:
-                    repeatTime++;
-                    if (repeatTime == oldProp['repeatTimes']) return;
-                    object.position = oldProp['position'];
-                    object.rotation = oldProp['rotation'];
-                    object.scale = oldProp['scale'];
-                    if (object.runtimeType != IBLabel) {
-                      object.opacity = oldProp['opacity'];
-                    }
-                    break;
-                  case Constants.REPEAT_FOREVER:
-                    object.position = oldProp['position'];
-                    object.rotation = oldProp['rotation'];
-                    object.scale = oldProp['scale'];
-                    if (object.runtimeType != IBLabel) {
-                      object.opacity = oldProp['opacity'];
-                    }
-                    break;
-                  default:
+            parameters['duration']?.toDouble() ?? 1.0, setterFunction: (angle) {
+          object.rotation = angle;
+          if (oldProp != null && angle == endVal) {
+            switch (oldProp['motion']) {
+              case Constants.REPEAT:
+                repeatTime++;
+                if (repeatTime == oldProp['repeatTimes']) return;
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
                 }
-              }
-            },
-            propStartVal: startVal,
-            propEndVal: endVal);
+                break;
+              case Constants.REPEAT_FOREVER:
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
+                }
+                break;
+              default:
+            }
+          }
+        }, propStartVal: startVal, propEndVal: endVal);
       case 'scale':
         var parameters = action['parameters'];
         double startVal = parameters['startVal'].toDouble();
         double endVal = parameters['endVal'].toDouble();
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_SCALE,
-            parameters['duration']?.toDouble() ?? 1.0,
-            setterFunction: (scale) {
-              object.scale = scale;
-              if (oldProp != null && scale == endVal) {
-                switch (oldProp['motion']) {
-                  case Constants.REPEAT:
-                    repeatTime++;
-                    if (repeatTime == oldProp['repeatTimes']) return;
-                    object.position = oldProp['position'];
-                    object.rotation = oldProp['rotation'];
-                    object.scale = oldProp['scale'];
-                    if (object.runtimeType != IBLabel) {
-                      object.opacity = oldProp['opacity'];
-                    }
-                    break;
-                  case Constants.REPEAT_FOREVER:
-                    object.position = oldProp['position'];
-                    object.rotation = oldProp['rotation'];
-                    object.scale = oldProp['scale'];
-                    if (object.runtimeType != IBLabel) {
-                      object.opacity = oldProp['opacity'];
-                    }
-                    break;
-                  default:
+            parameters['duration']?.toDouble() ?? 1.0, setterFunction: (scale) {
+          object.scale = scale;
+          if (oldProp != null && scale == endVal) {
+            switch (oldProp['motion']) {
+              case Constants.REPEAT:
+                repeatTime++;
+                if (repeatTime == oldProp['repeatTimes']) return;
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
                 }
-              }
-            },
-            propStartVal: startVal,
-            propEndVal: endVal);
+                break;
+              case Constants.REPEAT_FOREVER:
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
+                }
+                break;
+              default:
+            }
+          }
+        }, propStartVal: startVal, propEndVal: endVal);
         break;
       case 'opacity':
         var parameters = action['parameters'];
@@ -594,33 +622,72 @@ class Utils {
         return IBTranslation.createMotion(Constants.MOTION_TWEEN_OPACITY,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (opacity) {
-              object.opacity = opacity;
-              if (oldProp != null && opacity == endVal) {
-                switch (oldProp['motion']) {
-                  case Constants.REPEAT:
-                    repeatTime++;
-                    if (repeatTime == oldProp['repeatTimes']) return;
-                    object.position = oldProp['position'];
-                    object.rotation = oldProp['rotation'];
-                    object.scale = oldProp['scale'];
-                    if (object.runtimeType != IBLabel) {
-                      object.opacity = oldProp['opacity'];
-                    }
-                    break;
-                  case Constants.REPEAT_FOREVER:
-                    object.position = oldProp['position'];
-                    object.rotation = oldProp['rotation'];
-                    object.scale = oldProp['scale'];
-                    if (object.runtimeType != IBLabel) {
-                      object.opacity = oldProp['opacity'];
-                    }
-                    break;
-                  default:
+          object.opacity = opacity;
+          if (oldProp != null && opacity == endVal) {
+            switch (oldProp['motion']) {
+              case Constants.REPEAT:
+                repeatTime++;
+                if (repeatTime == oldProp['repeatTimes']) return;
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
                 }
-              }
-            },
-            propStartVal: startVal,
-            propEndVal: endVal);
+                break;
+              case Constants.REPEAT_FOREVER:
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
+                }
+                break;
+              default:
+            }
+          }
+        }, propStartVal: startVal, propEndVal: endVal);
+        break;
+      case 'skew':
+        var parameters = action['parameters'];
+        double startVal = parameters['startVal'].toDouble();
+        double endVal = parameters['endVal'].toDouble();
+        return IBTranslation.createMotion(Constants.MOTION_TWEEN_SKEW,
+            parameters['duration']?.toDouble() ?? 1.0, setterFunction: (skew) {
+          object.skewX = skew;
+          object.skewY = skew;
+          if (oldProp != null && skew == endVal) {
+            switch (oldProp['motion']) {
+              case Constants.REPEAT:
+                repeatTime++;
+                if (repeatTime == oldProp['repeatTimes']) return;
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
+                }
+                break;
+              case Constants.REPEAT_FOREVER:
+                object.position = oldProp['position'];
+                object.rotation = oldProp['rotation'];
+                object.scale = oldProp['scale'];
+                object.skewX = oldProp['skewX'];
+                object.skewY = oldProp['skewY'];
+                if (object.runtimeType != IBLabel) {
+                  object.opacity = oldProp['opacity'];
+                }
+                break;
+              default:
+            }
+          }
+        }, propStartVal: startVal, propEndVal: endVal);
         break;
       default:
     }
@@ -634,9 +701,11 @@ class Utils {
       case Constants.NORMAL:
         return motion;
       case Constants.REPEAT:
-        Motion repeatMotion = IBTranslation.createMotion(Constants.MOTION_TWEEN_REPEAT, 1.0,
+        Motion repeatMotion = IBTranslation.createMotion(
+            Constants.MOTION_TWEEN_REPEAT, 1.0,
             numRepeat: numRepeat - 1, motion: motion);
-        return IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0, motions: List<Motion>()..add(repeatMotion)..add(motion));
+        return IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0,
+            motions: List<Motion>()..add(repeatMotion)..add(motion));
       case Constants.REPEAT_FOREVER:
         return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0,
             motion: motion);
@@ -683,49 +752,50 @@ class Utils {
     return data;
   }
 
-  static PageObject reCalculateSpecificObjects(IBObject iObject, NodeBook rootNode) {
-      Map object = iObject.object;
-      switch (iObject.type) {
-        case Constants.GALLERY:
-          Offset newCoordinates =
-              rootNode.convertPointToBoxSpace(object['coordinates']);
-          Offset sizeConverted = rootNode.convertPointToBoxSpace(
-              Offset(object['size'].width, object['size'].height));
-          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          IBGallery galleryWidget = new IBGallery(newSize, object['imageList']);
-          Widget gallery = new Positioned(
-              top: newCoordinates.dy,
-              left: newCoordinates.dx,
-              child: Container(
-                height: newSize.height,
-                width: newSize.width,
-                child: galleryWidget,
-              ));
-          return new PageObject('widget', widget: gallery, rawObject: iObject); 
-        case Constants.VIDEO:
-          Offset newCoordinates =
-              rootNode.convertPointToBoxSpace(object['coordinates']);
-          Offset sizeConverted = rootNode.convertPointToBoxSpace(
-              Offset(object['size'].width, object['size'].height));
-          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
-          Union2<File, String> videoFile;
-          if (Constants.ENV == 'DEVELOPMENT') {
-            videoFile = object['originalVideo'].asSecond();
-          } else {
-            videoFile = File(object['originalVideo']).asFirst();
-          }
-          IBVideo videoWidget = new IBVideo(newSize, videoFile);
-          Widget video = new Positioned(
-              top: newCoordinates.dy,
-              left: newCoordinates.dx,
-              child: Container(
-                height: newSize.height,
-                width: newSize.width,
-                child: videoWidget,
-              ));
-          return new PageObject('widget', widget: video, rawObject: iObject);
-          break;
-        default:
+  static PageObject reCalculateSpecificObjects(
+      IBObject iObject, NodeBook rootNode) {
+    Map object = iObject.object;
+    switch (iObject.type) {
+      case Constants.GALLERY:
+        Offset newCoordinates =
+            rootNode.convertPointToBoxSpace(object['coordinates']);
+        Offset sizeConverted = rootNode.convertPointToBoxSpace(
+            Offset(object['size'].width, object['size'].height));
+        Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+        IBGallery galleryWidget = new IBGallery(newSize, object['imageList']);
+        Widget gallery = new Positioned(
+            top: newCoordinates.dy,
+            left: newCoordinates.dx,
+            child: Container(
+              height: newSize.height,
+              width: newSize.width,
+              child: galleryWidget,
+            ));
+        return new PageObject('widget', widget: gallery, rawObject: iObject);
+      case Constants.VIDEO:
+        Offset newCoordinates =
+            rootNode.convertPointToBoxSpace(object['coordinates']);
+        Offset sizeConverted = rootNode.convertPointToBoxSpace(
+            Offset(object['size'].width, object['size'].height));
+        Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+        Union2<File, String> videoFile;
+        if (Constants.ENV == 'DEVELOPMENT') {
+          videoFile = object['originalVideo'].asSecond();
+        } else {
+          videoFile = File(object['originalVideo']).asFirst();
+        }
+        IBVideo videoWidget = new IBVideo(newSize, videoFile);
+        Widget video = new Positioned(
+            top: newCoordinates.dy,
+            left: newCoordinates.dx,
+            child: Container(
+              height: newSize.height,
+              width: newSize.width,
+              child: videoWidget,
+            ));
+        return new PageObject('widget', widget: video, rawObject: iObject);
+        break;
+      default:
     }
 
     return new PageObject('none');

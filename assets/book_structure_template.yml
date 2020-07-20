@@ -54,6 +54,21 @@ app:
                   alpha: 1
                   rotation: 0
                   scale: 1
+                objectActions:
+                  - objectAction:
+                      index: "1"
+                      type: "Single Action"
+                      motion: "repeat forever"
+                      active:
+                        type: auto
+                      actions:
+                        - action:
+                            index: "1"
+                            type: "skew"
+                            parameters:
+                              duration: 10.0
+                              startVal: -1000.0
+                              endVal: 1000.0
     - page:
         index: "2"
         objects:
