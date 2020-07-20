@@ -30,9 +30,7 @@ class IBTranslation {
           duration,
         );
       case Constants.MOTION_TWEEN_REPEAT:
-        return new MotionRepeat(
-            motion,
-            numRepeat);
+        return new MotionRepeat(motion, numRepeat);
         break;
       case Constants.MOTION_SEQUENCE:
         return new MotionSequence(motions);
@@ -380,6 +378,33 @@ class IBTranslation {
           endVal,
           duration,
           Curves.linear,
+        );
+        break;
+      case Constants.MOTION_FAST_LINEAR_TO_SLOW_EASE_IN:
+        return new MotionTween<Offset>(
+          setterFunction,
+          startVal,
+          endVal,
+          duration,
+          Curves.fastLinearToSlowEaseIn,
+        );
+        break;
+      case Constants.MOTION_LINEAR_TO_EASE_OUT:
+        return new MotionTween<Offset>(
+          setterFunction,
+          startVal,
+          endVal,
+          duration,
+          Curves.linearToEaseOut,
+        );
+        break;
+      case Constants.MOTION_EASE_IN_TO_LINEAR:
+        return new MotionTween<Offset>(
+          setterFunction,
+          startVal,
+          endVal,
+          duration,
+          Curves.easeInToLinear,
         );
         break;
       default:

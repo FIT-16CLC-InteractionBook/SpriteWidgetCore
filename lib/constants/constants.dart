@@ -16,7 +16,7 @@ const MOTION_SEQUENCE = "MotionSequence";
 const MOTION_BOUNCED_OUT = "BouncedOut";
 const MOTION_BOUNCED_IN_OUT = "BouncedInOut";
 const MOTION_BOUNCED_IN = "BouncedIn";
-const MOTION_DECELERATE= "Ease";
+const MOTION_DECELERATE = "Ease";
 const MOTION_EASE = "Ease";
 const MOTION_EASE_IN = "EaseIn";
 const MOTION_EASE_IN_SINE = "EaseInSine";
@@ -51,7 +51,9 @@ const MOTION_ELASTIC_OUT = "EaseElasticOut";
 const MOTION_FAST_OUT_SLOW_IN = "EaseFastOutSlowIn";
 const MOTION_SLOW_MIDDLE = "EaseSlowMiddle";
 const MOTION_LINEAR = "EaseLinear";
-
+const MOTION_FAST_LINEAR_TO_SLOW_EASE_IN = "FastLinearToSlowEaseIn";
+const MOTION_LINEAR_TO_EASE_OUT = "LinearToEaseOut";
+const MOTION_EASE_IN_TO_LINEAR = "EaseInToLinear";
 //Object type
 const TEXT = 'text';
 const IMAGE = 'image';
@@ -65,19 +67,3 @@ const SEQUENCE_ACTION = 'Sequence Action';
 const SINGLE_ACTION = 'Single Action';
 
 const ENV = String.fromEnvironment('ENV', defaultValue: 'Production');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
