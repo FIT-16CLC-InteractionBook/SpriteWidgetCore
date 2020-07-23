@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:ibcore/interfaces/KaraokeCounterObject.dart';
 import 'package:ibcore/interfaces/PageObject.dart';
 import 'package:ibcore/core/IBGallery.dart';
 import 'package:ibcore/core/IBLabel.dart';
+import 'package:ibcore/core/IBParticle.dart';
 import 'package:ibcore/interfaces/IBObject.dart';
 import 'package:ibcore/interfaces/IBPage.dart';
 import 'package:ibcore/core/IBSprite.dart';
@@ -84,6 +86,10 @@ class Utils {
               // Map destructKaraoke = destructKaraokeText(object['objectTexts']);
               objects.add(new IBObject(Constants.SOUND, destructSound));
               // objects.add(new IBObject(Constants.KARAOKE, destructKaraoke));
+              break;
+            case Constants.PARTICLE:
+              Map destructParticle = destructParticleObject(object);
+              objects.add(new IBObject(Constants.PARTICLE, destructParticle));
               break;
             default:
           }
@@ -245,7 +251,101 @@ class Utils {
       });
   }
 
-  static List<PageObject> createObjectsInPage(IBPage page, NodeBook rootNode) {
+  static Map<String, dynamic> destructParticleObject(YamlMap object) {
+    ui.Offset coordinateParticle = new ui.Offset(
+        object['coordinates']['x'].toDouble(),
+        object['coordinates']['y'].toDouble());
+    ui.Size sizeParticle = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
+
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinateParticle,
+        'size': sizeParticle,
+        'preset': object['preset'],
+        'parameters': {
+          'emission': {
+            'life': object['parameters']['emission']['life'].toDouble(),
+            'lifeVar': object['parameters']['emission']['lifeVar'].toDouble(),
+            'maxParticles': object['parameters']['emission']['maxParticles'],
+            'emissionRate':
+                object['parameters']['emission']['emissionRate'].toDouble(),
+            'numParticlesToEmit': object['parameters']['emission']
+                ['numParticlesToEmit'],
+          },
+          'movement': {
+            'posVar': object['parameters']['movement']['posVar']
+                .map((value) => value.toDouble())
+                .toList(),
+            'gravity': object['parameters']['movement']['gravity']
+                .map((value) => value.toDouble())
+                .toList(),
+            'direction':
+                object['parameters']['movement']['direction'].toDouble(),
+            'directionVar':
+                object['parameters']['movement']['directionVar'].toDouble(),
+            'speed': object['parameters']['movement']['speed'].toDouble(),
+            'speedVar': object['parameters']['movement']['speedVar'].toDouble(),
+            'radialAcceleration': object['parameters']['movement']
+                    ['radialAcceleration']
+                .toDouble(),
+            'radialAccelerationVar': object['parameters']['movement']
+                    ['radialAccelerationVar']
+                .toDouble(),
+            'tangentialAcceleration': object['parameters']['movement']
+                    ['tangentialAcceleration']
+                .toDouble(),
+            'tangentialAccelerationVar': object['parameters']['movement']
+                    ['tangentialAccelerationVar']
+                .toDouble(),
+          },
+          'sizeAndRotate': {
+            'rotateToMovement': object['parameters']['sizeAndRotate']
+                ['rotateToMovement'],
+            'startSize':
+                object['parameters']['sizeAndRotate']['startSize'].toDouble(),
+            'startSizeVar': object['parameters']['sizeAndRotate']
+                    ['startSizeVar']
+                .toDouble(),
+            'endSize':
+                object['parameters']['sizeAndRotate']['endSize'].toDouble(),
+            'endSizeVar':
+                object['parameters']['sizeAndRotate']['endSizeVar'].toDouble(),
+            'startRotation': object['parameters']['sizeAndRotate']
+                    ['startRotation']
+                .toDouble(),
+            'startRotationVar': object['parameters']['sizeAndRotate']
+                    ['startRotationVar']
+                .toDouble(),
+            'endRotation':
+                object['parameters']['sizeAndRotate']['endRotation'].toDouble(),
+            'endRotationVar': object['parameters']['sizeAndRotate']
+                    ['endRotationVar']
+                .toDouble(),
+          },
+          'textureAndColors': {
+            'colorSequence': {
+              'colors': object['parameters']['textureAndColors']
+                  ['colorSequence']['colors'],
+              'colorStops': object['parameters']['textureAndColors']
+                      ['colorSequence']['colorStops']
+                  .map((value) => value.toDouble())
+                  .toList(),
+            },
+            'alphaVar': object['parameters']['textureAndColors']['alphaVar'],
+            'redVar': object['parameters']['textureAndColors']['redVar'],
+            'greenVar': object['parameters']['textureAndColors']['greenVar'],
+            'blueVar': object['parameters']['textureAndColors']['blueVar'],
+            'blendMode': object['parameters']['textureAndColors']['blendMode'],
+            'autoRemoveOnFinish': object['parameters']['textureAndColors']
+                ['autoRemoveOnFinish'],
+          },
+        }
+      });
+  }
+
+  static List<PageObject> createObjectsInPage(
+      IBPage page, NodeBook rootNode, ImageMap imagesParticle) {
     List<IBObject> objects = page.objects;
     List<PageObject> spriteObjects = new List<PageObject>();
     for (var iObject in objects) {
@@ -431,6 +531,22 @@ class Utils {
         //   );
         //   spriteObjects.add(new PageObject('widget', widget: karaokeText));
         //   break;
+        case Constants.PARTICLE:
+          var emission = object['parameters']['emission'];
+          var movement = object['parameters']['movement'];
+          var sizeAndRotate = object['parameters']['sizeAndRotate'];
+          var textureAndColors = object['parameters']['textureAndColors'];
+          var blendMode = new Map()..addAll({'blendMode': 12});
+          var particleData = new Map()
+            ..addAll(emission)
+            ..addAll(movement)
+            ..addAll(sizeAndRotate)
+            ..addAll(textureAndColors)
+            ..addAll(blendMode);
+          IBParticle particle = new IBParticle(imagesParticle, object['preset'],
+              object['coordinates'], object['size'], json.encode(particleData));
+          spriteObjects.add(new PageObject('node', node: particle));
+          break;
         default:
       }
     }
@@ -750,6 +866,23 @@ class Utils {
       data = await File(imgSrc).readAsBytes();
     }
     return data;
+  }
+
+  static Future<ImageMap> getParticleImage() async {
+    ImageMap _images = new ImageMap(rootBundle);
+    var completer = new Completer<ImageMap>();
+    _images.load([
+      'assets/particle-0.png',
+      'assets/particle-1.png',
+      'assets/particle-2.png',
+      'assets/particle-3.png',
+      'assets/particle-4.png',
+      'assets/particle-5.png',
+    ]).then((List<ui.Image> images) {
+      completer.complete(_images);
+    });
+
+    return completer.future;
   }
 
   static PageObject reCalculateSpecificObjects(

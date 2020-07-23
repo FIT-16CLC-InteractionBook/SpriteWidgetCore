@@ -15,7 +15,6 @@ class PDFDataObject: ObservableObject {
 
 class FetchApi {
     func getPDF(url: String, completion: @escaping (PDFView) -> ()) {
-        print(url);
         let documentUrl = URL(string: url);
         let pdfView = PDFView();
         if let pdfDocument = PDFDocument(url: documentUrl!) {

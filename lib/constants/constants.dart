@@ -62,6 +62,7 @@ const GALLERY = 'gallery';
 const VIDEO = 'video';
 const SOUND = 'sound';
 const KARAOKE = 'karaoke';
+const PARTICLE = 'particle';
 
 //Object Aciton type
 const SEQUENCE_ACTION = 'Sequence Action';

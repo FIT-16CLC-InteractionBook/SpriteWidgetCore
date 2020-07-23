@@ -3,7 +3,7 @@ manifest:
   author:
     name: nhuttm
   app-name: test-book
-  orientation: portrait
+  orientation: landscape
   initializePDF: ''
   categories:
     - horror
@@ -14,7 +14,7 @@ manifest:
 app:
   background:
     image: ""
-    color: 0xffffffff
+    color: 0xffffc0cb
   app-page:
     - page:
         index: "1"
@@ -42,99 +42,126 @@ app:
           #           originalImage: assets/image3.jpg
           - object:
                 index: "2" #1 -> n
-                type: "image"
+                type: "particle"
                 name: "demo"
                 coordinates:
-                  x: 300.0
+                  x: 100.0
                   y: 100.0
-                  w: 300.0
-                  h: 300.0
-                originalImage: assets/image3.jpg
-                properties:
-                  alpha: 1
-                  rotation: 0
-                  scale: 1
-                objectActions:
-                  - objectAction:
-                      index: "1"
-                      type: "Single Action"
-                      motion: "repeat forever"
-                      active:
-                        type: auto
-                      actions:
-                        - action:
-                            index: "1"
-                            type: "skew"
-                            parameters:
-                              duration: 10.0
-                              startVal: -1000.0
-                              endVal: 1000.0
-    - page:
-        index: "2"
-        objects:
-          # - object:
-          #     index: "1" #1 -> n
-          #     type: "gallery"
-          #     coordinates:
-          #       x: 100.0
-          #       y: 100.0
-          #       w: 200.0
-          #       h: 200.0
-          #     imageList:
-          #       - image:
-          #           index: "1"
-          #           name: "image1"
-          #           originalImage: assets/image1.jpg
-          #       - image:
-          #           index: "2"
-          #           name: "image2"
-          #           originalImage: assets/image2.jpg
-          #       - image:
-          #           index: "3"
-          #           name: "image3"
-          #           originalImage: assets/image3.jpg
-          - object:
-                index: "2" #1 -> n
-                type: "image"
-                name: "demo"
-                coordinates:
-                  x: 300.0
-                  y: 100.0
-                  w: 300.0
-                  h: 300.0
-                originalImage: assets/image3.jpg
-                properties:
-                  alpha: 1
-                  rotation: 0
-                  scale: 1
-                # objectActions:
-                #   - objectAction:
-                #       index: "1"
-                #       type: "Sequence Action"
-                #       motion: "repeat"
-                #       repeatTimes: 5
-                #       active:
-                #         type: auto
-                #       actions:
-                #         # - action:
-                #         #     index: "1"
-                #         #     type: "scale"
-                #         #     parameters:
-                #         #       duration: 0.5
-                #         #       startVal: 0.5
-                #         #       endVal: 2.0
-                #         - action:
-                #             index: "1"
-                #             type: "scale"
-                #             parameters:
-                #               duration: 0.5
-                #               startVal: 2.0
-                #               endVal: 1.0
-                #         - action:
-                #             index: "2"
-                #             type: "opacity"
-                #             parameters:
-                #               duration: 0.5
-                #               startVal: 1.0
-                #               endVal: 0.4
+                  w: 500.0
+                  h: 400.0
+                preset: default
+                parameters:
+                  emission:
+                    life: 1.5
+                    lifeVar: 1
+                    maxParticles: 100
+                    emissionRate: 50
+                    numParticlesToEmit: 0
+                  movement:
+                    posVar:
+                      - 0
+                      - 0
+                    gravity:
+                      - 0
+                      - 0
+                    direction: 0
+                    directionVar: 360
+                    speed: 100
+                    speedVar: 50
+                    radialAcceleration: 0
+                    radialAccelerationVar: 0
+                    tangentialAcceleration: 0
+                    tangentialAccelerationVar: 0
+                  sizeAndRotate:
+                    rotateToMovement: false
+                    startSize: 2.5
+                    startSizeVar: 0.5
+                    endSize: 0
+                    endSizeVar: 0
+                    startRotation: 0
+                    startRotationVar: 0
+                    endRotation: 0
+                    endRotationVar: 0
+                  textureAndColors:
+                    colorSequence:
+                      colors:
+                        - 0xffffc0cb
+                        - 16777215
+                      colorStops:
+                        - 0
+                        - 1
+                    alphaVar: 0
+                    redVar: 0
+                    greenVar: 0
+                    blueVar: 0
+                    blendMode: 'plus'
+                    autoRemoveOnFinish: false
+    # - page:
+    #     index: "2"
+    #     objects:
+    #       # - object:
+    #       #     index: "1" #1 -> n
+    #       #     type: "gallery"
+    #       #     coordinates:
+    #       #       x: 100.0
+    #       #       y: 100.0
+    #       #       w: 200.0
+    #       #       h: 200.0
+    #       #     imageList:
+    #       #       - image:
+    #       #           index: "1"
+    #       #           name: "image1"
+    #       #           originalImage: assets/image1.jpg
+    #       #       - image:
+    #       #           index: "2"
+    #       #           name: "image2"
+    #       #           originalImage: assets/image2.jpg
+    #       #       - image:
+    #       #           index: "3"
+    #       #           name: "image3"
+    #       #           originalImage: assets/image3.jpg
+    #       - object:
+    #             index: "2" #1 -> n
+    #             type: "image"
+    #             name: "demo"
+    #             coordinates:
+    #               x: 300.0
+    #               y: 100.0
+    #               w: 300.0
+    #               h: 300.0
+    #             originalImage: assets/image3.jpg
+    #             properties:
+    #               alpha: 1
+    #               rotation: 0
+    #               scale: 1
+    #             # objectActions:
+    #             #   - objectAction:
+    #             #       index: "1"
+    #             #       type: "Sequence Action"
+    #             #       motion: "repeat"
+    #             #       repeatTimes: 5
+    #             #       active:
+    #             #         type: auto
+    #             #       actions:
+    #             #         # - action:
+    #             #         #     index: "1"
+    #             #         #     type: "scale"
+    #             #         #     parameters:
+    #             #         #       duration: 0.5
+    #             #         #       startVal: 0.5
+    #             #         #       endVal: 2.0
+    #             #         - action:
+    #             #             index: "1"
+    #             #             type: "scale"
+    #             #             parameters:
+    #             #               duration: 0.5
+    #             #               startVal: 2.0
+    #             #               endVal: 1.0
+    #             #         - action:
+    #             #             index: "2"
+    #             #             type: "opacity"
+    #             #             parameters:
+    #             #               duration: 0.5
+    #             #               startVal: 1.0
+    #             #               endVal: 0.4
                 

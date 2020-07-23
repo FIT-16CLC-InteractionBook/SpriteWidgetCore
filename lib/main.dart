@@ -26,6 +26,7 @@ class IBCore extends StatefulWidget {
 class AppState extends State<IBCore> {
   var doc;
   bool isLoading = true;
+  ImageMap imagesParticle;
   List<IBPage> pages;
   String initializePDF;
   String orientationBook;
@@ -63,6 +64,7 @@ class AppState extends State<IBCore> {
 
     background = await Utils.loadBackground(main['background']);
     pages = await Utils.loadPage(main['app-page']);
+    imagesParticle = await Utils.getParticleImage();
     initializePDF = manifest['initializePDF'] ?? '';
     orientationBook = manifest['orientation'] ?? '';
     setState(() {
@@ -79,8 +81,8 @@ class AppState extends State<IBCore> {
           )
         : MaterialApp(
             title: 'Title',
-            home: MyWidget(
-                background, pages, orientation, initializePDF, orientationBook),
+            home: MyWidget(background, pages, imagesParticle, orientation,
+                initializePDF, orientationBook),
           );
   }
 }
@@ -91,12 +93,13 @@ class MyWidget extends StatefulWidget {
   final Orientation orientation;
   final String initializePDF;
   final String orientationBook;
+  final ImageMap imagesParticle;
 
-  MyWidget(this.background, this.pages, this.orientation, this.initializePDF,
-      this.orientationBook);
+  MyWidget(this.background, this.pages, this.imagesParticle, this.orientation,
+      this.initializePDF, this.orientationBook);
   @override
-  MyWidgetState createState() => new MyWidgetState(
-      background, pages, orientation, this.initializePDF, this.orientationBook);
+  MyWidgetState createState() => new MyWidgetState(background, pages,
+      imagesParticle, orientation, this.initializePDF, this.orientationBook);
 }
 
 class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
@@ -107,6 +110,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
       PageController(initialPage: 0, keepPage: true);
   final String initializePDF;
   final String orientationBook;
+  final ImageMap imagesParticle;
 
   static int totalPages;
   static List<NodeBook> rootNodes;
@@ -123,8 +127,8 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   List<int> pageRendered;
   Orientation currentOrientation;
 
-  MyWidgetState(this.background, this.pages, this.orientation,
-      this.initializePDF, this.orientationBook)
+  MyWidgetState(this.background, this.pages, this.imagesParticle,
+      this.orientation, this.initializePDF, this.orientationBook)
       : super() {
     totalPages = pages.length;
     currentOrientation = orientation;
@@ -195,7 +199,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   loadBook(BuildContext context) {
     for (var page in pages) {
       List<PageObject> pageObject =
-          Utils.createObjectsInPage(page, rootNodes[0]);
+          Utils.createObjectsInPage(page, rootNodes[0], imagesParticle);
       renderPages.add(pageObject);
     }
     for (var spriteObject in renderPages[0]) {
