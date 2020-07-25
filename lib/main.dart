@@ -119,7 +119,7 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   bool loading = true;
   bool isPDFRender = false;
   var curPage = 1;
-  Size size = Size(600.0, 800.0);
+  Size size = Size(420.0, 560.0);
 
   PDFViewer pdfViewer;
   List<List<PageObject>> renderPages;
@@ -137,8 +137,8 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
       isPDFRender = true;
     }
     size = this.orientationBook == 'portrait'
-        ? Size(600.0, 800.0)
-        : Size(800.0, 600.0);
+        ? Size(420.0, 560.0)
+        : Size(560.0, 420.0);
   }
 
   @override
