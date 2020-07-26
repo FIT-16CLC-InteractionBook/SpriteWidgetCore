@@ -588,7 +588,7 @@ class Utils {
             motions.add(motion);
           }
           Motion sequenceMotion = IBTranslation.createMotion(
-              Constants.MOTION_SEQUENCE, 1.0,
+              Constants.MOTION_EASE, Constants.MOTION_SEQUENCE, 1.0,
               motions: motions);
           Motion finalMotion = createMotionWithBehaviour(sequenceMotion,
               objAction['motion'], objAction['repeatTimes'] ?? 0);
@@ -625,6 +625,7 @@ class Utils {
             (parameters['endVal']['y'] + size.height / 2).toDouble());
         return IBTranslation.createMotion(
           parameters['name'],
+          Constants.MOTION_TWEEN,
           parameters['duration'].toDouble() ?? 1.0,
           setterFunction: (newPos) {
             object.position = newPos;
@@ -664,7 +665,9 @@ class Utils {
         double startVal = parameters['startVal'].toDouble();
         double endVal =
             parameters['endVal'].toDouble() * parameters['direction'];
-        return IBTranslation.createMotion(Constants.MOTION_TWEEN_ROTATE,
+        return IBTranslation.createMotion(
+            parameters['name'],
+            Constants.MOTION_TWEEN_ROTATE,
             parameters['duration']?.toDouble() ?? 1.0, setterFunction: (angle) {
           object.rotation = angle;
           if (oldProp != null && angle == endVal) {
@@ -699,7 +702,9 @@ class Utils {
         var parameters = action['parameters'];
         double startVal = parameters['startVal'].toDouble();
         double endVal = parameters['endVal'].toDouble();
-        return IBTranslation.createMotion(Constants.MOTION_TWEEN_SCALE,
+        return IBTranslation.createMotion(
+            parameters['name'],
+            Constants.MOTION_TWEEN_SCALE,
             parameters['duration']?.toDouble() ?? 1.0, setterFunction: (scale) {
           object.scale = scale;
           if (oldProp != null && scale == endVal) {
@@ -735,7 +740,9 @@ class Utils {
         var parameters = action['parameters'];
         double startVal = parameters['startVal'].toDouble();
         double endVal = parameters['endVal'].toDouble();
-        return IBTranslation.createMotion(Constants.MOTION_TWEEN_OPACITY,
+        return IBTranslation.createMotion(
+            parameters['name'],
+            Constants.MOTION_TWEEN_OPACITY,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (opacity) {
           object.opacity = opacity;
@@ -772,7 +779,9 @@ class Utils {
         var parameters = action['parameters'];
         double startVal = parameters['startVal'].toDouble();
         double endVal = parameters['endVal'].toDouble();
-        return IBTranslation.createMotion(Constants.MOTION_TWEEN_SKEW,
+        return IBTranslation.createMotion(
+            parameters['name'],
+            Constants.MOTION_TWEEN_SKEW,
             parameters['duration']?.toDouble() ?? 1.0, setterFunction: (skew) {
           object.skewX = skew;
           object.skewY = skew;
@@ -818,12 +827,14 @@ class Utils {
         return motion;
       case Constants.REPEAT:
         Motion repeatMotion = IBTranslation.createMotion(
-            Constants.MOTION_TWEEN_REPEAT, 1.0,
+            Constants.MOTION_EASE, Constants.MOTION_TWEEN_REPEAT, 1.0,
             numRepeat: numRepeat - 1, motion: motion);
-        return IBTranslation.createMotion(Constants.MOTION_SEQUENCE, 1.0,
+        return IBTranslation.createMotion(
+            Constants.MOTION_EASE, Constants.MOTION_SEQUENCE, 1.0,
             motions: List<Motion>()..add(repeatMotion)..add(motion));
       case Constants.REPEAT_FOREVER:
-        return IBTranslation.createMotion(Constants.MOTION_REPEAT_FOREVER, 1.0,
+        return IBTranslation.createMotion(
+            Constants.MOTION_EASE, Constants.MOTION_REPEAT_FOREVER, 1.0,
             motion: motion);
       default:
     }
