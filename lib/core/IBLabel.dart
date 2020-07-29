@@ -7,7 +7,6 @@ import 'package:ibcore/interfaces/ActiveAction.dart';
 import 'package:ibcore/utils.dart';
 
 class IBLabel extends Label {
-  
   final String _text;
   final TextAlign _textAlign;
   final TextStyle _textStyle;
@@ -15,20 +14,14 @@ class IBLabel extends Label {
   final Offset _position;
   final double _scale;
   final double _rotation;
-  
-  IBLabel(
-    this._text, 
-    this._textAlign, 
-    this._textStyle,
-    this._size,
-    this._position, 
-    this._scale, 
-    this._rotation) : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
-    position = Offset(_position.dx + _size.width / 2, _position.dy);
+
+  IBLabel(this._text, this._textAlign, this._textStyle, this._size,
+      this._position, this._scale, this._rotation)
+      : super(_text, textAlign: _textAlign, textStyle: _textStyle) {
     scale = _scale;
+    position = Offset(_position.dx + _size.width / 2, _position.dy);
     rotation = _rotation;
     userInteractionEnabled = true;
-    
   }
 
   // Offset range;
@@ -48,18 +41,22 @@ class IBLabel extends Label {
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
-    if (checkPoint.dx >= position.dx - _size.width/2 && checkPoint.dx <= _size.width + position.dx - _size.width/2 && checkPoint.dy <= _size.height + position.dy && checkPoint.dy >= position.dy)
-      return true;
+    if (checkPoint.dx >= position.dx - _size.width / 2 &&
+        checkPoint.dx <= _size.width + position.dx - _size.width / 2 &&
+        checkPoint.dy <= _size.height + position.dy &&
+        checkPoint.dy >= position.dy) return true;
 
     return false;
   }
 
-  @override handleEvent(SpriteBoxEvent event) {
+  @override
+  handleEvent(SpriteBoxEvent event) {
     if (event.type == PointerDownEvent) {
       // Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       // this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
       for (var action in onClickActions) {
-        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, _size, parent);
+        List<CustomAction> motionDestruct = Utils.createActions(
+            YamlList.wrap(List()..add(action.motion)), this, _size, parent);
         motions.run(motionDestruct[0].motion);
       }
     }
@@ -72,5 +69,4 @@ class IBLabel extends Label {
     // }
     return true;
   }
-
 }

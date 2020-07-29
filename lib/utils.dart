@@ -138,7 +138,8 @@ class Utils {
         object['coordinates']['y'].toDouble());
     ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
         object['coordinates']['h'].toDouble());
-
+    ui.Size rawSize = new ui.Size(object['extra']['rawWidth'].toDouble(),
+        object['extra']['rawHeight'].toDouble());
     Map<String, dynamic> properties = new Map<String, dynamic>()
       ..addAll({
         'rotation': object['properties']['rotation']?.toDouble() ?? 0.0,
@@ -155,6 +156,7 @@ class Utils {
       ..addAll({
         'coordinates': coordinates,
         'size': size,
+        'rawSize': rawSize,
         'originalImage': image['originalImage'],
         'properties': properties,
         'objectActions': object['objectActions'],
@@ -391,6 +393,7 @@ class Utils {
           IBSprite sprite = new IBSprite(
               object['originalImage'],
               object['size'],
+              object['rawSize'],
               object['coordinates'],
               object['properties']['scale'],
               object['properties']['rotation'],
@@ -617,12 +620,23 @@ class Utils {
     switch (action['type']) {
       case 'move':
         var parameters = action['parameters'];
-        Offset startVal = Offset(
-            (parameters['startVal']['x'] + size.width / 2).toDouble(),
-            (parameters['startVal']['y'] + size.height / 2).toDouble());
-        Offset endVal = Offset(
-            (parameters['endVal']['x'] + size.width / 2).toDouble(),
-            (parameters['endVal']['y'] + size.height / 2).toDouble());
+        Offset startVal;
+        Offset endVal;
+        if (object.runtimeType == IBLabel) {
+          startVal = Offset(
+              (parameters['startVal']['x'] + size.width / 2).toDouble(),
+              (parameters['startVal']['y']).toDouble());
+          endVal = Offset(
+              (parameters['endVal']['x'] + size.width / 2).toDouble(),
+              (parameters['endVal']['y']).toDouble());
+        } else {
+          startVal = Offset(
+              (parameters['startVal']['x'] + size.width / 2).toDouble(),
+              (parameters['startVal']['y'] + size.height / 2).toDouble());
+          endVal = Offset(
+              (parameters['endVal']['x'] + size.width / 2).toDouble(),
+              (parameters['endVal']['y'] + size.height / 2).toDouble());
+        }
         return IBTranslation.createMotion(
           parameters['name'],
           Constants.MOTION_TWEEN,

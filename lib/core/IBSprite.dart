@@ -7,19 +7,24 @@ import 'package:ibcore/interfaces/ActiveAction.dart';
 import 'package:ibcore/utils.dart';
 
 class IBSprite extends Sprite {
-
   final ui.Image _image;
   final Size _size;
+  final Size _rawSize;
   final Offset _position;
   final double _scale;
   final double _rotation;
-  final double _alpha; 
+  final double _alpha;
 
-  IBSprite(this._image, this._size, this._position, this._scale, this._rotation, this._alpha) : super.fromImage(_image) {
-    size = _size;
-    position = Offset(_position.dx + _size.width / 2, _position.dy + _size.height / 2);
-    scale= _scale;
+  bool firstPaint = false;
+
+  IBSprite(this._image, this._size, this._rawSize, this._position, this._scale,
+      this._rotation, this._alpha)
+      : super.fromImage(_image) {
+    size = _rawSize;
+    scale = _scale;
     rotation = _rotation;
+    position =
+        Offset(_position.dx + _size.width / 2, _position.dy + _size.height / 2);
     opacity = _alpha;
     userInteractionEnabled = true;
   }
@@ -37,21 +42,26 @@ class IBSprite extends Sprite {
       default:
     }
   }
+
   @override
   bool isPointInside(Offset point) {
     Offset checkPoint = parent.convertPointFromNode(point, this);
-    if (checkPoint.dx >= position.dx - size.width/2 && checkPoint.dx <= size.width + position.dx  - size.width/2 && checkPoint.dy <= size.height + position.dy - size.height / 2 && checkPoint.dy >= position.dy - size.height / 2)
-      return true;
+    if (checkPoint.dx >= position.dx - size.width / 2 &&
+        checkPoint.dx <= size.width + position.dx - size.width / 2 &&
+        checkPoint.dy <= size.height + position.dy - size.height / 2 &&
+        checkPoint.dy >= position.dy - size.height / 2) return true;
 
     return false;
   }
 
-  @override handleEvent(SpriteBoxEvent event) {
+  @override
+  handleEvent(SpriteBoxEvent event) {
     if (event.type == PointerDownEvent) {
       // Offset currentPosition = parent.convertPointToNodeSpace(event.boxPosition);
       // this.range = Offset(currentPosition.dx - position.dx, currentPosition.dy - position.dy);
       for (var action in onClickActions) {
-        List<CustomAction> motionDestruct = Utils.createActions(YamlList.wrap(List()..add(action.motion)), this, size, parent);
+        List<CustomAction> motionDestruct = Utils.createActions(
+            YamlList.wrap(List()..add(action.motion)), this, size, parent);
         motions.run(motionDestruct[0].motion);
       }
     }

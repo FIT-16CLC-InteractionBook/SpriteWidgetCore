@@ -14,7 +14,7 @@ manifest:
 app:
   background:
     image: ""
-    color: 0xffffc0cb
+    color: 16312092
   app-page:
     - page:
         index: "1"
@@ -40,62 +40,62 @@ app:
           #           index: "3"
           #           name: "image3"
           #           originalImage: assets/image3.jpg
-          - object:
-                index: "2" #1 -> n
-                type: "particle"
-                name: "demo"
-                coordinates:
-                  x: 100.0
-                  y: 100.0
-                  w: 500.0
-                  h: 400.0
-                preset: default
-                parameters:
-                  emission:
-                    life: 1.5
-                    lifeVar: 1
-                    maxParticles: 100
-                    emissionRate: 50
-                    numParticlesToEmit: 0
-                  movement:
-                    posVar:
-                      - 0
-                      - 0
-                    gravity:
-                      - 0
-                      - 0
-                    direction: 0
-                    directionVar: 360
-                    speed: 100
-                    speedVar: 50
-                    radialAcceleration: 0
-                    radialAccelerationVar: 0
-                    tangentialAcceleration: 0
-                    tangentialAccelerationVar: 0
-                  sizeAndRotate:
-                    rotateToMovement: false
-                    startSize: 2.5
-                    startSizeVar: 0.5
-                    endSize: 0
-                    endSizeVar: 0
-                    startRotation: 0
-                    startRotationVar: 0
-                    endRotation: 0
-                    endRotationVar: 0
-                  textureAndColors:
-                    colorSequence:
-                      colors:
-                        - 0xffffc0cb
-                        - 16777215
-                      colorStops:
-                        - 0
-                        - 1
-                    alphaVar: 0
-                    redVar: 0
-                    greenVar: 0
-                    blueVar: 0
-                    blendMode: 'plus'
-                    autoRemoveOnFinish: false
+          # - object:
+          #       index: "2" #1 -> n
+          #       type: "particle"
+          #       name: "demo"
+          #       coordinates:
+          #         x: 100.0
+          #         y: 100.0
+          #         w: 500.0
+          #         h: 400.0
+          #       preset: default
+          #       parameters:
+          #         emission:
+          #           life: 1.5
+          #           lifeVar: 1
+          #           maxParticles: 100
+          #           emissionRate: 50
+          #           numParticlesToEmit: 0
+          #         movement:
+          #           posVar:
+          #             - 0
+          #             - 0
+          #           gravity:
+          #             - 0
+          #             - 0
+          #           direction: 0
+          #           directionVar: 360
+          #           speed: 100
+          #           speedVar: 50
+          #           radialAcceleration: 0
+          #           radialAccelerationVar: 0
+          #           tangentialAcceleration: 0
+          #           tangentialAccelerationVar: 0
+          #         sizeAndRotate:
+          #           rotateToMovement: false
+          #           startSize: 2.5
+          #           startSizeVar: 0.5
+          #           endSize: 0
+          #           endSizeVar: 0
+          #           startRotation: 0
+          #           startRotationVar: 0
+          #           endRotation: 0
+          #           endRotationVar: 0
+          #         textureAndColors:
+          #           colorSequence:
+          #             colors:
+          #               - 0xffffc0cb
+          #               - 16777215
+          #             colorStops:
+          #               - 0
+          #               - 1
+          #           alphaVar: 0
+          #           redVar: 0
+          #           greenVar: 0
+          #           blueVar: 0
+          #           blendMode: 'plus'
+          #           autoRemoveOnFinish: false
     # - page:
     #     index: "2"
     #     objects:
@@ -120,20 +120,47 @@ app:
     #       #           index: "3"
     #       #           name: "image3"
     #       #           originalImage: assets/image3.jpg
-    #       - object:
-    #             index: "2" #1 -> n
-    #             type: "image"
-    #             name: "demo"
-    #             coordinates:
-    #               x: 300.0
-    #               y: 100.0
-    #               w: 300.0
-    #               h: 300.0
-    #             originalImage: assets/image3.jpg
-    #             properties:
-    #               alpha: 1
-    #               rotation: 0
-    #               scale: 1
+          - object:
+              index: 750ab4de-e1a6-45c1-931d-1f9d34e5867e
+              type: text
+              coordinates:
+                x: 0
+                y: 0
+                w: 112.84088134765625
+                h: 32.931811523437496
+              content: '123456'
+              extra:
+                rawWidth: 100
+                rawHeight: 30
+              properties:
+                alpha: 1
+                rotation: 0
+                scale: 1
+                font: Inter
+                fontSize: 30
+                fontWeight: 600
+                color: 4278190080
+              objectActions:
+                - objectAction:
+                    index: 65186193-638a-412c-a0ac-f7e677caad54
+                    type: Single Action
+                    motion: normal
+                    repeatTimes: 0
+                    active:
+                      type: onClick
+                    actions:
+                      - action:
+                          index: 17fd345d-2660-439f-8c16-0331bb5ec5a8
+                          type: move
+                          parameters:
+                            name: EaseSlowMiddle
+                            duration: 2
+                            startVal:
+                              x: 0
+                              y: 0
+                            endVal:
+                              x: 0
+                              y: 0
     #             # objectActions:
     #             #   - objectAction:
     #             #       index: "1"
