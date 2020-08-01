@@ -63,6 +63,7 @@ const VIDEO = 'video';
 const SOUND = 'sound';
 const KARAOKE = 'karaoke';
 const PARTICLE = 'particle';
+const CODE = 'code';
 
 //Object Aciton type
 const SEQUENCE_ACTION = 'Sequence Action';

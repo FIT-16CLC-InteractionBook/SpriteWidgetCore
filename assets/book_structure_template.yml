@@ -121,46 +121,19 @@ app:
     #       #           name: "image3"
     #       #           originalImage: assets/image3.jpg
           - object:
-              index: 750ab4de-e1a6-45c1-931d-1f9d34e5867e
-              type: text
+              index: 46f97d0a-8f32-4b89-99a6-28cf3fd7ee48
+              type: code
+              typeCode: text/x-java
               coordinates:
-                x: 0
-                y: 0
-                w: 112.84088134765625
-                h: 32.931811523437496
-              content: '123456'
-              extra:
-                rawWidth: 100
-                rawHeight: 30
-              properties:
-                alpha: 1
-                rotation: 0
-                scale: 1
-                font: Inter
-                fontSize: 30
-                fontWeight: 600
-                color: 4278190080
-              objectActions:
-                - objectAction:
-                    index: 65186193-638a-412c-a0ac-f7e677caad54
-                    type: Single Action
-                    motion: normal
-                    repeatTimes: 0
-                    active:
-                      type: onClick
-                    actions:
-                      - action:
-                          index: 17fd345d-2660-439f-8c16-0331bb5ec5a8
-                          type: move
-                          parameters:
-                            name: EaseSlowMiddle
-                            duration: 2
-                            startVal:
-                              x: 0
-                              y: 0
-                            endVal:
-                              x: 0
-                              y: 0
+                x: 137
+                y: 93.5
+                w: 300
+                h: 300
+              dataCode: |-
+                dasdasdsadasdasdasd
+                asdasdasdasdas
+                dasdasdasdasd
+                sadasdasda
     #             # objectActions:
     #             #   - objectAction:
     #             #       index: "1"

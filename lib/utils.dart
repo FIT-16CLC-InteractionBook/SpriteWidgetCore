@@ -9,6 +9,7 @@ import 'package:ibcore/interfaces/CustomAction.dart';
 import 'package:ibcore/core/IBKaraokeText.dart';
 import 'package:ibcore/core/IBSound.dart';
 import 'package:ibcore/core/IBVideo.dart';
+import 'package:ibcore/core/IBCode.dart';
 import 'package:ibcore/interfaces/KaraokeCounterObject.dart';
 import 'package:ibcore/interfaces/PageObject.dart';
 import 'package:ibcore/core/IBGallery.dart';
@@ -90,6 +91,10 @@ class Utils {
             case Constants.PARTICLE:
               Map destructParticle = destructParticleObject(object);
               objects.add(new IBObject(Constants.PARTICLE, destructParticle));
+              break;
+            case Constants.CODE:
+              Map destructCode = destructCodeObject(object);
+              objects.add(new IBObject(Constants.CODE, destructCode));
               break;
             default:
           }
@@ -196,6 +201,21 @@ class Utils {
         'coordinates': coordinates,
         'size': size,
         'originalVideo': object['originalVideo'],
+      });
+  }
+
+  static Map<String, dynamic> destructCodeObject(YamlMap object) {
+    ui.Offset coordinates = new ui.Offset(object['coordinates']['x'].toDouble(),
+        object['coordinates']['y'].toDouble());
+    ui.Size size = new ui.Size(object['coordinates']['w'].toDouble(),
+        object['coordinates']['h'].toDouble());
+
+    return new Map<String, dynamic>()
+      ..addAll({
+        'coordinates': coordinates,
+        'size': size,
+        'dataCode': object['dataCode'],
+        'typeCode': object['typeCode'],
       });
   }
 
@@ -550,6 +570,30 @@ class Utils {
               object['coordinates'], object['size'], json.encode(particleData));
           spriteObjects.add(new PageObject('node', node: particle));
           break;
+        case Constants.CODE:
+          var type = object['typeCode'];
+          var theme = object['theme'];
+          var dataCode = object['dataCode'];
+
+          Offset newCoordinates =
+              rootNode.convertPointToBoxSpace(object['coordinates']);
+          Offset sizeConverted = rootNode.convertPointToBoxSpace(
+              Offset(object['size'].width, object['size'].height));
+          Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
+
+          IBCode codeWidget = new IBCode(dataCode, theme, type);
+
+          Widget code = new Positioned(
+              top: newCoordinates.dy,
+              left: newCoordinates.dx,
+              child: Container(
+                height: newSize.height,
+                width: newSize.width,
+                child: codeWidget,
+              ));
+          spriteObjects
+              .add(new PageObject('widget', widget: code, rawObject: iObject));
+          break;
         default:
       }
     }
@@ -858,11 +902,35 @@ class Utils {
 
   static FontWeight getFontWeight(int weight) {
     switch (weight) {
+      case 100:
+        return FontWeight.w100;
+        break;
+      case 200:
+        return FontWeight.w200;
+        break;
+      case 300:
+        return FontWeight.w300;
+        break;
       case 400:
         return FontWeight.w400;
         break;
+      case 500:
+        return FontWeight.w500;
+        break;
+      case 600:
+        return FontWeight.w600;
+        break;
+      case 700:
+        return FontWeight.w700;
+        break;
+      case 800:
+        return FontWeight.w800;
+        break;
+      case 900:
+        return FontWeight.w900;
+        break;
       default:
-        return FontWeight.w400;
+        return FontWeight.w500;
     }
   }
 
