@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class IBCode extends StatefulWidget {
   final String data;
@@ -25,14 +25,9 @@ class _IBCodeState extends State<IBCode> {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: "https://google.com",
-      onPageStarted: (String url) {
-        print('Page started loading: $url');
-      },
-      onPageFinished: (String url) {
-        print('Page finished loading: $url');
-      },
+    return InAppWebView(
+      initialUrl: Uri.encodeFull(
+          "https://ibcoding.netlify.app/interactive-book-codemirror/mode=$type&&&&theme=$theme&&&&content=$data"),
     );
   }
 }

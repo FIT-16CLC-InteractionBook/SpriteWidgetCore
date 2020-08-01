@@ -214,6 +214,7 @@ class Utils {
       ..addAll({
         'coordinates': coordinates,
         'size': size,
+        'theme': object['theme'],
         'dataCode': object['dataCode'],
         'typeCode': object['typeCode'],
       });
