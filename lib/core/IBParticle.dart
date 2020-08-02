@@ -49,7 +49,7 @@ class IBParticle extends NodeWithSize {
   IBParticle(
       this.images, this.preset, this._position, this._size, this.particleData)
       : super(_size) {
-    SpriteTexture texture = new SpriteTexture(images['assets/particle-3.png']);
+    SpriteTexture texture = new SpriteTexture(images['assets/particle-5.png']);
     particleSystem = new ParticleSystem(
       texture,
       autoRemoveOnFinish: false,

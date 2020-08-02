@@ -259,9 +259,11 @@ packages:
   spritewidget:
     dependency: "direct main"
     description:
-      name: spritewidget
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: e3835508a1a5625282171fb11594103d35e09019
+      url: "git://github.com/FIT-16CLC-InteractionBook/spritewidget.git"
+    source: git
     version: "0.9.24"
   stack_trace:
     dependency: transitive

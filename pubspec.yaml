@@ -20,6 +20,9 @@ dependencies:
   flutter:
     sdk: flutter
   spritewidget:
+    git:
+      url: git://github.com/FIT-16CLC-InteractionBook/spritewidget.git
+      ref: master
   yaml: ^2.2.0
   carousel_slider: ^1.3.0
   union: 0.0.3+1

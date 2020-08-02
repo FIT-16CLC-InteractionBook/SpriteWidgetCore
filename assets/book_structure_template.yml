@@ -14,11 +14,29 @@ manifest:
 app:
   background:
     image: ""
-    color: 16312092
+    color: 0xff000000
   app-page:
     - page:
         index: "1"
         objects:
+          - object:
+              index: image-b5ac00b4-7b9a-4231-87d1-cab08fe60c86
+              type: image
+              name: Shiranui.(Onmyouji).full.2544317.png
+              coordinates:
+                x: 0
+                y: 0
+                w: 560
+                h: 300
+              originalImage: "assets/background.jpg"
+              extra:
+                rawWidth: 560
+                rawHeight: 315
+              properties:
+                alpha: 1
+                rotation: 180
+                scale: 1
+              objectActions: []
           # - object:
           #     index: "1" #1 -> n
           #     type: "gallery"
@@ -47,48 +65,52 @@ app:
           #       coordinates:
           #         x: 100.0
           #         y: 100.0
-          #         w: 500.0
-          #         h: 400.0
-          #       preset: default
+          #         w: 300.0
+          #         h: 300.0
+          #       preset: fire
           #       parameters:
           #         emission:
           #           life: 1.5
-          #           lifeVar: 1
-          #           maxParticles: 100
-          #           emissionRate: 50
+          #           lifeVar: 1.0
+          #           maxParticles: 198
+          #           emissionRate: 82.89703049584841
           #           numParticlesToEmit: 0
           #         movement:
           #           posVar:
-          #             - 0
-          #             - 0
+          #             - 73.27049247382203
+          #             - 39.76263907068064
           #           gravity:
-          #             - 0
-          #             - 0
-          #           direction: 0
-          #           directionVar: 360
-          #           speed: 100
+          #             - -9.828983965968234
+          #             - -168.87958115183238
+          #           direction: 271.4136125654451
+          #           directionVar: 38.32459774316914
+          #           speed: 39.26701570680628
           #           speedVar: 50
           #           radialAcceleration: 0
           #           radialAccelerationVar: 0
           #           tangentialAcceleration: 0
           #           tangentialAccelerationVar: 0
           #         sizeAndRotate:
-          #           rotateToMovement: false
-          #           startSize: 2.5
-          #           startSizeVar: 0.5
-          #           endSize: 0
-          #           endSizeVar: 0
-          #           startRotation: 0
+          #           rotateToMovement: true
+          #           startSize: 1.2478182328309062
+          #           startSizeVar: 0.584642100708647
+          #           endSize: 1.038394149061272
+          #           endSizeVar: 0.73298429319371764
+          #           startRotation: -90.47120418848164
           #           startRotationVar: 0
-          #           endRotation: 0
+          #           endRotation: -87.95812476991966
           #           endRotationVar: 0
           #         textureAndColors:
           #           colorSequence:
           #             colors:
-          #               - 0xffffc0cb
-          #               - 16777215
+          #               - 16639318
+          #               - 4294961739
+          #               - 4292819771
+          #               - 16728385
           #             colorStops:
           #               - 0
+          #               - 0.2037036683824327
+          #               - 0.7060184478759767
           #               - 1
           #           alphaVar: 0
           #           redVar: 0
@@ -120,19 +142,19 @@ app:
     #       #           index: "3"
     #       #           name: "image3"
     #       #           originalImage: assets/image3.jpg
-          - object:
-              index: 1edb4bcf-daa2-4384-8ae8-b8b6912b52a7
-              type: code
-              typeCode: text/x-c++src
-              theme: material
-              coordinates:
-                x: 100
-                y: 100
-                w: 300
-                h: 300
-              dataCode: |-
-                3123123123213123
-                  12312321312312
+          # - object:
+          #     index: 1edb4bcf-daa2-4384-8ae8-b8b6912b52a7
+          #     type: code
+          #     typeCode: text/x-c++src
+          #     theme: material
+          #     coordinates:
+          #       x: 100
+          #       y: 100
+          #       w: 300
+          #       h: 300
+          #     dataCode: |-
+          #       3123123123213123
+          #         12312321312312
     #             # objectActions:
     #             #   - objectAction:
     #             #       index: "1"
