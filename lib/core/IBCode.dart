@@ -1,33 +1,51 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class IBCode extends StatefulWidget {
-  final String data;
-  final String theme;
-  final String type;
+  final String dataCodeUrl;
 
-  IBCode(this.data, this.theme, this.type) : super();
+  IBCode(this.dataCodeUrl) : super();
   @override
-  _IBCodeState createState() => _IBCodeState(data, theme, type);
+  _IBCodeState createState() => _IBCodeState(dataCodeUrl);
 }
 
 class _IBCodeState extends State<IBCode> {
-  String data;
-  String theme;
-  String type;
+  bool loading = false;
+  String dataCodeUrl;
+  WebViewController _controller;
 
-  _IBCodeState(_data, _theme, _type) : super() {
-    data = _data;
-    theme = _theme;
-    type = _type;
+  _IBCodeState(_dataCodeUrl) : super() {
+    dataCodeUrl = _dataCodeUrl;
+  }
+
+  void _loadHtml() async {
+    String contentHtml = await File(dataCodeUrl).readAsString();
+    print(contentHtml);
+    _controller.loadUrl(Uri.dataFromString(contentHtml,
+            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        .toString());
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return InAppWebView(
-      initialUrl: Uri.encodeFull(
-          "https://ibcoding.netlify.app/interactive-book-codemirror/mode=$type&&&&theme=$theme&&&&content=$data"),
-    );
+    return loading
+        ? const Center(child: const CircularProgressIndicator())
+        : WebView(
+            initialUrl: 'about:blank',
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller = webViewController;
+              setState(() {
+                loading = true;
+              });
+              _loadHtml();
+            },
+          );
   }
 }
