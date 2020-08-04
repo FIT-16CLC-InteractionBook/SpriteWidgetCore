@@ -804,8 +804,14 @@ class Utils {
             Constants.MOTION_TWEEN_OPACITY,
             parameters['duration']?.toDouble() ?? 1.0,
             setterFunction: (opacity) {
-          object.opacity = opacity;
-          if (oldProp != null && opacity == endVal) {
+          if (opacity < 0.0) {
+            object.opacity = 0.0;
+          } else if (opacity > 1.0) {
+            object.opacity = 1.0;
+          } else {
+            object.opacity = opacity;
+          }
+          if (oldProp != null && opacity >= endVal) {
             switch (oldProp['motion']) {
               case Constants.REPEAT:
                 repeatTime++;

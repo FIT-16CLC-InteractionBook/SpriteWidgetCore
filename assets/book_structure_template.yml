@@ -36,7 +36,23 @@ app:
                 alpha: 1
                 rotation: 180
                 scale: 1
-              objectActions: []
+              objectActions:
+                - objectAction:
+                    index: 5cc2e52c-184c-46a1-8c74-97dd00527b61
+                    type: Single Action
+                    motion: normal
+                    repeatTimes: 0
+                    active:
+                      type: onClick
+                    actions:
+                      - action:
+                          index: cf6616fb-ce99-4dd3-9a3f-c03383eeaa34
+                          type: opacity
+                          parameters:
+                            name: EaseElasticOut
+                            duration: 4
+                            startVal: 0
+                            endVal: 1
           # - object:
           #     index: "1" #1 -> n
           #     type: "gallery"
