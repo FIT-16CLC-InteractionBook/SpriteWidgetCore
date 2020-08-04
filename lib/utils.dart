@@ -572,9 +572,9 @@ class Utils {
           spriteObjects.add(new PageObject('node', node: particle));
           break;
         case Constants.CODE:
-          var type = object['typeCode'];
-          var theme = object['theme'];
           var dataCode = object['dataCode'];
+          var theme = object['theme'];
+          var mode = object['typeCode'];
 
           Offset newCoordinates =
               rootNode.convertPointToBoxSpace(object['coordinates']);
@@ -582,7 +582,7 @@ class Utils {
               Offset(object['size'].width, object['size'].height));
           Size newSize = new Size(sizeConverted.dx, sizeConverted.dy);
 
-          IBCode codeWidget = new IBCode(dataCode, theme, type);
+          IBCode codeWidget = new IBCode(dataCode, theme, mode);
 
           Widget code = new Positioned(
               top: newCoordinates.dy,

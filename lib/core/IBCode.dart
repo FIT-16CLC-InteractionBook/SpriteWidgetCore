@@ -3,31 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class IBCode extends StatefulWidget {
-  final String data;
+  final String content;
   final String theme;
-  final String type;
+  final String mode;
 
-  IBCode(this.data, this.theme, this.type) : super();
+  IBCode(this.content, this.theme, this.mode) : super();
   @override
-  _IBCodeState createState() => _IBCodeState(data, theme, type);
+  _IBCodeState createState() => _IBCodeState(content, theme, mode);
 }
 
 class _IBCodeState extends State<IBCode> {
-  String data;
+  String content;
   String theme;
-  String type;
+  String mode;
+  InAppWebViewController _controller;
 
-  _IBCodeState(_data, _theme, _type) : super() {
-    data = _data;
+  _IBCodeState(_content, _theme, _mode) : super() {
+    content = _content;
     theme = _theme;
-    type = _type;
+    mode = _mode;
   }
 
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      initialUrl: Uri.encodeFull(
-          "https://ibcoding.netlify.app/interactive-book-codemirror/mode=$type&&&&theme=$theme&&&&content=$data"),
+      initialFile: 'assets/Codemirror.html',
+      onWebViewCreated: (controller) {
+        _controller = controller;
+      },
+      onLoadStop: (controller, url) async {
+        String cTheme = theme;
+        String cData = Uri.encodeFull(content);
+        String cMode = mode;
+        await controller.evaluateJavascript(
+            source:
+                "window.localStorage.setItem('content', '$cData'); window.localStorage.setItem('theme', '$cTheme'); window.localStorage.setItem('mode', '$cMode');");
+        await _controller.evaluateJavascript(
+          source:
+              'window.dispatchEvent(new CustomEvent("native.code_mirror_execute"))',
+        );
+      },
     );
   }
 }

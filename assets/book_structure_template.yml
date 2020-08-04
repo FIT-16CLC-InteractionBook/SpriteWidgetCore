@@ -158,19 +158,19 @@ app:
     #       #           index: "3"
     #       #           name: "image3"
     #       #           originalImage: assets/image3.jpg
-          # - object:
-          #     index: 1edb4bcf-daa2-4384-8ae8-b8b6912b52a7
-          #     type: code
-          #     typeCode: text/x-c++src
-          #     theme: material
-          #     coordinates:
-          #       x: 100
-          #       y: 100
-          #       w: 300
-          #       h: 300
-          #     dataCode: |-
-          #       3123123123213123
-          #         12312321312312
+          - object:
+              index: 1edb4bcf-daa2-4384-8ae8-b8b6912b52a7
+              type: code
+              typeCode: text/x-c++src
+              theme: material
+              coordinates:
+                x: 100
+                y: 100
+                w: 300
+                h: 300
+              dataCode: |-
+                3123123123213123
+                  12312321312312
     #             # objectActions:
     #             #   - objectAction:
     #             #       index: "1"
