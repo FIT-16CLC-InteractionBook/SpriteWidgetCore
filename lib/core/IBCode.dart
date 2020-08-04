@@ -1,51 +1,48 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class IBCode extends StatefulWidget {
-  final String dataCodeUrl;
+  final String content;
+  final String theme;
+  final String mode;
 
-  IBCode(this.dataCodeUrl) : super();
+  IBCode(this.content, this.theme, this.mode) : super();
   @override
-  _IBCodeState createState() => _IBCodeState(dataCodeUrl);
+  _IBCodeState createState() => _IBCodeState(content, theme, mode);
 }
 
 class _IBCodeState extends State<IBCode> {
-  bool loading = false;
-  String dataCodeUrl;
-  WebViewController _controller;
+  String content;
+  String theme;
+  String mode;
+  InAppWebViewController _controller;
 
-  _IBCodeState(_dataCodeUrl) : super() {
-    dataCodeUrl = _dataCodeUrl;
-  }
-
-  void _loadHtml() async {
-    String contentHtml = await File(dataCodeUrl).readAsString();
-    print(contentHtml);
-    _controller.loadUrl(Uri.dataFromString(contentHtml,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
-    setState(() {
-      loading = false;
-    });
+  _IBCodeState(_content, _theme, _mode) : super() {
+    content = _content;
+    theme = _theme;
+    mode = _mode;
   }
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? const Center(child: const CircularProgressIndicator())
-        : WebView(
-            initialUrl: 'about:blank',
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller = webViewController;
-              setState(() {
-                loading = true;
-              });
-              _loadHtml();
-            },
-          );
+    return InAppWebView(
+      initialFile: 'assets/Codemirror.html',
+      onWebViewCreated: (controller) {
+        _controller = controller;
+      },
+      onLoadStop: (controller, url) async {
+        String cTheme = theme;
+        String cData = Uri.encodeFull(content);
+        String cMode = mode;
+        await controller.evaluateJavascript(
+            source:
+                "window.localStorage.setItem('content', '$cData'); window.localStorage.setItem('theme', '$cTheme'); window.localStorage.setItem('mode', '$cMode');");
+        await _controller.evaluateJavascript(
+          source:
+              'window.dispatchEvent(new CustomEvent("native.code_mirror_execute"))',
+        );
+      },
+    );
   }
 }

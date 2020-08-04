@@ -37,7 +37,7 @@ dependencies:
     git:
       url: git://github.com/FIT-16CLC-InteractionBook/PDFViewer.git
       ref: master
-  webview_flutter: ^0.3.22+1
+  flutter_inappwebview: ^4.0.0+4
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -81,6 +81,10 @@ flutter:
     - assets/1.yml
     - assets/yeuthiyeu.mp3
     - assets/Codemirror.html
+    - assets/js/2.29a7d2bb.chunk.js
+    - assets/js/main.a7221ad7.chunk.js
+    - assets/css/2.4155ed2b.chunk.css
+    - assets/css/main.1bccd029.chunk.css
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
