@@ -3,7 +3,7 @@ manifest:
   author:
     name: nhuttm
   app-name: test-book
-  orientation: landscape
+  orientation: portrait
   initializePDF: ''
   categories:
     - horror

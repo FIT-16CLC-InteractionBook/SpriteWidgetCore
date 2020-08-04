@@ -67,9 +67,11 @@ class AppState extends State<IBCore> {
     imagesParticle = await Utils.getParticleImage();
     initializePDF = manifest['initializePDF'] ?? '';
     orientationBook = manifest['orientation'] ?? '';
-    setState(() {
-      isLoading = false;
-    });
+    Timer(
+        Duration(seconds: 2),
+        () => setState(() {
+              isLoading = false;
+            }));
   }
 
   @override
@@ -77,7 +79,11 @@ class AppState extends State<IBCore> {
     return isLoading
         ? MaterialApp(
             title: 'Title',
-            home: new Container(child: Text('123')),
+            home: new Container(
+                color: Color.fromARGB(255, 242, 242, 242),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                )),
           )
         : MaterialApp(
             title: 'Title',
@@ -232,37 +238,40 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return loading
         ? Stack(
-            children: List<Widget>.generate(totalPages, (i) {
-              return new Align(
-                alignment: Alignment.center,
-                child: AspectRatio(
-                    aspectRatio:
-                        this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
-                    child: Stack(
-                      children: <Widget>[
-                        new SpriteWidget(rootNodes[i]),
-                        Positioned(
-                          bottom: 0.0,
-                          left: 0.0,
-                          right: 0.0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color.fromARGB(200, 0, 0, 0),
-                                  Color.fromARGB(0, 0, 0, 0)
-                                ],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
+            children: <Widget>[
+              Container(color: Color.fromARGB(255, 242, 242, 242)),
+              ...List<Widget>.generate(totalPages, (i) {
+                return new Align(
+                  alignment: Alignment.center,
+                  child: AspectRatio(
+                      aspectRatio:
+                          this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
+                      child: Stack(
+                        children: <Widget>[
+                          new SpriteWidget(rootNodes[i]),
+                          Positioned(
+                            bottom: 0.0,
+                            left: 0.0,
+                            right: 0.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromARGB(200, 0, 0, 0),
+                                    Color.fromARGB(0, 0, 0, 0)
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        ...specificObjects[i].map((item) => item).toList(),
-                      ],
-                    )),
-              );
-            }),
+                          ...specificObjects[i].map((item) => item).toList(),
+                        ],
+                      )),
+                );
+              }).toList()
+            ],
           )
         : Stack(
             children: <Widget>[

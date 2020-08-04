@@ -12,7 +12,7 @@ class IBCode extends StatefulWidget {
   _IBCodeState createState() => _IBCodeState(content, theme, mode);
 }
 
-class _IBCodeState extends State<IBCode> {
+class _IBCodeState extends State<IBCode> with AutomaticKeepAliveClientMixin {
   String content;
   String theme;
   String mode;
@@ -45,4 +45,7 @@ class _IBCodeState extends State<IBCode> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

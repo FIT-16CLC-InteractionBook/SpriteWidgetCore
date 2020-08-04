@@ -6,7 +6,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "00debbe1020cd19598eb91cb6b0a32b497a1102b"
+      resolved-ref: "57d156e48cf34922f19c86c111c75d3c3ee88090"
       url: "git://github.com/FIT-16CLC-InteractionBook/PDFViewer.git"
     source: git
     version: "0.0.1"
@@ -173,7 +173,7 @@ packages:
       name: mime
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.6+3"
+    version: "0.9.7"
   open_iconic_flutter:
     dependency: transitive
     description:
