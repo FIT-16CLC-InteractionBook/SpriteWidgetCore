@@ -6,7 +6,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "57d156e48cf34922f19c86c111c75d3c3ee88090"
+      resolved-ref: "859b1bdb36303bffa105b07f6b29880b46f9eea1"
       url: "git://github.com/FIT-16CLC-InteractionBook/PDFViewer.git"
     source: git
     version: "0.0.1"
