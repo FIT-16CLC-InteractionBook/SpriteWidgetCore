@@ -227,36 +227,52 @@ class Utils {
     ui.Size sizeSound = new ui.Size(object['coordinates']['w'].toDouble(),
         object['coordinates']['h'].toDouble());
 
-    ui.Offset coordinatesKaraoke = new ui.Offset(
+    if (object['objectTexts'] != null) {
+      ui.Offset coordinatesKaraoke = new ui.Offset(
         object['objectTexts']['coordinates']['x'].toDouble(),
         object['objectTexts']['coordinates']['y'].toDouble());
-    ui.Size sizeKaraoke = new ui.Size(
-        object['objectTexts']['coordinates']['w'].toDouble(),
-        object['objectTexts']['coordinates']['h'].toDouble());
-    TextStyle textStyle = new TextStyle(
-      fontFamily: object['objectTexts']['properties']['font'],
-      height: 1,
-      fontWeight:
-          getFontWeight(object['objectTexts']['properties']['fontWeight']),
-      fontSize:
-          object['objectTexts']['properties']['fontSize'].toDouble() ?? 14.0,
-      color: ui.Color(
-              object['objectTexts']['properties']['color'] ?? 0x00000000)
-          .withOpacity(
-              object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
-    );
+      ui.Size sizeKaraoke = new ui.Size(
+          object['objectTexts']['coordinates']['w'].toDouble(),
+          object['objectTexts']['coordinates']['h'].toDouble());
+      TextStyle textStyle = new TextStyle(
+        fontFamily: object['objectTexts']['properties']['font'],
+        height: 1,
+        fontWeight:
+            getFontWeight(object['objectTexts']['properties']['fontWeight']),
+        fontSize:
+            object['objectTexts']['properties']['fontSize'].toDouble() ?? 14.0,
+        color: ui.Color(
+                object['objectTexts']['properties']['color'] ?? 0x00000000)
+            .withOpacity(
+                object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
+      );
 
-    var listTexts = object['objectTexts']['listTexts'];
-    // List<KaraokeText> contents = listTexts.map((text) {
-    //   return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
-    // }).toList<KaraokeText>();
-    List<KaraokeText> contents = [];
-    for (var i = 0; i < listTexts.length; i++) {
-      contents.add(new KaraokeText(
-          content: listTexts[i]['text']['content'],
-          start: listTexts[i]['text']['start'],
-          end: listTexts[i]['text']['end'],
-          index: i));
+      var listTexts = object['objectTexts']['listTexts'];
+      // List<KaraokeText> contents = listTexts.map((text) {
+      //   return new KaraokeText(content: text['content'], start: text['start'], end: text['end']);
+      // }).toList<KaraokeText>();
+      List<KaraokeText> contents = [];
+      for (var i = 0; i < listTexts.length; i++) {
+        contents.add(new KaraokeText(
+            content: listTexts[i]['text']['content'],
+            start: listTexts[i]['text']['start'],
+            end: listTexts[i]['text']['end'],
+            index: i));
+      }
+
+      return new Map<String, dynamic>()
+        ..addAll({
+          'coordinates': coordinatesSound,
+          'size': sizeSound,
+          'originalSound': object['originalSound'],
+          'karaokeText': {
+            'coordinates': coordinatesKaraoke,
+            'size': sizeKaraoke,
+            'colorSubtitle': object['objectTexts']['colorSubtitle'],
+            'textStyle': textStyle,
+            'contents': contents
+          }
+        });
     }
 
     return new Map<String, dynamic>()
@@ -264,13 +280,6 @@ class Utils {
         'coordinates': coordinatesSound,
         'size': sizeSound,
         'originalSound': object['originalSound'],
-        'karaokeText': {
-          'coordinates': coordinatesKaraoke,
-          'size': sizeKaraoke,
-          'colorSubtitle': object['objectTexts']['colorSubtitle'],
-          'textStyle': textStyle,
-          'contents': contents
-        }
       });
   }
 
@@ -512,29 +521,31 @@ class Utils {
                 child: soundWidget,
               ));
           spriteObjects.add(new PageObject('widget', widget: sound));
-
-          Offset newCoordinatesKaraokeText = rootNode
+          
+          if (object['karaokeText'] != null) {
+            Offset newCoordinatesKaraokeText = rootNode
               .convertPointToBoxSpace(object['karaokeText']['coordinates']);
-          // Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
-          //     Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
-          // );
-          // Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
-          KaraokeCounterObject kCounterObject = KaraokeCounterObject(-1, false);
-          IBKaraokeText karaokeTextWidget = new IBKaraokeText(
-              object['karaokeText']['contents'],
-              object['karaokeText']['colorSubtitle'],
-              object['karaokeText']['textStyle'],
-              _player,
-              kCounterObject);
-          Widget karaokeText = new Positioned(
-              top: newCoordinatesKaraokeText.dy,
-              left: newCoordinatesKaraokeText.dx,
-              child: Container(
-                  // height: newSizeKaraoke.height,
-                  // width: newSizeKaraoke.width,
-                  child: karaokeTextWidget));
+            // Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
+            //     Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
+            // );
+            // Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
+            KaraokeCounterObject kCounterObject = KaraokeCounterObject(-1, false);
+            IBKaraokeText karaokeTextWidget = new IBKaraokeText(
+                object['karaokeText']['contents'],
+                object['karaokeText']['colorSubtitle'],
+                object['karaokeText']['textStyle'],
+                _player,
+                kCounterObject);
+            Widget karaokeText = new Positioned(
+                top: newCoordinatesKaraokeText.dy,
+                left: newCoordinatesKaraokeText.dx,
+                child: Container(
+                    // height: newSizeKaraoke.height,
+                    // width: newSizeKaraoke.width,
+                    child: karaokeTextWidget));
 
-          spriteObjects.add(new PageObject('widget', widget: karaokeText));
+            spriteObjects.add(new PageObject('widget', widget: karaokeText));
+          }
           break;
         // case Constants.KARAOKE:
         //   Offset newCoordinates =
