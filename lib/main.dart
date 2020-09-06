@@ -14,6 +14,7 @@ import 'package:yaml/yaml.dart';
 import 'package:union/union.dart';
 import 'package:ibcore/utils.dart';
 import 'package:PDFViewer/PDFViewer.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
 class IBCore extends StatefulWidget {
   final Union2<File, String> fileUrl;
@@ -246,29 +247,41 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                   child: AspectRatio(
                       aspectRatio:
                           this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
-                      child: Stack(
-                        children: <Widget>[
-                          new SpriteWidget(rootNodes[i]),
-                          Positioned(
-                            bottom: 0.0,
-                            left: 0.0,
-                            right: 0.0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color.fromARGB(200, 0, 0, 0),
-                                    Color.fromARGB(0, 0, 0, 0)
-                                  ],
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
+                      child: Zoom(
+                          width:
+                              this.orientationBook == 'portrait' ? 1200 : 1600,
+                          height:
+                              this.orientationBook == 'portrait' ? 1600 : 1200,
+                          initZoom: 0.0,
+                          backgroundColor: Color.fromARGB(255, 242, 242, 242),
+                          opacityScrollBars: 0.5,
+                          doubleTapZoom: false,
+                          colorScrollBars: Color.fromARGB(255, 242, 242, 242),
+                          child: Stack(
+                            children: <Widget>[
+                              new SpriteWidget(rootNodes[i]),
+                              Positioned(
+                                bottom: 0.0,
+                                left: 0.0,
+                                right: 0.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(200, 0, 0, 0),
+                                        Color.fromARGB(0, 0, 0, 0)
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          ...specificObjects[i].map((item) => item).toList(),
-                        ],
-                      )),
+                              ...specificObjects[i]
+                                  .map((item) => item)
+                                  .toList(),
+                            ],
+                          ))),
                 );
               }).toList()
             ],
@@ -279,8 +292,16 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
               Align(
                   alignment: Alignment.center,
                   child: AspectRatio(
-                      aspectRatio:
-                          this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
+                    aspectRatio:
+                        this.orientationBook == 'portrait' ? 3 / 4 : 4 / 3,
+                    child: Zoom(
+                      width: this.orientationBook == 'portrait' ? 1200 : 1600,
+                      height: this.orientationBook == 'portrait' ? 1600 : 1200,
+                      initZoom: 0.0,
+                      backgroundColor: Color.fromARGB(255, 242, 242, 242),
+                      opacityScrollBars: 0.5,
+                      doubleTapZoom: false,
+                      colorScrollBars: Color.fromARGB(255, 242, 242, 242),
                       child: Stack(
                         children: <Widget>[
                           Container(color: Colors.white),
@@ -323,7 +344,9 @@ class MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
                                 );
                               })),
                         ],
-                      ))),
+                      ),
+                    ),
+                  )),
               Positioned(
                 bottom: 0,
                 right: 0,
