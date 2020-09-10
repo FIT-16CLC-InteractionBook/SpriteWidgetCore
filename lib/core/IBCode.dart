@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -28,6 +30,7 @@ class _IBCodeState extends State<IBCode> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     return InAppWebView(
       initialFile: 'assets/Codemirror.html',
+      gestureRecognizers: [Factory(() => EagerGestureRecognizer())].toSet(),
       onWebViewCreated: (controller) {
         _controller = controller;
       },
