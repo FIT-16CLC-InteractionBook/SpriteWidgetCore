@@ -229,8 +229,8 @@ class Utils {
 
     if (object['objectTexts'] != null) {
       ui.Offset coordinatesKaraoke = new ui.Offset(
-        object['objectTexts']['coordinates']['x'].toDouble(),
-        object['objectTexts']['coordinates']['y'].toDouble());
+          object['objectTexts']['coordinates']['x'].toDouble(),
+          object['objectTexts']['coordinates']['y'].toDouble());
       ui.Size sizeKaraoke = new ui.Size(
           object['objectTexts']['coordinates']['w'].toDouble(),
           object['objectTexts']['coordinates']['h'].toDouble());
@@ -241,10 +241,11 @@ class Utils {
             getFontWeight(object['objectTexts']['properties']['fontWeight']),
         fontSize:
             object['objectTexts']['properties']['fontSize'].toDouble() ?? 14.0,
-        color: ui.Color(
-                object['objectTexts']['properties']['color'] ?? 0x00000000)
-            .withOpacity(
-                object['objectTexts']['properties']['alpha']?.toDouble() ?? 1.0),
+        color:
+            ui.Color(object['objectTexts']['properties']['color'] ?? 0x00000000)
+                .withOpacity(
+                    object['objectTexts']['properties']['alpha']?.toDouble() ??
+                        1.0),
       );
 
       var listTexts = object['objectTexts']['listTexts'];
@@ -521,15 +522,16 @@ class Utils {
                 child: soundWidget,
               ));
           spriteObjects.add(new PageObject('widget', widget: sound));
-          
+
           if (object['karaokeText'] != null) {
             Offset newCoordinatesKaraokeText = rootNode
-              .convertPointToBoxSpace(object['karaokeText']['coordinates']);
+                .convertPointToBoxSpace(object['karaokeText']['coordinates']);
             // Offset sizeConvertedKaraokeText = rootNode.convertPointToBoxSpace(
             //     Offset(object['karaokeText']['size'].width, object['karaokeText']['size'].height)
             // );
             // Size newSizeKaraoke = new Size(sizeConvertedKaraokeText.dx, sizeConvertedKaraokeText.dy);
-            KaraokeCounterObject kCounterObject = KaraokeCounterObject(-1, false);
+            KaraokeCounterObject kCounterObject =
+                KaraokeCounterObject(-1, false);
             IBKaraokeText karaokeTextWidget = new IBKaraokeText(
                 object['karaokeText']['contents'],
                 object['karaokeText']['colorSubtitle'],
@@ -689,9 +691,11 @@ class Utils {
           startVal = Offset(
               (parameters['startVal']['x'] + size.width / 2).toDouble(),
               (parameters['startVal']['y'] + size.height / 2).toDouble());
+          print(startVal);
           endVal = Offset(
               (parameters['endVal']['x'] + size.width / 2).toDouble(),
               (parameters['endVal']['y'] + size.height / 2).toDouble());
+          print(endVal);
         }
         return IBTranslation.createMotion(
           parameters['name'],
